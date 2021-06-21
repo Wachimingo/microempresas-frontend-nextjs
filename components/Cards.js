@@ -1,4 +1,8 @@
+import { ToastContainer, toast } from 'react-toastify';
+import Image from 'next/image';
+import 'react-toastify/dist/ReactToastify.css';
 const classes = require('./../styles/menu.module.css');
+
 import {
   BsFillTrashFill,
   BsChevronCompactUp,
@@ -7,46 +11,51 @@ import {
 } from 'react-icons/bs';
 
 export default function Cards(props) {
-  const deleteDish = (id, i) => {
-    fetch(`http://localhost:3001/api/v1/menu/${id}`, {
+  const notify = (text) => toast(text);
+
+  const deleteDish = (id, i, fileName) => {
+    fetch(`/api/deleteDish`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
-        Authorization: `Bearer ${cookie.session.token}`,
-      },
-    });
-    // location.reload();
-    document.getElementById(i).className = 'd-none';
-  };
-
-  const setDishForToday = (id, forToday) => {
-    console.log(forToday);
-    fetch(`http://localhost:3001/api/v1/menu/${id}`, {
-      method: 'PATCH',
-      mode: 'cors',
-      headers: {
-        'Authorization': `Bearer ${cookie.session.token}`,
+        Authorization: `${props.session.token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        forToday,
+        id,
+        fileName,
       }),
-    }).then((res) => res.json());
-    //   .then((res) => console.log(res));
-    location.reload();
+    });
+    document.getElementById(i).className = 'd-none';
+    // location.reload();
+    notify('Se ha borrado el platillo');
   };
 
-  const sellDish = dishId => {
-    console.log('vendido')
-  }
+  const setDishForToday = (id, forToday) => {
+    fetch(`/api/setDishForToday`, {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Authorization: `${props.session.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+        forToday,
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => location.reload());
+    notify('Platillo selecionado para hoy!');
+  };
 
-  const cardButtons = (id, i) => (
+  const cardButtons = (id, i, fileName) => (
     <div key={i}>
       {/* Button to Delete Card */}
       <button
         type="button"
         className={'btn btn-danger'}
-        onClick={(e) => deleteDish(id, i)}
+        onClick={(e) => deleteDish(id, i, fileName)}
       >
         <BsFillTrashFill />
       </button>
@@ -71,6 +80,7 @@ export default function Cards(props) {
       </button>
     </div>
   );
+
   return (
     <div className={classes.centerCard}>
       {
@@ -91,12 +101,16 @@ export default function Cards(props) {
                 marginRight: '2vw',
               }}
             >
-              {props.session !== undefined ? cardButtons(el.id, i) : null}
-              <div onClick={(e) => sellDish(el.id)} className={classes.hoverCard}>
-                <img
-                  src={'http://localhost:3001/img/dishes/' + el.image}
+              {props.session !== undefined
+                ? cardButtons(el.id, i, el.image)
+                : null}
+              <div className={classes.hoverCard}>
+                <Image
+                  src={'/dishes/' + el.image}
                   className="card-img-top"
-                  alt="..."
+                  alt="me"
+                  width="1000"
+                  height="1000"
                 />
                 <div className="card-body">
                   <h5 className="card-title">{el.name}</h5>
@@ -107,6 +121,9 @@ export default function Cards(props) {
           );
         })
       }
+      <div>
+        <ToastContainer />
+      </div>
     </div>
-  );
+  )
 }

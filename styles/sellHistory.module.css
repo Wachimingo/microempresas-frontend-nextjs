@@ -1,0 +1,20 @@
+.headerRow{
+    background-color: gray;
+    font-size: 24px;
+    font-weight: bold;
+}
+.bodyRow{
+    border-top: 1px solid;
+    font-size: 18px;
+}
+.tableBorder{
+    border: 1px solid;
+}
+.middleCol{
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.centerItem{
+    margin-left: 35vw;
+}

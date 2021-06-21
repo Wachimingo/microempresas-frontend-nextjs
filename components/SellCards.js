@@ -1,14 +1,28 @@
-import { useCookies } from 'react-cookie';
-import { BsFillTrashFill, BsCheck } from 'react-icons/bs';
+import Image from 'next/image';
+import { BsFillTrashFill, BsCheck, BsFlagFill } from 'react-icons/bs';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const classes = require('./../styles/menu.module.css');
 
 export default function SellCards(props) {
   let dishIds = new Set();
   let counterDish = 0;
   let counterPrice = 0;
-  const [cookie] = useCookies(['session']);
+  let Today_date = new Date();
+  let day = Today_date.getDay();
+  const week = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miercoles',
+    'Jueves',
+    'Viernes',
+    'Sabado',
+  ];
   localStorage.setItem('counterDish', 0);
   localStorage.setItem('counterPrice', 0);
+
+  const notify = (text) => toast(text);
 
   const upCounter = (id, price) => {
     dishIds.add(id);
@@ -53,42 +67,48 @@ export default function SellCards(props) {
     }
   };
 
-  const processSell = () => {
-    fetch(`http://localhost:3001/api/v1/bills`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Authorization: `Bearer ${cookie.session.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        totalPrice: localStorage.getItem('counterPrice'),
-        totalDishes: localStorage.getItem('counterDish'),
-      }),
-    })
-      .then((res) => res.json())
-      // .then((res)=>console.log(res))
-      .then((res) => addDishesToBill(res.data.data._id));
+  const processSell = (fiado) => {
+    if (localStorage.getItem('counterDish') * 1 > 0) {
+      fetch(`/api/processSell`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${props.session.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          totalPrice: localStorage.getItem('counterPrice'),
+          totalDishes: localStorage.getItem('counterDish'),
+          day: week[day],
+          isFiado: fiado,
+        }),
+      })
+        .then((res) => res.json())
+        // .then((res)=>console.log(res))
+        .then((res) => addDishesToBill(res.data.result.data.data._id));
+    }
   };
 
   const addDishesToBill = (billId) => {
     for (let id of dishIds) {
-      fetch(`http://localhost:3001/api/v1/bills/detailedBilling`, {
+      fetch(`/api/addDishesToBill`, {
         method: 'POST',
         mode: 'cors',
         headers: {
-          Authorization: `Bearer ${cookie.session.token}`,
+          Authorization: `Bearer ${props.session.token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           bill: billId,
           dish: id,
           amount: document.getElementById(id).innerHTML,
-          day: 'lunes',
+          day: week[day],
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
     }
+    // notify('Factura creada!');
+    location.reload();
   };
 
   return (
@@ -112,10 +132,12 @@ export default function SellCards(props) {
                 onClick={(e) => upCounter(el.id, el.price)}
                 className={classes.hoverCard}
               >
-                <img
-                  src={'http://localhost:3001/img/dishes/' + el.image}
+                <Image
+                  src={'/dishes/' + el.image}
                   className="card-img-top"
-                  alt="..."
+                  alt="me"
+                  width="1000"
+                  height="1000"
                 />
                 <div className="card-body">
                   <h5 className="card-title">{el.name}</h5>
@@ -134,34 +156,38 @@ export default function SellCards(props) {
         })
       }
       {/* Section to see purchase details */}
-      <div className="container">
-        <div className="row">
-          <div className="col-2" style={{ display: 'inline-block' }}>
-            <h2>Platos:</h2>
-          </div>
-          <div className="col" style={{ display: 'inline-block' }}>
-            <h2 id="totalDishes">0</h2>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-2" style={{ display: 'inline-block' }}>
-            <h2>Total: $</h2>
-          </div>
-          <div className="col" style={{ display: 'inline-block' }}>
-            <h2 id="totalPrice">0</h2>
-          </div>
-        </div>
+      <div className={classes.billInfo}>
+        <h2 style={{marginRight: '10px'}}>Platos:</h2>
+        <h2 id="totalDishes" style={{ marginRight: '2vw' }}>
+          0
+        </h2>
+      </div>
+      <div className={classes.billInfo}>
+        <h2>Total: $</h2>
+        <h2 id="totalPrice">0</h2>
       </div>
       <br />
       <button
         type="button"
         className={'btn btn-success '}
-        style={{ marginTop: '2%' }}
-        onClick={(e) => processSell(e)}
+        
+        onClick={(e) => processSell(false)}
       >
         <BsCheck /> Procesar venta
       </button>
+      {/* Fiado is to lend this dish to the client with the promise to pay afterward */}
+      <button
+        type="button"
+        className={'btn btn-danger ' + classes.fiado}
+        
+        onClick={(e) => processSell(true)}
+      >
+        <BsFlagFill /> Fiar
+      </button>
       <br />
+      <div>
+        <ToastContainer />
+      </div>
     </div>
   );
 }

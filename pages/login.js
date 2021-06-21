@@ -19,8 +19,7 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    fetch('http://localhost:3001/api/v1/users/login', {
+    fetch('/api/login', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -31,17 +30,17 @@ export default function SignIn() {
         password,
       }),
     })
-      .then((res) => res.json())
-      .then((res) =>
-        setCookie('session', JSON.stringify(res.data), {
-          path: '/',
-          sameSite: true,
-          maxAge: 3600, //One our
-        })
-      );
-    
-    router.push('/');
-  };
+    .then((res) => res.json())
+    // .then((res) => console.log(res.data.data.data))
+    .then((res) =>
+      setCookie('session', JSON.stringify(res.data.data.data), {
+        path: '/',
+        sameSite: true,
+        maxAge: 3600, //One our
+      })
+    );
+  router.push('/');
+  }
 
   return (
     <div>

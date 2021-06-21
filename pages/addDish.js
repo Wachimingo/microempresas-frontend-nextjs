@@ -1,4 +1,5 @@
-import TopBar from '../components/TopBar';
+import dynamic from 'next/dynamic';
+const TopBar = dynamic(() => import('../components/TopBar'), { ssr: false });
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ export default function addDish() {
   };
 
   const addItemHandler = (e) => {
+    //convertir este form en un json, para convertirlo en form en el API
     e.preventDefault();
     //Using form data to be able to sent the image to node.js backend
     var formData = new FormData();
@@ -29,18 +31,21 @@ export default function addDish() {
       formData.append('image', image);
     }
     formData.append('forToday', isForTodayState);
+
     // console.log(formData);
-    fetch(`http://localhost:3001/api/v1/menu`, {
+    fetch(`/api/addDish`, {
       method: 'POST',
       mode: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookie.session.token}`,
+        'Authorization': `${cookie.session.token}`,
       },
       body: formData,
     })
       .then((res) => res.json())
+      // .then((res) => console.log(res))
       .then((res) => router.push('/'));
   };
+
   return (
     <div>
       <TopBar logged={cookie.session ? true : false} />

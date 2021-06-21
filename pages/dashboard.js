@@ -1,37 +1,49 @@
-import TopBar from '../components/TopBar';
-import {useState, useEffect} from 'react';
-import cookieCutter from 'cookie-cutter';
+import { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import dynamic from 'next/dynamic';
+// import BarChart from '../components/Charts/BarChart';
+import DonutChart from '../components/Charts/DonutChart';
+const TopBar = dynamic(() => import('../components/TopBar'), { ssr: false });
+const BarChart = dynamic(() => import('../components/Charts/BarChart'), { ssr: false });
+// const Charts = dynamic(() => import('../components/Charts'), { ssr: false });
+
 export default function dashboard() {
-    const [loaded,setLoaded] = useState(false)
-    useEffect(() => {
-        // conditional redirect
-        if(!cookieCutter.get('jwt')){
-            // with router.push the page may be added to history
-            // the browser on history back will  go back to this page and then forward again to the redirected page
-            // you can prevent this behaviour using location.replace
-            location.replace('/')
-        }else{
-            setLoaded(true)
-        }
-      },[]);
+  const [cookie] = useCookies(['session']);
+  // const [loaded,setLoaded] = useState(false)
+  useEffect(() => {}, []);
 
-    if(!loaded){
-        return <div></div> //show nothing or a loader
-    }
-    return (
-        <div>
-            <TopBar/>
+  // if(!loaded){
+  //     return <div></div> //show nothing or a loader
+  // }
+  return (
+    <div>
+      <TopBar logged={cookie.session ? true : false} />
+
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <DonutChart
+              name={'Platos vendidos'}
+              labels={['Vendido', 'Restante']}
+              values={[300, 50]}
+            />
+          </div>
+          <div className="col">
+            <DonutChart
+              name={'Ganancias'}
+              labels={['Ingresos', 'Meta']}
+              values={[50, 25]}
+            />
+          </div>
+          <div className="col">
+            <DonutChart
+              name={'Fiados'}
+              labels={['Platos']}
+              values={[10,1]}
+            />
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
-
-// // This gets called on every request
-// export async function getServerSideProps() {
-//     // Fetch data from external API
-//     const res = await fetch(`https://.../data`)
-//     const data = await res.json()
-  
-//     // Pass data to the page via props
-//     return { props: { data } }
-//   }
-  

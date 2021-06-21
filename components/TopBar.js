@@ -34,12 +34,12 @@ export default function TopBar(props) {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link href="/" passHref>
-                  <a className="nav-link">Home</a>
+                <Link href="/dashboard" passHref>
+                  <a className="nav-link">DashBoard</a>
                 </Link>
               </li>
               <li>
-                <Link href="/menu" passHref>
+                <Link href="/" passHref>
                   <a className="nav-link">Menu</a>
                 </Link>
               </li>
@@ -47,6 +47,28 @@ export default function TopBar(props) {
                 <Link href="/sell" passHref>
                   <a className="nav-link">Vender</a>
                 </Link>
+              </li>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Historial
+                </a>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <Link href="/sellHistory/grupal" passHref>
+                      <a className="dropdown-item">Listado grupal</a>
+                    </Link>
+                  </li>
+                  <Link href="/sellHistory/individual" passHref>
+                    <a className="dropdown-item">Listado individual</a>
+                  </Link>
+                </ul>
               </li>
             </ul>
             <form className="d-flex">

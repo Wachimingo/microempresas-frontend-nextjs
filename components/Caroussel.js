@@ -1,7 +1,10 @@
+import Image from 'next/image';
 const classes = require('./../styles/menu.module.css');
+
 export default function Caroussel(props) {
-  return (
-    <div className={classes.centerCarousel}>
+  //Carousel needs more than 1 item to display properly  
+  const carussel = (
+    <div>
       {/* Carousel */}
       <div
         id="carouselExampleControls"
@@ -45,10 +48,12 @@ export default function Caroussel(props) {
               return (
                 <div key={i} className={'carousel-item ' + active}>
                   <div className="card">
-                    <img
-                      src={'http://localhost:3001/img/dishes/' + el.image}
+                    <Image
+                      src={'/dishes/' + el.image}
                       className="card-img-top"
-                      alt="..."
+                      alt="me"
+                      width="1000"
+                      height="1000"
                     />
                     <div className="card-body">
                       <h5 className="card-title">{el.name}</h5>
@@ -90,4 +95,5 @@ export default function Caroussel(props) {
       </div>
     </div>
   );
+  return <div className={classes.centerCarousel}>{carussel}</div>;
 }
