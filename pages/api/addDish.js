@@ -47,19 +47,29 @@ export default async (req, res) => {
 
   if (addDish.ok) {
     var oldpath = data.files.image.path;
+    var modifiedPath = `${oldpath.split('.')[0]}-new.${oldpath.split('.')[1]}`;
+    sharp(oldpath)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(modifiedPath)
+      .then(() => {
+        var newpath =
+          path.join(`${__dirname}/../../../../`, 'public') +
+          '/dishes/' +
+          fileName;
 
-    var newpath =
-      path.join(`${__dirname}/../../../../`, 'public') + '/dishes/' + fileName;
-
-    fs.rename(oldpath, newpath, function (err) {
-      if (err) throw err;
-    });
-
-    // sharp(newpath)
-    //   .resize(500, 500)
-    //   .toFormat('jpeg')
-    //   .jpeg({ quality: 90 })
-    //   .toFile(newpath);
+        fs.rename(modifiedPath, newpath, function (err) {
+          if (err) throw err;
+        });
+      }).then(() => {
+        fs.unlink(data.files.image.path, (err) => {
+          if (err) {
+            throw err;
+          }
+          // console.log('File deleted')
+        });
+      });
 
     res.status(201).json({
       status: 'success',

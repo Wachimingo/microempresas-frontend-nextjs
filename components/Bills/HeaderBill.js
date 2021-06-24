@@ -32,15 +32,22 @@ export default function HeaderBill(props) {
               <div className={"col-1 " + classes.headerRow}>ID</div>
               <div className={"col " + classes.headerRow + ' ' + classes.middleCol}>Total de Platos</div>
               <div className={"col-1 " + classes.headerRow + ' ' + classes.middleCol}>Total</div>
+              <div className={"col-1 " + classes.headerRow + ' ' + classes.middleCol}>Estado</div>
               <div className={"col " + classes.headerRow}>Fecha</div>
             </div>
         {items.map((el, i) => {
-        
+          let estado = 'Pagado';
+          let fondo = '';
+          if(el.isFiado){
+            estado = 'Fiado'
+            fondo = classes.estado;
+          }
           return (
             <div key={i} className="row">
               <div className={"col-1 " + classes.bodyRow}>{i+1}</div>
               <div className={"col " + classes.bodyRow + ' ' + classes.middleCol}>{el.totalDishes} Platos</div>
               <div className={"col-1 " + classes.bodyRow + ' ' + classes.middleCol}>${el.totalPrice}</div>
+              <div className={"col-1 " + classes.bodyRow + ' ' + classes.middleCol + ' ' + fondo}>{estado}</div>
               <div className={"col " + classes.bodyRow}>{el.createdAt}</div>
             </div>
           );

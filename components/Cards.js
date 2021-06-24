@@ -1,7 +1,10 @@
-import { ToastContainer, toast } from 'react-toastify';
+// import { ToastContainer, toast } from 'react-toastify';
 import Image from 'next/image';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
+import {useState} from 'react'
 const classes = require('./../styles/menu.module.css');
+const cardsController = require('./../controllers/cardsController.js');
+const searchBarController = require('./../controllers/searchBarController.js');
 
 import {
   BsFillTrashFill,
@@ -11,51 +14,19 @@ import {
 } from 'react-icons/bs';
 
 export default function Cards(props) {
-  const notify = (text) => toast(text);
-
-  const deleteDish = (id, i, fileName) => {
-    fetch(`/api/deleteDish`, {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        Authorization: `${props.session.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id,
-        fileName,
-      }),
-    });
-    document.getElementById(i).className = 'd-none';
-    // location.reload();
-    notify('Se ha borrado el platillo');
-  };
-
-  const setDishForToday = (id, forToday) => {
-    fetch(`/api/setDishForToday`, {
-      method: 'PATCH',
-      mode: 'cors',
-      headers: {
-        Authorization: `${props.session.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id,
-        forToday,
-      }),
-    })
-      .then((res) => res.json())
-      .then(() => location.reload());
-    notify('Platillo selecionado para hoy!');
-  };
-
+  //Clone props.items to filter object
+  let [filterObject, setFilterObject] = useState(JSON.parse(JSON.stringify(props.items)))
+  
+  // const notify = (text) => toast(text);
   const cardButtons = (id, i, fileName) => (
     <div key={i}>
       {/* Button to Delete Card */}
       <button
         type="button"
         className={'btn btn-danger'}
-        onClick={(e) => deleteDish(id, i, fileName)}
+        onClick={(e) =>
+          cardsController.deleteDish(id, i, fileName, props.session.token)
+        }
       >
         <BsFillTrashFill />
       </button>
@@ -63,7 +34,9 @@ export default function Cards(props) {
       <button
         type="button"
         className={'btn btn-success'}
-        onClick={(e) => setDishForToday(id, true)}
+        onClick={(e) =>
+          cardsController.setDishForToday(id, true, props.session.token)
+        }
       >
         <BsChevronCompactUp />
       </button>
@@ -71,7 +44,9 @@ export default function Cards(props) {
       <button
         type="button"
         className={'btn btn-primary'}
-        onClick={(e) => setDishForToday(id, false)}
+        onClick={(e) =>
+          cardsController.setDishForToday(id, false, props.session.token)
+        }
       >
         <BsChevronCompactDown />
       </button>
@@ -81,11 +56,28 @@ export default function Cards(props) {
     </div>
   );
 
+  const searchItem = (text) =>{
+    let re = new RegExp(`^${text}`, 'g');
+    props.items.map((el, i)=>{
+      if(el.name.match(re))
+      {
+        filterObject[i] = el
+      }
+      else{
+        delete filterObject[i]
+      }
+    })
+    // console.log(filterObject)
+    //This is to update the object in the return, as if not the copy in the client won't update
+    setFilterObject(searchBarController.cleanArray(JSON.parse(JSON.stringify(filterObject))))
+  }
+
   return (
     <div className={classes.centerCard}>
+      <input className={"form-control me-2 " + classes.searchBar} type="search" placeholder="Search" aria-label="Search" onChange={(e)=>searchItem(e.target.value)}></input>
       {
-        // console.log(items),
-        props.items.map((el, i) => {
+        // console.log(filterObject),
+        filterObject.map((el, i) => {
           let colorBorder = '';
           el.forToday
             ? (colorBorder = classes.borderActive)
@@ -121,9 +113,9 @@ export default function Cards(props) {
           );
         })
       }
-      <div>
+      {/* <div>
         <ToastContainer />
-      </div>
+      </div> */}
     </div>
-  )
+  );
 }

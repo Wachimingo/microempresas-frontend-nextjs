@@ -18,6 +18,11 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
+## Observetion on File Structure
+
+[Login page](pages/login.js) cannot move api calls to a controller, because of the router import to push the user to the landing page if login was successful
+[Add dish page](pages/addDish.js) cannot move api calls to controller, because it uses FormData object to handole the image,  and cannot send that to a pure js file
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

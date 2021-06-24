@@ -71,17 +71,6 @@ export default function TopBar(props) {
                 </ul>
               </li>
             </ul>
-            <form className="d-flex">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
             <Link href="/" passHref>
               <a className="nav-link" onClick={(e) => loggoutHandlder(e)}>
                 Logout
@@ -117,17 +106,6 @@ export default function TopBar(props) {
                 </Link>
               </li>
             </ul>
-            <form className="d-flex">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
             <Link href="/login" passHref>
               <a className="nav-link">Login</a>
             </Link>

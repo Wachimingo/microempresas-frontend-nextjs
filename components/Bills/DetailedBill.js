@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-const classes = require('./../../styles/sellHistory.module.css')
+const classes = require('./../../styles/sellHistory.module.css');
 
 export default function DetailedBill(props) {
   const [items, setItems] = useState([]);
@@ -30,21 +30,32 @@ export default function DetailedBill(props) {
 
   return (
     <div>
-      <div className={"container " + classes.tableBorder}>
-      <div className="row">
-      <div className={"col-1 " + classes.headerRow}>ID</div>
-              <div className={"col " + classes.headerRow + ' ' + classes.middleCol}>Plato</div>
-              <div className={"col " + classes.headerRow + ' ' + classes.middleCol}>Dia</div>
-              <div className={"col-1 " + classes.headerRow}>Precio</div>
-            </div>
+      <div className={'container ' + classes.tableBorder}>
+        <div className="row">
+          <div className={'col-1 ' + classes.headerRow}>ID</div>
+          <div className={'col ' + classes.headerRow + ' ' + classes.middleCol}>
+            Plato
+          </div>
+          <div className={'col ' + classes.headerRow + ' ' + classes.middleCol}>
+            Dia
+          </div>
+          <div className={'col-1 ' + classes.headerRow}>Precio</div>
+        </div>
         {items.map((el, i) => {
-        
           return (
             <div key={i} className="row">
-              <div className={"col-1 " + classes.bodyRow}>{i+1}</div>
-              <div className={"col " + classes.bodyRow + ' ' + classes.middleCol}>{el.dish.name}</div>
-              <div className={"col " + classes.bodyRow + ' ' + classes.middleCol}>{el.day}</div>
-              <div className={"col-1 " + classes.bodyRow}>${el.dish.price}</div>
+              <div className={'col-1 ' + classes.bodyRow}>{i + 1}</div>
+              <div
+                className={'col ' + classes.bodyRow + ' ' + classes.middleCol}
+              >
+                {el.dish.name}
+              </div>
+              <div
+                className={'col ' + classes.bodyRow + ' ' + classes.middleCol}
+              >
+                {el.day}
+              </div>
+              <div className={'col-1 ' + classes.bodyRow}>${el.dish.price}</div>
             </div>
           );
         })}

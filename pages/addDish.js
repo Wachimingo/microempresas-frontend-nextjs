@@ -27,7 +27,7 @@ export default function addDish() {
     formData.append('name', name);
     formData.append('description', description);
     formData.append('price', price);
-    if(image !== undefined && image.filename !== ''){
+    if (image !== undefined && image.filename !== '') {
       formData.append('image', image);
     }
     formData.append('forToday', isForTodayState);
@@ -37,13 +37,13 @@ export default function addDish() {
       method: 'POST',
       mode: 'cors',
       headers: {
-        'Authorization': `${cookie.session.token}`,
+        Authorization: `${cookie.session.token}`,
       },
       body: formData,
     })
       .then((res) => res.json())
-      // .then((res) => console.log(res))
-      .then((res) => router.push('/'));
+      // .then((res) => console.log(res));
+    .then((res) => router.push('/'));
   };
 
   return (

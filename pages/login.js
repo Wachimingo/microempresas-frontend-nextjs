@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 // import TopBar from '../components/TopBar';
 const classes = require('./../styles/login.module.css');
 
-const DynamicComponentWithNoSSR = dynamic(
-  () => import('../components/TopBar'),
-  { ssr: false }
-)
+const TopBar = dynamic(() => import('../components/TopBar'), { ssr: false });
 
 export default function SignIn() {
-  const [email, setEmail] = useState('a@b.com');
+  const [email, setEmail] = useState('b@a.com');
   const [password, setPassword] = useState('pass123456');
   const [cookie, setCookie] = useCookies(['session']);
 
@@ -30,21 +27,25 @@ export default function SignIn() {
         password,
       }),
     })
-    .then((res) => res.json())
-    // .then((res) => console.log(res.data.data.data))
-    .then((res) =>
+      .then((res) => res.json())
+      // .then((res) => console.log(res))
+      .then((res) => cookieSettup(res));
+    router.push('/');
+  };
+
+  const cookieSettup = (res) => {
+    if (res.data.data !== undefined) {
       setCookie('session', JSON.stringify(res.data.data.data), {
         path: '/',
         sameSite: true,
         maxAge: 3600, //One our
-      })
-    );
-  router.push('/');
-  }
+      });
+    }
+  };
 
   return (
     <div>
-      <DynamicComponentWithNoSSR />
+      <TopBar />
       <br />
       <div className={'container ' + classes.formBody}>
         <form className={''} onSubmit={handleSubmit}>

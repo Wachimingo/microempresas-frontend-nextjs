@@ -17,7 +17,6 @@ export default async (req, res) => {
       },
     }
   );
-
     fs.unlink(filePath, (err) => {
       if (err) {
         throw err;

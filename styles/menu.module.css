@@ -62,6 +62,11 @@
 .fiado{
   margin-left: 38vw;
 }
+.searchBar{
+  width: 95%;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
 @media screen and (max-width: 800px) {
   .carouselSize {
     width: 100%;
@@ -83,5 +88,10 @@
   .centerButtons {
     margin-left: 25vw;
     margin-bottom: 2vh;
+  }
+  .searchBar{
+    width: 95%;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
   }
 }
