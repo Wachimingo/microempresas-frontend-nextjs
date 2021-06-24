@@ -5,17 +5,18 @@ const classes = require('./../styles/menu.module.css');
 export default function MenuAdmin(props) {
   const [visible, setVisible] = useState(props.visible);
 
-  useEffect(()=>{
-    setVisible(props.visible)
-  }, [])
+  useEffect(() => {
+    setVisible(props.visible);
+  }, []);
 
   let section = (title, componentName, Component) => {
-      return(<div>
+    return (
+      <>
         {/* Title of the section */}
-        <h1 className={'centered ' + classes.centerButtons}>{title}</h1>
+        <h1 className={'centered '}>{title}</h1>
         <button
           type="button"
-          className={'btn btn-info ' + classes.centerButtons}
+          className={'btn btn-info '}
           onClick={(e) => setVisible(!visible)}
         >
           {/* Show/Hide button */}
@@ -31,11 +32,10 @@ export default function MenuAdmin(props) {
         </button>
         {/* Render of the Component */}
         {visible ? null : Component}
-      </div>);
+      </>
+    );
   };
   return (
-    <div>
-      {section(props.title, props.componentName, props.Component)}
-    </div>
+    <div>{section(props.title, props.componentName, props.Component)}</div>
   );
 }

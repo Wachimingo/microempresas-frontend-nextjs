@@ -63,11 +63,18 @@
   margin-left: 38vw;
 }
 .searchBar{
-  width: 95%;
+  width: 100vw;
+  margin-left: -20vw;
   margin-top: 5vh;
   margin-bottom: 5vh;
 }
+.centered{
+  padding-left: 20vw;
+}
 @media screen and (max-width: 800px) {
+  .centered{
+    padding-left: 2vw;
+  }
   .carouselSize {
     width: 100%;
   }
@@ -91,6 +98,7 @@
   }
   .searchBar{
     width: 95%;
+    margin-left: 0;
     margin-top: 1vh;
     margin-bottom: 1vh;
   }

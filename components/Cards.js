@@ -57,9 +57,10 @@ export default function Cards(props) {
   );
 
   const searchItem = (text) =>{
-    let re = new RegExp(`^${text}`, 'g');
+    let re = new RegExp(`\\b${text.toLowerCase()}`, 'g');
     props.items.map((el, i)=>{
-      if(el.name.match(re))
+      let nameLowerCase = el.name.toLowerCase();
+      if(nameLowerCase.match(re))
       {
         filterObject[i] = el
       }
@@ -73,7 +74,7 @@ export default function Cards(props) {
   }
 
   return (
-    <div className={classes.centerCard}>
+    <>
       <input className={"form-control me-2 " + classes.searchBar} type="search" placeholder="Search" aria-label="Search" onChange={(e)=>searchItem(e.target.value)}></input>
       {
         // console.log(filterObject),
@@ -116,6 +117,6 @@ export default function Cards(props) {
       {/* <div>
         <ToastContainer />
       </div> */}
-    </div>
+    </>
   );
 }

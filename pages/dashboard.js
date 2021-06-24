@@ -9,8 +9,14 @@ const BarChart = dynamic(() => import('../components/Charts/BarChart'), { ssr: f
 
 export default function dashboard() {
   const [cookie] = useCookies(['session']);
+  const [earnings, setEarnings] = useState();
+  const [sold, setSold] = useState();
+  const [fiado, setFiado] = useState();
+  const [totalDishes, setTotalDishes] = useState();
   // const [loaded,setLoaded] = useState(false)
-  useEffect(() => {}, []);
+  useEffect(() => {
+    
+  }, []);
 
   // if(!loaded){
   //     return <div></div> //show nothing or a loader

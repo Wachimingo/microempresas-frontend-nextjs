@@ -11,9 +11,10 @@ export default function SellCards(props) {
   let [filterObject, setFilterObject] = useState(JSON.parse(JSON.stringify(props.items)))
 
   const searchItem = (text) =>{
-    let re = new RegExp(`^${text}`, 'g');
+    let re = new RegExp(`\\b${text.toLowerCase()}`, 'g');
     props.items.map((el, i)=>{
-      if(el.name.match(re))
+      let nameLowerCase = el.name.toLowerCase();
+      if(nameLowerCase.match(re))
       {
         filterObject[i] = el
       }
@@ -27,7 +28,7 @@ export default function SellCards(props) {
   }
 
   return (
-    <div className={classes.centerSellCard}>
+    <>
       <input className={"form-control me-2 " + classes.searchBar} type="search" placeholder="Search" aria-label="Search" onChange={(e)=>searchItem(e.target.value)}></input>
       {
         // console.log(items),
@@ -114,6 +115,6 @@ export default function SellCards(props) {
       <div>
         <ToastContainer />
       </div>
-    </div>
+    </>
   );
 }
