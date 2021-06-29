@@ -8,7 +8,7 @@ const classes = require('./../styles/login.module.css');
 const TopBar = dynamic(() => import('../components/TopBar'), { ssr: false });
 
 export default function SignIn() {
-  const [email, setEmail] = useState('b@a.com');
+  const [email, setEmail] = useState('a@b.com');
   const [password, setPassword] = useState('pass123456');
   const [cookie, setCookie] = useCookies(['session']);
 
@@ -38,7 +38,8 @@ export default function SignIn() {
       setCookie('session', JSON.stringify(res.data.data.data), {
         path: '/',
         sameSite: true,
-        maxAge: 3600, //One our
+        // maxAge: 3600, //One our
+        
       });
     }
   };

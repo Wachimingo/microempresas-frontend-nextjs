@@ -1,34 +1,25 @@
 import { useEffect, memo } from 'react';
 import Script from 'next/script';
-import Chart from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import Chart from "chart.js";
 
-// Register the plugin to all charts:
-Chart.plugins.register(ChartDataLabels);
-
-export default memo(function DonutChart(props) {
-  let chartId = props.chartId;
+export default memo(function LineChart(props) {
+  let chartId = props.chartId
   let config = {
-    type: 'doughnut',
+    type: "line",
     data: {
       labels: props.labels,
-      datasets: [
-        {
-          // label: 'My First Dataset',
-          data: props.values,
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)',
-          ],
-          hoverOffset: 4,
-        },
-      ],
+      datasets: [{
+        label: props.dataSetLabel,
+        data: props.values,
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
     },
-    options: props.options,
   };
   useEffect(() => {
     if (chartId !== undefined) {
+      window[chartId] = chartId;
       let ctx = document.getElementById(chartId).getContext('2d');
       window[chartId] = new Chart(ctx, config);
     } else {
@@ -47,10 +38,10 @@ export default memo(function DonutChart(props) {
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
               <h6 className="uppercase text-blueGray-400 mb-1 text-xs font-semibold">
-                {props.category}
+              {props.category}
               </h6>
               <h2 className="text-blueGray-700 text-xl font-semibold">
-                {props.name}
+              {props.name}
               </h2>
             </div>
           </div>

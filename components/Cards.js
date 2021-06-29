@@ -79,6 +79,7 @@ export default function Cards(props) {
       {
         // console.log(filterObject),
         filterObject.map((el, i) => {
+          // console.log(el)
           let colorBorder = '';
           el.forToday
             ? (colorBorder = classes.borderActive)
@@ -99,7 +100,7 @@ export default function Cards(props) {
                 : null}
               <div className={classes.hoverCard}>
                 <Image
-                  src={'/dishes/' + el.image}
+                  src={`/dishes/${el.image}`}
                   className="card-img-top"
                   alt="me"
                   width="1000"

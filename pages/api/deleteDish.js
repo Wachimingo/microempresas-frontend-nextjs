@@ -7,6 +7,7 @@ export default async (req, res) => {
     '/dishes/' +
     req.body.fileName;
 
+    // console.log(filePath)
   const deleteDish = await fetch(
     `http://192.168.1.2:3001/api/v1/menu/${req.body.id}`,
     {
@@ -17,16 +18,30 @@ export default async (req, res) => {
       },
     }
   );
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        throw err;
-      }
-    });
+
+  const data = await deleteDish;
+  if (deleteDish.ok) {
+    if (fs.existsSync(path)) {
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    } else {
+      console.log("File does not exist.")
+    }
     res.status(200).json({
       status: 'success',
       data: {
-        message: 'successful',
-        data: null
+        message: data
       },
     });
+  } else {
+    res.status(401).json({
+        status: 'failed',
+        data: {
+          message: data.message[0].message
+        },
+      });
+  }
 };

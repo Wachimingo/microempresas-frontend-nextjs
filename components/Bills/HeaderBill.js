@@ -27,6 +27,7 @@ export default function HeaderBill(props) {
 
   return (
     <div>
+      
       <div className={"container " + classes.tableBorder}>
       <div className="row justify-content-center">
               <div className={"col-1 " + classes.headerRow}>ID</div>
@@ -48,7 +49,7 @@ export default function HeaderBill(props) {
               <div className={"col " + classes.bodyRow + ' ' + classes.middleCol}>{el.totalDishes} Platos</div>
               <div className={"col-1 " + classes.bodyRow + ' ' + classes.middleCol}>${el.totalPrice}</div>
               <div className={"col-1 " + classes.bodyRow + ' ' + classes.middleCol + ' ' + fondo}>{estado}</div>
-              <div className={"col " + classes.bodyRow}>{el.createdAt}</div>
+              <div className={"col " + classes.bodyRow}>{el.day}  {el.createdAt}</div>
             </div>
           );
         })}

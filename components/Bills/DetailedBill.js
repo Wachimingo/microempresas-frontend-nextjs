@@ -50,11 +50,7 @@ export default function DetailedBill(props) {
               >
                 {el.dish.name}
               </div>
-              <div
-                className={'col ' + classes.bodyRow + ' ' + classes.middleCol}
-              >
-                {el.day}
-              </div>
+              <div className={"col " + classes.bodyRow + ' ' + classes.middleCol}>{el.day}  {el.createdAt.split('T')[0].split("-").reverse().join("-")}</div>
               <div className={'col-1 ' + classes.bodyRow}>${el.dish.price}</div>
             </div>
           );
