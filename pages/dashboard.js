@@ -22,6 +22,7 @@ export default function dashboard() {
     .reverse()
     .join('-');
   const month = [
+    '',
     'Enero',
     'Febrero',
     'Marzo',
@@ -29,13 +30,14 @@ export default function dashboard() {
     'Mayo',
     'Junio',
     'Julio',
-    'Septiembre',
     'Agosto',
+    'Septiembre',
     'Octubre',
     'Noviembre',
     'Deciembre',
   ];
   const days = [
+    '',
     'Domingo',
     'Lunes',
     'Martes',
@@ -52,12 +54,27 @@ export default function dashboard() {
     totalFiadoDishes: 0,
     TotalDishes: 0,
   });
-  let [statsHistory, setStatsHistory] = useState();
+  let fiado = [];
+  let sold = [];
+  let earnings = [];
+  let totalSoldDishes = [];
+  let totalFiadoDishes = [];
+  let totalDishes = [];
   const [loaded, setLoaded] = useState(false);
   const [loadedHistory, setLoadedHistory] = useState(false);
   const [pickedDate, setPickedDate] = useState(today);
   const [mode, setMode] = useState('day');
-  const [historyMode, setHistoryMode] = useState('month');
+  const [valuesArray, setValuesArray] = useState({
+    fiado,
+    sold,
+    earnings,
+    totalFiadoDishes,
+    totalSoldDishes,
+    totalDishes,
+  });
+  const [value, setValue] = useState('totalDishes');
+  const [historyMode, setHistoryMode] = useState('day');
+
   const options = {
     plugins: {
       datalabels: {
@@ -70,14 +87,14 @@ export default function dashboard() {
   };
 
   const [cookie] = useCookies(['session']);
-  // const [loaded,setLoaded] = useState(false)
+
   useEffect(() => {
-    const stats = fetch(`/api/getStats`, {
+    fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        mode: 'month',
+        mode,
         day: today.split('-')[0],
         month: today.split('-')[1],
         year: today.split('-')[2],
@@ -86,44 +103,191 @@ export default function dashboard() {
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
-      .then((res) => setStats(res.data))
+      .then((res) => valitateIfemtpy(res))
       .then(() => setLoaded(true));
 
-    const statsHistory = fetch(`/api/getStatsHistory`, {
+    fetch(`/api/getStatsHistory`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
+        historyMode,
+        month: today.split('-')[1],
         year: today.split('-')[2],
         token: cookie.session.token,
       }),
     })
       .then((res) => res.json())
-      // .then((res) => console.log(res))
-      .then((res) => setStatsHistory(res.data))
+      // .then((res) => console.log(res.data.result))
+      .then((res) => fillingArrayForLineChart(res.data.result, historyMode))
       .then(() => setLoadedHistory(true));
   }, []);
 
+  const valitateIfemtpy = (res) => {
+    if (res.data.result[0] !== undefined) {
+      setStats(res.data.result[0]);
+    }
+  };
+
   const loadNewData = (e) => {
     e.preventDefault();
-    const stats = fetch(`/api/getStats`, {
+
+    let pickedDate = document.getElementById('donutDate').value;
+    let mode = document.getElementById('donutList').value;
+
+    fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         mode,
-        day: pickedDate.split('-')[0],
+        day: pickedDate.split('-')[2],
         month: pickedDate.split('-')[1],
-        year: pickedDate.split('-')[2],
+        year: pickedDate.split('-')[0],
         token: cookie.session.token,
       }),
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
-      .then((res) => setStats(res.data));
+      .then((res) => valitateIfemtpy(res));
   };
-  const putCategory = (category) => {
-    console.log(category)
+
+  const putValue = (category) => {
+    setValue(category);
+  };
+
+  const putHistoryMode = (mode) => {
+    setHistoryMode(mode);
+  };
+
+  const loadNewStatsHistory = (e) => {
+    e.preventDefault();
+
+    let pickedDate = document.getElementById('lineDate').value;
+    let historyMode = document.getElementById('lineMode').value;
+
+    setHistoryMode(historyMode)
+
+    fetch(`/api/getStatsHistory`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        historyMode,
+        month: pickedDate.split('-')[1],
+        year: pickedDate.split('-')[0],
+        token: cookie.session.token,
+      }),
+    })
+      .then((res) => res.json())
+      // .then((res) => console.log(res.data))
+      .then((res) => fillingArrayForLineChart(res.data.result, historyMode));
+  };
+
+  const fillingArrayForLineChart = (result, historyMode) => {
+    if (historyMode === 'month') {
+      result.map((el) => {
+        fiado[el._id] = el.fiado;
+        sold[el._id] = el.sold;
+        earnings[el._id] = el.earnings;
+        totalSoldDishes[el._id] = el.totalSoldDishes;
+        totalFiadoDishes[el._id] = el.totalFiadoDishes;
+        totalDishes[el._id] = el.totalFiadoDishes + el.totalSoldDishes;
+      });
+      setValuesArray({
+        fiado,
+        sold,
+        earnings,
+        totalFiadoDishes,
+        totalSoldDishes,
+        totalDishes,
+      });
+    } else if (historyMode === 'year') {
+      let year = [];
+      result.map((el) => {
+        fiado.push(el.fiado);
+        sold.push(el.sold);
+        earnings.push(el.earnings);
+        totalSoldDishes.push(el.totalSoldDishes);
+        totalFiadoDishes.push(el.totalFiadoDishes);
+        year.push(el._id);
+        totalDishes.push(el.totalFiadoDishes + el.totalSoldDishes);
+      });
+      setValuesArray({
+        fiado,
+        sold,
+        earnings,
+        totalFiadoDishes,
+        totalSoldDishes,
+        totalDishes,
+        year,
+      });
+    }else if (historyMode === 'day') {
+      result.map((el) => {
+        fiado[el._id] = el.fiado;
+        sold[el._id] = el.sold;
+        earnings[el._id] = el.earnings;
+        totalSoldDishes[el._id] = el.totalSoldDishes;
+        totalFiadoDishes[el._id] = el.totalFiadoDishes;
+        totalDishes[el._id] = el.totalFiadoDishes + el.totalSoldDishes;
+      });
+      setValuesArray({
+        fiado,
+        sold,
+        earnings,
+        totalFiadoDishes,
+        totalSoldDishes,
+        totalDishes,
+      });
+    }
+  };
+
+  const lineChart = () => {
+    let category = '';
+    let dataSetLabel = ''
+    if(value === 'totalDishes') category = 'Total de platos', dataSetLabel = 'Platos'
+    if(value === 'earnings') category = 'Dinero ganado neto', dataSetLabel = 'Dinero'
+    if(value === 'totalFiadoDishes') category = 'Total de platos fiados', dataSetLabel = 'Platos'
+    if(value === 'totalSoldDishes') category = 'Total de platos pagados', dataSetLabel = 'Platos'
+    if(value === 'fiado') category = 'Total de dinero en platos fiados', dataSetLabel = 'Dinero'
+    if(value === 'sold') category = 'Total de dinero en platos pagados', dataSetLabel = 'Dinero'
+    if (loadedHistory) {
+      if (historyMode === 'month') {
+        return (
+          <LineChart
+            category={category}
+            name={'Por mes'}
+            labels={month}
+            dataSetLabel={dataSetLabel}
+            values={valuesArray[value]}
+            chartId={'lineHistory'}
+          />
+        );
+      } else if (historyMode === 'year') {
+        return (
+          <LineChart
+            category={category}
+            name={'Por año'}
+            labels={valuesArray['year']}
+            dataSetLabel={dataSetLabel}
+            values={valuesArray[value]}
+            chartId={'lineHistory'}
+          />
+        );
+      } else if (historyMode === 'day') {
+        return (
+          <LineChart
+            category={category}
+            name={'Por dia'}
+            labels={days}
+            dataSetLabel={dataSetLabel}
+            values={valuesArray[value]}
+            chartId={'lineHistory'}
+          />
+        );
+      }
+    }
+    return <></>;
   };
 
   if (!loaded) {
@@ -134,13 +298,13 @@ export default function dashboard() {
         <TopBar logged={cookie.session ? true : false} />
         <div className="container">
           <h1>Estadisticas</h1>
-          <form onSubmit={(e) => loadNewData(e)}>
+          <form id="donutForm" onSubmit={loadNewData}>
             <div className="row">
               <div className="col">
                 <select
+                  id="donutList"
                   className="form-select"
                   aria-label="Default select example"
-                  onChange={(e) => setMode(e.target.value)}
                 >
                   <option value="day" defaultValue>
                     Hoy
@@ -150,20 +314,7 @@ export default function dashboard() {
                 </select>
               </div>
               <div className="col">
-                <input
-                  onChange={(e) =>
-                    setPickedDate(
-                      e.target.value
-                        .split('T')[0]
-                        .split('-')
-                        .reverse()
-                        .join('-')
-                    )
-                  }
-                  type="date"
-                  id="date"
-                  className="form-control"
-                />
+                <input type="date" id="donutDate" className="form-control" />
               </div>
             </div>
             <input type="submit" value="Buscar" />
@@ -174,7 +325,10 @@ export default function dashboard() {
                 category={'Platos'}
                 name={'Platos vendidos'}
                 labels={['Vendido', 'Restante']}
-                values={[stats.TotalDishes, 50 - stats.TotalDishes]}
+                values={[
+                  stats.totalFiadoDishes + stats.totalSoldDishes,
+                  50 - (stats.totalFiadoDishes + stats.totalSoldDishes),
+                ]}
                 options={options}
                 chartId={'platos'}
               />
@@ -200,13 +354,14 @@ export default function dashboard() {
             </div>
           </div>
           <h1>Historiales</h1>
-          <form onSubmit={(e) => loadNewData(e)}>
+          <form id="lineForm" onSubmit={loadNewStatsHistory}>
             <div className="row">
               <div className="col">
                 <select
+                  id="lineCategory"
                   className="form-select"
                   aria-label="Default select example"
-                  onChange={(e) => putCategory(e.target.value)}
+                  onChange={(e) => putValue(e.target.value)}
                 >
                   <option value="totalDishes" defaultValue>
                     Total de Platos
@@ -220,9 +375,10 @@ export default function dashboard() {
               </div>
               <div className="col">
                 <select
+                  id="lineMode"
                   className="form-select"
                   aria-label="Default select example"
-                  onChange={(e) => sethistoryMode(e.target.value)}
+                  // onChange={(e) => putHistoryMode(e.target.value)}
                 >
                   <option value="month" defaultValue>
                     Mes
@@ -232,38 +388,14 @@ export default function dashboard() {
                 </select>
               </div>
               <div className="col">
-                <input
-                  onChange={(e) =>
-                    setPickedDate(
-                      e.target.value
-                        .split('T')[0]
-                        .split('-')
-                        .reverse()
-                        .join('-')
-                    )
-                  }
-                  type="date"
-                  id="date"
-                  className="form-control"
-                />
+                <input type="date" id="lineDate" className="form-control" />
               </div>
             </div>
             <input type="submit" value="Buscar" />
           </form>
           <div className="row">
             <div className="col">
-              {loadedHistory ? (
-                <LineChart
-                  category={'Platos'}
-                  name={'Semana'}
-                  labels={month}
-                  dataSetLabel={statsHistory.year}
-                  values={statsHistory.TotalDishes}
-                  chartId={'week'}
-                />
-              ) : (
-                <></>
-              )}
+              {lineChart()}
             </div>
           </div>
         </div>
@@ -271,7 +403,10 @@ export default function dashboard() {
         <Script
           src="https://google.com"
           onLoad={() => {
-            document.getElementById('date').value = dateTime
+            document.getElementById('donutDate').value = dateTime
+              .toISOString()
+              .split('T')[0];
+            document.getElementById('lineDate').value = dateTime
               .toISOString()
               .split('T')[0];
           }}

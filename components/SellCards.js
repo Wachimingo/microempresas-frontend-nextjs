@@ -30,6 +30,7 @@ export default function SellCards(props) {
   return (
     <>
       <input className={"form-control me-2 " + classes.searchBar} type="search" placeholder="Search" aria-label="Search" onChange={(e)=>searchItem(e.target.value)}></input>
+      <div className={classes.centerSellCard}>
       {
         // console.log(items),
         filterObject.map((el, i) => {
@@ -114,6 +115,7 @@ export default function SellCards(props) {
       <br />
       <div>
         <ToastContainer />
+      </div>
       </div>
     </>
   );

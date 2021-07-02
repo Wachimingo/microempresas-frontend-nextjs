@@ -9,7 +9,7 @@ export default async (req, res) => {
       body: JSON.stringify({
         bill: req.body.bill,
         dish: req.body.dish,
-        amount: req.body.amount,
+        // amount: req.body.amount,
         day: req.body.day,
       }),
     });

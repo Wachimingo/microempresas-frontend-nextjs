@@ -1,6 +1,6 @@
 export default async (req, res) => {
     const HeaderBillings = await fetch(
-      `http://localhost:3001/api/v1/bills`,
+      `http://localhost:3001/api/v1/bills?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
       {
         method: 'GET',
         mode: 'cors',

@@ -1,6 +1,7 @@
 export default async (req, res) => {
+  // console.log(req.body)
   const detailedBillings = await fetch(
-    `http://localhost:3001/api/v1/bills/detailedBilling`,
+    `http://localhost:3001/api/v1/bills/detailedBilling?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
     {
       method: 'GET',
       mode: 'cors',

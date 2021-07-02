@@ -12,7 +12,7 @@ export default memo(function LineChart(props) {
         label: props.dataSetLabel,
         data: props.values,
         fill: false,
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgb(255,0,0)',
         tension: 0.1
       }]
     },

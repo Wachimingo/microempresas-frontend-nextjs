@@ -89,7 +89,7 @@ export default function Menu({ items }) {
 }
 
 export async function getServerSideProps(context) {
-  const res = await fetch('http://localhost:3001/api/v1/menu', {
+  const res = await fetch('http://localhost:3001/api/v1/menu?limit=100', {
     method: 'GET',
     mode: 'cors',
   });

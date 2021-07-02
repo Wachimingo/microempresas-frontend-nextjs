@@ -4,7 +4,7 @@ const classes = require('./../styles/menu.module.css');
 export default function Caroussel(props) {
   //Carousel needs more than 1 item to display properly  
   const carussel = (
-    <>
+    <div className={classes.centerCarousel}>
       {/* Carousel */}
       <div
         id="carouselExampleControls"
@@ -93,7 +93,7 @@ export default function Caroussel(props) {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
   return <>{carussel}</>;
 }

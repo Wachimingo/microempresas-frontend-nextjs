@@ -27,7 +27,7 @@ export default async (req, res) => {
   if (Object.keys(data.files).length > 0) {
     fileName = `dish-${data.files.image.name}-${Date.now()}.jpeg`;
   }
-  // console.log(data);
+  console.log(data);
 
   const addDish = await fetch('http://localhost:3001/api/v1/menu', {
     method: 'POST',

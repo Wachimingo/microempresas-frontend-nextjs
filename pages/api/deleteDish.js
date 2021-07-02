@@ -28,7 +28,7 @@ export default async (req, res) => {
         }
       });
     } else {
-      console.log("File does not exist.")
+      // console.log("File does not exist.")
     }
     res.status(200).json({
       status: 'success',

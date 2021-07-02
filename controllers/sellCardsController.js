@@ -74,34 +74,35 @@ addDishesToBill = (billId, token) => {
         body: JSON.stringify({
           bill: billId,
           dish: id,
-          amount: document.getElementById(id).innerHTML,
+          // amount: document.getElementById(id).innerHTML,
           day: week[day],
         }),
-      }).then((res) => res.json());
-      // .then((res) => console.log(res));}
+      }).then((res) => res.json())
+      .then((res) => console.log(res));
     }
     // notify('Factura creada!');
-    // location.reload();
-  }}
+  }
+  location.reload();
+};
 
-  exports.processSell = (fiado, token) => {
-    if (localStorage.getItem('counterDish') * 1 > 0) {
-      fetch(`/api/processSell`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          totalPrice: localStorage.getItem('counterPrice'),
-          totalDishes: localStorage.getItem('counterDish'),
-          day: week[day],
-          isFiado: fiado,
-        }),
-      })
-        .then((res) => res.json())
-        // .then((res)=>console.log(res))
-        .then((res) => addDishesToBill(res.data.result.data.data._id, token));
-    }
-  };
+exports.processSell = (fiado, token) => {
+  if (localStorage.getItem('counterDish') * 1 > 0) {
+    fetch(`/api/processSell`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        totalPrice: localStorage.getItem('counterPrice'),
+        totalDishes: localStorage.getItem('counterDish'),
+        day: week[day],
+        isFiado: fiado,
+      }),
+    })
+      .then((res) => res.json())
+      // .then((res)=>console.log(res))
+      .then((res) => addDishesToBill(res.data.result.data.data._id, token));
+  }
+};

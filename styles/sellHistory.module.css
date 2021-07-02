@@ -10,9 +10,16 @@
 .tableBorder{
     border: 1px solid;
 }
+.centerTable {
+    padding-bottom: 5vh;
+}
 .middleCol{
     border-left: 1px solid;
     border-right: 1px solid;
+}
+
+.paginationNav{
+    padding-left: 45%;
 }
 
 .centerItem{
