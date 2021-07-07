@@ -1,11 +1,13 @@
-import { CookiesProvider } from "react-cookie"
+import { AuthProvider } from './../context/authContext';
 import Head from 'next/head';
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import dynamic from 'next/dynamic';
+const TopBar = dynamic(() => import('../components/TopBar'), { ssr: true });
 
 function MyApp({ Component, pageProps }) {
   return (
-    <CookiesProvider>
+      <AuthProvider>
       <Head>
         {/* Responsive meta tag */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,8 +24,9 @@ function MyApp({ Component, pageProps }) {
           crossOrigin="anonymous"
         ></script>
       </Head>
+      <TopBar />
       <Component {...pageProps} />
-    </CookiesProvider>
+      </AuthProvider>
   );
 }
 

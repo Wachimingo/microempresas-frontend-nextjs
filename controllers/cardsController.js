@@ -1,5 +1,4 @@
-// import { toast } from 'react-toastify';
-// const notify = (text) => toast(text);
+const classes = require('./../styles/menu.module.css');
 
 exports.deleteDish = (id, i, fileName, token) => {
   fetch(`/api/deleteDish`, {
@@ -15,11 +14,9 @@ exports.deleteDish = (id, i, fileName, token) => {
     }),
   });
   document.getElementById(i).className = 'd-none';
-  // location.reload();
-  // notify('Se ha borrado el platillo');
 };
 
-exports.setDishForToday = (id, forToday, token) => {
+exports.setDishForToday = (id, i, forToday, token) => {
   fetch(`/api/setDishForToday`, {
     method: 'PATCH',
     mode: 'cors',
@@ -33,6 +30,10 @@ exports.setDishForToday = (id, forToday, token) => {
     }),
   })
     .then((res) => res.json())
-    .then(() => location.reload());
-  //   notify('Platillo selecionado para hoy!');
+
+    if(forToday){      
+      document.getElementById(i).className = `card ${classes.borderActive}`;
+    } else {
+      document.getElementById(i).className = 'card ';
+    }
 };

@@ -42,3 +42,12 @@
 	cursor: pointer;
 	outline: inherit;
 }
+
+.title{
+  padding-left: 5vw;
+  padding-right: 38vw;
+}
+.register{
+  width: 9vw;
+  padding-right: 1vw;
+}

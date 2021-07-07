@@ -13,10 +13,10 @@ export default function MenuAdmin(props) {
     return (
       <>
         {/* Title of the section */}
-        <h1 className={'centered '}>{title}</h1>
+        {visible ? null : <h1 className={'centered '}>{title}</h1>}        
         <button
           type="button"
-          className={'btn btn-info '}
+          className={'btn btn-info ' + classes.hideButton}
           onClick={(e) => setVisible(!visible)}
         >
           {/* Show/Hide button */}

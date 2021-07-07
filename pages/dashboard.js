@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+import {useContext} from 'react'
+import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
-const TopBar = dynamic(() => import('../components/TopBar'), { ssr: true });
+const classes = import('./../styles/dashboard.module.css')
 const BarChart = dynamic(() => import('../components/Charts/BarChart'), {
   ssr: true,
 });
@@ -14,6 +15,7 @@ const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
 });
 
 export default function dashboard() {
+  const {session} = useContext(AuthContext)
   let dateTime = new Date();
   let today = dateTime
     .toISOString()
@@ -86,8 +88,6 @@ export default function dashboard() {
     circumference: 1 * Math.PI,
   };
 
-  const [cookie] = useCookies(['session']);
-
   useEffect(() => {
     fetch(`/api/getStats`, {
       method: 'POST',
@@ -98,7 +98,7 @@ export default function dashboard() {
         day: today.split('-')[0],
         month: today.split('-')[1],
         year: today.split('-')[2],
-        token: cookie.session.token,
+        token: session.token,
       }),
     })
       .then((res) => res.json())
@@ -114,7 +114,7 @@ export default function dashboard() {
         historyMode,
         month: today.split('-')[1],
         year: today.split('-')[2],
-        token: cookie.session.token,
+        token: session.token,
       }),
     })
       .then((res) => res.json())
@@ -144,7 +144,7 @@ export default function dashboard() {
         day: pickedDate.split('-')[2],
         month: pickedDate.split('-')[1],
         year: pickedDate.split('-')[0],
-        token: cookie.session.token,
+        token: session.token,
       }),
     })
       .then((res) => res.json())
@@ -176,7 +176,7 @@ export default function dashboard() {
         historyMode,
         month: pickedDate.split('-')[1],
         year: pickedDate.split('-')[0],
-        token: cookie.session.token,
+        token: session.token,
       }),
     })
       .then((res) => res.json())
@@ -261,6 +261,8 @@ export default function dashboard() {
             dataSetLabel={dataSetLabel}
             values={valuesArray[value]}
             chartId={'lineHistory'}
+            height={process.env.NEXT_PUBLIC_Line_Chart_Height}
+            maintainAspectRatio={false}
           />
         );
       } else if (historyMode === 'year') {
@@ -272,6 +274,8 @@ export default function dashboard() {
             dataSetLabel={dataSetLabel}
             values={valuesArray[value]}
             chartId={'lineHistory'}
+            height={process.env.NEXT_PUBLIC_Line_Chart_Height}
+            maintainAspectRatio={false}
           />
         );
       } else if (historyMode === 'day') {
@@ -283,6 +287,8 @@ export default function dashboard() {
             dataSetLabel={dataSetLabel}
             values={valuesArray[value]}
             chartId={'lineHistory'}
+            height={process.env.NEXT_PUBLIC_Line_Chart_Height}
+            maintainAspectRatio={false}
           />
         );
       }
@@ -295,7 +301,7 @@ export default function dashboard() {
   } else {
     return (
       <div>
-        <TopBar logged={cookie.session ? true : false} />
+        {/* <TopBar logged={cookie.session ? true : false} /> */}
         <div className="container">
           <h1>Estadisticas</h1>
           <form id="donutForm" onSubmit={loadNewData}>
@@ -350,6 +356,7 @@ export default function dashboard() {
                 values={[stats.earnings, 100 - stats.earnings]}
                 options={options}
                 chartId={'ganancias'}
+                className={classes.lineChart}
               />
             </div>
           </div>
@@ -393,7 +400,7 @@ export default function dashboard() {
             </div>
             <input type="submit" value="Buscar" />
           </form>
-          <div className="row">
+          <div className={"row"}>
             <div className="col">
               {lineChart()}
             </div>

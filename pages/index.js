@@ -1,88 +1,40 @@
-import Link from 'next/link';
-import { useCookies } from 'react-cookie';
-import dynamic from 'next/dynamic';
+import {useContext} from 'react'
+import AuthContext from '../context/authContext';
+import Image from 'next/image';
 const classes = require('./../styles/menu.module.css');
-import { BsCloudUpload } from 'react-icons/bs';
 import CarousselSSR from '../components/Caroussel';
-import CardsSSR from '../components/Cards';
 import MenuAdmin from '../components/MenuAdmin';
 
-const TopBar = dynamic(() => import('../components/TopBar'), { ssr: false });
-// const Caroussel = dynamic(() => import('../components/Caroussel'), {
-//   ssr: false,
-// });
-// const Cards = dynamic(() => import('../components/Cards'), { ssr: false });
-
-const SellCards = dynamic(() => import('../components/SellCards'), {
-  ssr: false,
-});
-
 export default function Menu({ items }) {
-  const [cookie, setCookie] = useCookies(['session']);
+  const {session} = useContext(AuthContext)
   // console.log(cookie.session)
 
-  const addButton = (
-    <>
-      <Link href="/addDish" passHref>
-        <button type="button" className={'btn btn-secondary '}>
-          <BsCloudUpload /> Agregar
-        </button>
-      </Link>
-    </>
-  );
-
-  const NoSSRElements = (
-    <>
-      <MenuAdmin
-        title={'Carusel de Platillos para hoy'}
-        componentName={'Carusel'}
-        visible={true}
-        Component={<CarousselSSR items={items} />}
-      />
-      <MenuAdmin
-        title={'Vender platos'}
-        componentName={'Vender Platos'}
-        visible={false}
-        Component={<SellCards items={items} session={cookie.session} />}
-      />
-      <MenuAdmin
-        title={'Catalogo'}
-        componentName={'Catalogo'}
-        visible={true}
-        Component={<CardsSSR items={items} session={cookie.session} />}
-      />
-    </>
-  );
   // Server side render component
   const SSRElements = (
     <>
       <MenuAdmin
-        title={'Carusel de Platillos para hoy'}
+        title={'Disfruta de nuestros platillos preparados para hoy'}
         componentName={'Carusel'}
         visible={false}
         Component={<CarousselSSR items={items} />}
-      />
-      <MenuAdmin
-        title={'Catalogo'}
-        componentName={'Catalogo'}
-        visible={false}
-        Component={<CardsSSR items={items} session={cookie.session} />}
       />
     </>
   );
 
   return (
     <div>
-      {/* NavBar */}
-      <TopBar logged={cookie.session ? true : false} />
-      <br />
-      <div className={classes.centered}>
-        {/* Add Button */}
-        {cookie.session !== undefined ? addButton : null}
+      <div className={'text-center '}>
+        <h1>Bienvenido a Comedor Buen Amancer</h1>
         <br />
-        {/* Here we render the caroussel and cards depending if the user is logged in or not,
-      the loggin components will be client render as they are dynamic, and the not login will be server side rendering */}
-        {cookie.session !== undefined ? NoSSRElements : SSRElements}
+        
+        <Image
+          src={`/logo.jpg`}
+          alt="logo"
+          width="250"
+          height="250"
+        />
+        <br />
+        {SSRElements}
       </div>
     </div>
   );

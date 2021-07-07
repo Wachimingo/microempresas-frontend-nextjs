@@ -1,20 +1,27 @@
 import { useEffect, memo } from 'react';
 import Script from 'next/script';
-import Chart from "chart.js";
+import Chart from 'chart.js';
+// const classes = import('./../../styles/dashboard.module.css')
 
 export default memo(function LineChart(props) {
-  let chartId = props.chartId
+  let chartId = props.chartId;
   let config = {
-    type: "line",
+    type: 'line',
     data: {
       labels: props.labels,
-      datasets: [{
-        label: props.dataSetLabel,
-        data: props.values,
-        fill: false,
-        borderColor: 'rgb(255,0,0)',
-        tension: 0.1
-      }]
+      datasets: [
+        {
+          label: props.dataSetLabel,
+          data: props.values,
+          fill: false,
+          borderColor: 'rgb(255,0,0)',
+          tension: 0.1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: props.maintainAspectRatio,
     },
   };
   useEffect(() => {
@@ -29,7 +36,7 @@ export default memo(function LineChart(props) {
 
   const destroyCanvas = (chartId) => {
     if (window[chartId] !== undefined) window[chartId].destroy();
-  }
+  };
 
   return (
     <>
@@ -38,10 +45,10 @@ export default memo(function LineChart(props) {
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
               <h6 className="uppercase text-blueGray-400 mb-1 text-xs font-semibold">
-              {props.category}
+                {props.category}
               </h6>
               <h2 className="text-blueGray-700 text-xl font-semibold">
-              {props.name}
+                {props.name}
               </h2>
             </div>
           </div>
@@ -53,9 +60,7 @@ export default memo(function LineChart(props) {
           </div>
         </div>
       </div>
-      <Script>
-        {destroyCanvas(chartId)}
-      </Script>
+      <Script>{destroyCanvas(chartId)}</Script>
     </>
   );
-})
+});

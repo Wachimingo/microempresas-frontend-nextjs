@@ -9,6 +9,8 @@ export default async (req, res) => {
       body: JSON.stringify({
         bill: req.body.bill,
         dish: req.body.dish,
+        name: req.body.name,
+        price: req.body.price,
         // amount: req.body.amount,
         day: req.body.day,
       }),

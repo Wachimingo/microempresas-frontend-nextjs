@@ -1,121 +1,222 @@
 import Image from 'next/image';
 import { BsFillTrashFill, BsCheck, BsFlagFill } from 'react-icons/bs';
 import { ToastContainer, toast } from 'react-toastify';
-import {useState} from 'react'
+import { useState, useEffect } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 const classes = require('./../styles/menu.module.css');
-const sellCardsController = require('./../controllers/sellCardsController.js');
-const searchBarController = require('./../controllers/searchBarController.js');
+import SearchBar from './NavigationItems/SearchBar';
 
 export default function SellCards(props) {
-  let [filterObject, setFilterObject] = useState(JSON.parse(JSON.stringify(props.items)))
+  let [filterObject, setFilterObject] = useState(
+    JSON.parse(JSON.stringify(props.items))
+  );
 
-  const searchItem = (text) =>{
-    let re = new RegExp(`\\b${text.toLowerCase()}`, 'g');
-    props.items.map((el, i)=>{
-      let nameLowerCase = el.name.toLowerCase();
-      if(nameLowerCase.match(re))
-      {
-        filterObject[i] = el
+  let [counterDish, setCounterDish] = useState(0);
+  let [counterPrice, setCounterPrice] = useState(0);
+
+  let dishIds = new Set();
+  let Today_date = new Date();
+  let day = Today_date.getDay();
+  const week = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miercoles',
+    'Jueves',
+    'Viernes',
+    'Sabado',
+  ];
+
+  useEffect(() => {
+    props.items.map((el) => {
+      if (el.forToday) {
+        window[el.id + '_counter'] = 0;
+        window[el.id + '_name'] = el.name;
+        window[el.id + '_price'] = el.price;
       }
-      else{
-        delete filterObject[i]
+    });
+  }, []);
+
+  const setNewFilteredObject = (obj) => {
+    setFilterObject(obj);
+  };
+
+  const setNewItems = (res) => {
+    setFilterObject(res.data.doc);
+  };
+
+  const upCounter = (id, price) => {
+    dishIds.add(id);
+    window[id + '_counter'] = window[id + '_counter'] * 1 + 1;
+    document.getElementById(id).innerHTML = window[id + '_counter']
+    setCounterDish(counterDish * 1 + 1);
+    setCounterPrice(counterPrice * 1 + price);
+  };
+
+  const lowerCounter = (id, price) => {
+    //Validating the amount to avoid going to negative numbers
+    if (window[id + '_counter'] * 1 > 0) {
+      // lower the number in the label of total amount in a single dish
+      window[id + '_counter'] = window[id + '_counter'] * 1 - 1;
+      document.getElementById(id).innerHTML = window[id + '_counter']
+      setCounterDish(counterDish * 1 - 1);
+      setCounterPrice(counterPrice * 1 - price);
+    }
+  };
+
+  const addDishesToBill = (billId, token) => {
+    for (let id of dishIds) {
+      for (let i = 0; i < window[id + '_counter'] * 1; i++) {
+        fetch(`/api/addDishesToBill`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            bill: billId,
+            dish: id,
+            name: window[id + '_name'],
+            price: window[id + '_price'],
+            // amount: document.getElementById(id).innerHTML,
+            day: week[day],
+          }),
+        }).then((res) => res.json());
+        // .then((res) => console.log(res));
       }
-    })
-    // console.log(filterObject)
-    //This is to update the object in the return, as if not the copy in the client won't update
-    setFilterObject(searchBarController.cleanArray(JSON.parse(JSON.stringify(filterObject))))
-  }
+      // lower the number in the label of total amount in a single dish
+      document.getElementById(id).innerHTML = 0;
+      // lower the number in the label of total dishes
+      document.getElementById('totalDishes').innerHTML = 0;
+      // lower the number in the label of total price
+      document.getElementById('totalPrice').innerHTML = 0;
+    }
+  };
+
+  const processSell = (fiado, token, msg) => {
+    if (totalPrice < 0 && counterDish < 1) {
+      toast.error('No ha seleccionado platos para facturar');
+    } else {
+      console.log(localStorage.getItem('counterDish'));
+      toast.success(msg);
+      fetch(`/api/processSell`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          totalPrice: totalPrice,
+          totalDishes: counterDish,
+          day: week[day],
+          isFiado: fiado,
+        }),
+      })
+        .then((res) => res.json())
+        // .then((res)=>console.log(res))
+        .then((res) => addDishesToBill(res.data.result.data.data._id, token))
+        .then(
+          (counterDish = 0),
+          (counterPrice = 0),
+          setCounterDish(0),
+          setCounterPrice(0)
+        );
+    }
+  };
 
   return (
     <>
-      <input className={"form-control me-2 " + classes.searchBar} type="search" placeholder="Search" aria-label="Search" onChange={(e)=>searchItem(e.target.value)}></input>
+      <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
       <div className={classes.centerSellCard}>
-      {
-        // console.log(items),
-        filterObject.map((el, i) => {
-          if (el.forToday) {
-            return (
-              <div
-                key={i}
-                id={i}
-                className={'card '}
-                style={{
-                  width: '18rem',
-                  display: 'inline-block',
-                  marginRight: '2vw',
-                }}
-              >
-                <h2 id={el.id}>0</h2>
+        {
+          // console.log(items),
+          filterObject.map((el, i) => {
+            if (el.forToday) {
+              return (
                 <div
-                  onClick={(e) =>
-                    sellCardsController.upCounter(el.id, el.price)
-                  }
-                  className={classes.hoverCard}
+                  key={i}
+                  id={i}
+                  className={'card '}
+                  style={{
+                    width: '18rem',
+                    display: 'inline-block',
+                    marginRight: '2vw',
+                  }}
                 >
-                  <Image
-                    src={'/dishes/' + el.image}
-                    className="card-img-top"
-                    alt="me"
-                    width="1000"
-                    height="1000"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{el.name}</h5>
-                    <p className="card-text">{el.description}</p>
+                  <h2 id={el.id}>0</h2>
+                  <div
+                    onClick={(e) => upCounter(el.id, el.price)}
+                    className={classes.hoverCard}
+                  >
+                    <Image
+                      src={'/dishes/' + el.image}
+                      className="card-img-top"
+                      alt="me"
+                      width="1000"
+                      height="1000"
+                    />
+                    <div className="card-body">
+                      <h5 id={el.id + ' name'} className="card-title">
+                        {el.name}
+                      </h5>
+                      <h5 id={el.id + ' price'} className="card-text">
+                        {el.price}
+                      </h5>
+                      <p className="card-text">{el.description}</p>
+                    </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={(e) => lowerCounter(el.id, el.price)}
+                    className={'btn btn-danger'}
+                  >
+                    <BsFillTrashFill /> Remover
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) =>
-                    sellCardsController.lowerCounter(el.id, el.price)
-                  }
-                  className={'btn btn-danger'}
-                >
-                  <BsFillTrashFill /> Remover
-                </button>
-              </div>
-            );
-          } else {
-            return null;
+              );
+            } else {
+              return null;
+            }
+          })
+        }
+        {/* Section to see purchase details */}
+
+        <div className={classes.billInfo}>
+          <h2 style={{ marginRight: '10px' }}>Platos:</h2>
+          <h2 id="totalDishes" style={{ marginRight: '2vw' }}>
+            {counterDish}
+          </h2>
+        </div>
+        <div className={classes.billInfo}>
+          <h2>Total: $</h2>
+          <h2 id="totalPrice">{counterPrice.toFixed(2)}</h2>
+        </div>
+        <br />
+        <button
+          type="button"
+          className={'btn btn-success '}
+          onClick={(e) =>
+            processSell(false, props.session.token, 'Factura creada!')
           }
-        })
-      }
-      {/* Section to see purchase details */}
-      <div className={classes.billInfo}>
-        <h2 style={{ marginRight: '10px' }}>Platos:</h2>
-        <h2 id="totalDishes" style={{ marginRight: '2vw' }}>
-          0
-        </h2>
-      </div>
-      <div className={classes.billInfo}>
-        <h2>Total: $</h2>
-        <h2 id="totalPrice">0</h2>
-      </div>
-      <br />
-      <button
-        type="button"
-        className={'btn btn-success '}
-        onClick={(e) =>
-          sellCardsController.processSell(false, props.session.token)
-        }
-      >
-        <BsCheck /> Procesar venta
-      </button>
-      {/* Fiado is to lend this dish to the client with the promise to pay afterward */}
-      <button
-        type="button"
-        className={'btn btn-danger ' + classes.fiado}
-        onClick={(e) =>
-          sellCardsController.processSell(true, props.session.token)
-        }
-      >
-        <BsFlagFill /> Fiar
-      </button>
-      <br />
-      <div>
-        <ToastContainer />
-      </div>
+        >
+          <BsCheck /> Procesar venta
+        </button>
+        {/* Fiado is to lend this dish to the client with the promise to pay afterward */}
+        <button
+          type="button"
+          className={'btn btn-danger ' + classes.fiado}
+          onClick={(e) =>
+            processSell(true, props.session.token, 'Factura creada!')
+          }
+        >
+          <BsFlagFill /> Fiar
+        </button>
+        <br />
+        <div>
+          <ToastContainer />
+        </div>
       </div>
     </>
   );

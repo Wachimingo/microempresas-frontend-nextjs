@@ -24,8 +24,8 @@ module.exports = {
 
 module.exports = {
   env: {
-      NEXT_PUBLIC_backendUrl: 'http://localhost:3001',
-      NEXT_PUBLIC_localUrl: 'http://localhost:3000',
+      NEXT_PUBLIC_backendUrl: 'http://localhost:3001/',
+      NEXT_PUBLIC_localUrl: 'http://localhost:3000/',
       NEXT_PUBLIC_ladingPage: 'dashboard',
   },
 }

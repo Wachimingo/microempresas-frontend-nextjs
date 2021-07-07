@@ -1,51 +1,45 @@
 import { useState } from 'react';
-import { useContext } from 'react';
-import AuthContext from '../context/authContext';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
-
+import { useCookies } from 'react-cookie';
 const classes = require('./../styles/login.module.css');
 
-export default function SignIn() {
-  const [email, setEmail] = useState('a@b.com');
-  const [password, setPassword] = useState('pass123456');
-  const { setSession } = useContext(AuthContext);
+export default function register() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [cookie, setCookie] = useCookies(['session']);
 
   const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('/api/login', {
+    fetch('/api/register', {
       method: 'POST',
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        name,
         email,
         password,
+        passwordConfirm,
       }),
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
-      .then(
-        (res) => cookieSettup(res),
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setError(error);
-        }
-      );
+      .then((res) => cookieSettup(res));
+    router.push('/');
   };
 
   const cookieSettup = (res) => {
     if (res.data.data !== undefined) {
-      setSession(res.data.data.data);
-      router.push('/');
-    } else {
-      toast.error('Correo o Contraseña equivocada!');
+      setCookie('session', JSON.stringify(res.data.data.data), {
+        path: '/',
+        sameSite: true,
+        // maxAge: 3600, //One our
+      });
     }
   };
 
@@ -53,10 +47,22 @@ export default function SignIn() {
     <div>
       <div className={'container ' + classes.formBody}>
         <form className={''} onSubmit={handleSubmit}>
-          <h3>Ingresar</h3>
+          <h3>Registrarse</h3>
 
           <div className="form-group">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Nombre</label>
+            <input
+              type="name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="form-control"
+              placeholder="Enter name"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Correo</label>
             <input
               type="email"
               id="email"
@@ -80,28 +86,21 @@ export default function SignIn() {
           </div>
 
           <div className="form-group">
-            <div className="custom-control custom-checkbox">
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                id="customCheck1"
-              />
-              <label className="custom-control-label" htmlFor="customCheck1">
-                Remember me
-              </label>
-            </div>
+            <label htmlFor="password">Confirme su Password</label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              className="form-control"
+              placeholder="Enter password again"
+            />
           </div>
 
           <button type="submit" className="btn btn-primary btn-block">
             Submit
           </button>
-          <p className="forgot-password text-right">
-            Forgot <a href="#">password?</a>
-          </p>
         </form>
-      </div>
-      <div>
-        <ToastContainer />
       </div>
     </div>
   );
