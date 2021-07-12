@@ -1,13 +1,16 @@
-import {useContext} from 'react'
+import { useContext } from 'react';
 import AuthContext from '../context/authContext';
 import Image from 'next/image';
+// import dynamic from 'next/dynamic';
+// const Mic = dynamic(() => import('../components/Mic'), {
+//   ssr: false,
+// });
 const classes = require('./../styles/menu.module.css');
 import CarousselSSR from '../components/Caroussel';
 import MenuAdmin from '../components/MenuAdmin';
 
 export default function Menu({ items }) {
-  const {session} = useContext(AuthContext)
-  // console.log(cookie.session)
+  const { session } = useContext(AuthContext);
 
   // Server side render component
   const SSRElements = (
@@ -26,15 +29,11 @@ export default function Menu({ items }) {
       <div className={'text-center '}>
         <h1>Bienvenido a Comedor Buen Amancer</h1>
         <br />
-        
-        <Image
-          src={`/logo.jpg`}
-          alt="logo"
-          width="250"
-          height="250"
-        />
+
+        <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
         <br />
         {SSRElements}
+        {/* <Mic/> */}
       </div>
     </div>
   );

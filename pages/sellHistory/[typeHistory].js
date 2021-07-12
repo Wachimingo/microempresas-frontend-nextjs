@@ -49,17 +49,17 @@ export default function sellHistory() {
     if (type === 'grupal') {
       return (
         <Table
-          headers={['ID', 'Total de Platos', 'Total', 'Estado', 'Fecha']}
+          headers={['ID', 'Total de Platos', 'Total', 'Estado', 'Dia', 'Fecha']}
           items={items}
-          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'createdAt']}
+          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'day','createdAt']}
         />
       );
     } else if (type === 'individual') {
       return (
         <Table
-          headers={['ID', 'Plato', 'Dia', 'Precio']}
+          headers={['ID', 'Plato', 'Dia', 'Fecha', 'Precio']}
           items={items}
-          body={['_id', 'name', 'createdAt', 'price']}
+          body={['_id', 'name', 'day','createdAt', 'price']}
         />
       );
     } else if (type === 'fiado') {

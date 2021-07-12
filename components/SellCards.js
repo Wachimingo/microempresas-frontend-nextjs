@@ -5,6 +5,10 @@ import { useState, useEffect } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 const classes = require('./../styles/menu.module.css');
 import SearchBar from './NavigationItems/SearchBar';
+import dynamic from 'next/dynamic';
+const Mic = dynamic(() => import('../components/Mic'), {
+  ssr: false,
+});
 
 export default function SellCards(props) {
   let [filterObject, setFilterObject] = useState(
@@ -13,8 +17,7 @@ export default function SellCards(props) {
 
   let [counterDish, setCounterDish] = useState(0);
   let [counterPrice, setCounterPrice] = useState(0);
-
-  let dishIds = new Set();
+  let [dishes] = useState([]);
   let Today_date = new Date();
   let day = Today_date.getDay();
   const week = [
@@ -30,9 +33,10 @@ export default function SellCards(props) {
   useEffect(() => {
     props.items.map((el) => {
       if (el.forToday) {
-        window[el.id + '_counter'] = 0;
-        window[el.id + '_name'] = el.name;
-        window[el.id + '_price'] = el.price;
+        window['counter_' + el.id] = 0;
+        dishes.push(el.id);
+        window['name_'+el.id] = el.name;
+        window['price_'+el.id] = el.price;
       }
     });
   }, []);
@@ -46,27 +50,30 @@ export default function SellCards(props) {
   };
 
   const upCounter = (id, price) => {
-    dishIds.add(id);
-    window[id + '_counter'] = window[id + '_counter'] * 1 + 1;
-    document.getElementById(id).innerHTML = window[id + '_counter']
+    window['counter_' + id] = window['counter_' + id] * 1 + 1;
+    document.getElementById(`counter_${id}`).innerHTML = window['counter_' + id]*1
     setCounterDish(counterDish * 1 + 1);
     setCounterPrice(counterPrice * 1 + price);
   };
 
   const lowerCounter = (id, price) => {
     //Validating the amount to avoid going to negative numbers
-    if (window[id + '_counter'] * 1 > 0) {
+    if (window['counter_' + id] * 1 > 0) {
       // lower the number in the label of total amount in a single dish
-      window[id + '_counter'] = window[id + '_counter'] * 1 - 1;
-      document.getElementById(id).innerHTML = window[id + '_counter']
+      window['counter_' + id] = window['counter_' + id] * 1 - 1;
+      document.getElementById(`counter_${id}`).innerHTML = window['counter_' + id]*1
       setCounterDish(counterDish * 1 - 1);
       setCounterPrice(counterPrice * 1 - price);
     }
   };
 
   const addDishesToBill = (billId, token) => {
-    for (let id of dishIds) {
-      for (let i = 0; i < window[id + '_counter'] * 1; i++) {
+    for(let i = 0; i < document.querySelectorAll(`[id^=counter_`).length; i++){
+      document.querySelectorAll(`[id^=counter_`)[i].innerHTML = 0
+    }
+    for (let id of dishes) {
+      for (let i = 0; i < window['counter_' + id] * 1; i++) {
+        console.log(window['counter_' + id])
         fetch(`/api/addDishesToBill`, {
           method: 'POST',
           mode: 'cors',
@@ -77,28 +84,25 @@ export default function SellCards(props) {
           body: JSON.stringify({
             bill: billId,
             dish: id,
-            name: window[id + '_name'],
-            price: window[id + '_price'],
-            // amount: document.getElementById(id).innerHTML,
+            name: window['name_'+id], 
+            price: window['price_'+id],
             day: week[day],
           }),
         }).then((res) => res.json());
         // .then((res) => console.log(res));
-      }
-      // lower the number in the label of total amount in a single dish
-      document.getElementById(id).innerHTML = 0;
-      // lower the number in the label of total dishes
+      }      
+      // // lower the number in the label of total dishes
       document.getElementById('totalDishes').innerHTML = 0;
       // lower the number in the label of total price
       document.getElementById('totalPrice').innerHTML = 0;
+      
     }
   };
 
   const processSell = (fiado, token, msg) => {
-    if (totalPrice < 0 && counterDish < 1) {
+    if (counterPrice < 0 && counterDish < 1) {
       toast.error('No ha seleccionado platos para facturar');
     } else {
-      console.log(localStorage.getItem('counterDish'));
       toast.success(msg);
       fetch(`/api/processSell`, {
         method: 'POST',
@@ -108,7 +112,7 @@ export default function SellCards(props) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          totalPrice: totalPrice,
+          totalPrice: counterPrice,
           totalDishes: counterDish,
           day: week[day],
           isFiado: fiado,
@@ -121,13 +125,21 @@ export default function SellCards(props) {
           (counterDish = 0),
           (counterPrice = 0),
           setCounterDish(0),
-          setCounterPrice(0)
+          setCounterPrice(0),
         );
     }
   };
 
+  const re = new RegExp(`\\b(un|una|[1-9]) (sopa|sopas)`, 'g')
+
+  const commands = [{
+    command: re,
+    callback: () => document.querySelectorAll(`[id^=counter_`)[0].innerHTML = document.querySelectorAll(`[id^=counter_`)[0].innerHTML*1 +1
+  },]
+
   return (
     <>
+    <Mic commands={commands}/>  
       <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
       <div className={classes.centerSellCard}>
         {
@@ -145,7 +157,7 @@ export default function SellCards(props) {
                     marginRight: '2vw',
                   }}
                 >
-                  <h2 id={el.id}>0</h2>
+                  <h2 id={`counter_${el.id}`}>0</h2>
                   <div
                     onClick={(e) => upCounter(el.id, el.price)}
                     className={classes.hoverCard}

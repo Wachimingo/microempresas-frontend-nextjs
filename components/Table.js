@@ -9,7 +9,7 @@ export default function Table(props) {
               {props.body.map((body, j) => {
                 el.estado = 'Pagado';
                 let fondo = '';
-                if (!el.isFiado && i === body.indexOf('estado')) {
+                if (el.isFiado) {
                   el.estado = 'Fiado';
                   fondo = classes.estado;
                 }
@@ -25,7 +25,7 @@ export default function Table(props) {
                       fondo
                     }
                   >
-                    {typeof(el[body]) === 'number' ? body === 'totalPrice' || body === 'price' ?`$${el[body].toFixed(2)}`  : el[body] : el[body]}
+                    {typeof(el[body]) === 'number' ? body === 'totalPrice' || body === 'price' ?`$${el[body].toFixed(2)}`: el[body] : el[body]}
                   </div>
                 );
               })}

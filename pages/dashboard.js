@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import {useContext} from 'react'
+import { useContext } from 'react';
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
-const classes = import('./../styles/dashboard.module.css')
+const classes = import('./../styles/dashboard.module.css');
 const BarChart = dynamic(() => import('../components/Charts/BarChart'), {
   ssr: true,
 });
@@ -15,9 +15,28 @@ const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
 });
 
 export default function dashboard() {
-  const {session} = useContext(AuthContext)
+  const { session } = useContext(AuthContext);
   let dateTime = new Date();
+  let nextWeek = new Date(
+    dateTime.setDate(dateTime.getDate() - dateTime.getDay() + 1) +
+      7 * 24 * 60 * 60 * 1000
+  );
   let today = dateTime
+    .toISOString()
+    .split('T')[0]
+    .split('-')
+    .reverse()
+    .join('-');
+  let nextWeekF = nextWeek
+    .toISOString()
+    .split('T')[0]
+    .split('-')
+    .reverse()
+    .join('-');
+
+  let monday = new Date(
+    dateTime.setDate(dateTime.getDate() - dateTime.getDay() + 1)
+  )
     .toISOString()
     .split('T')[0]
     .split('-')
@@ -88,6 +107,27 @@ export default function dashboard() {
     circumference: 1 * Math.PI,
   };
 
+  function getMondays() {
+    var d = new Date(),
+      month = d.getMonth(),
+      mondays = [];
+
+    d.setDate(1);
+
+    // Get the first Monday in the month
+    while (d.getDay() !== 1) {
+      d.setDate(d.getDate() + 1);
+    }
+
+    // Get all the other Mondays in the month
+    while (d.getMonth() === month) {
+      mondays.push(new Date(d.getTime()));
+      d.setDate(d.getDate() + 7);
+    }
+
+    return mondays;
+  }
+
   useEffect(() => {
     fetch(`/api/getStats`, {
       method: 'POST',
@@ -112,8 +152,12 @@ export default function dashboard() {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         historyMode,
-        month: today.split('-')[1],
-        year: today.split('-')[2],
+        day: monday.split('-')[0],
+        month: monday.split('-')[1],
+        year: monday.split('-')[2],
+        day2: nextWeekF.split('-')[0],
+        month2: nextWeekF.split('-')[1],
+        year2: nextWeekF.split('-')[2],
         token: session.token,
       }),
     })
@@ -163,10 +207,32 @@ export default function dashboard() {
   const loadNewStatsHistory = (e) => {
     e.preventDefault();
 
-    let pickedDate = document.getElementById('lineDate').value;
+    let pickedDate = new Date(document.getElementById('lineDate').value);
+    let pickedDateMonday = new Date(
+      pickedDate.setDate(pickedDate.getDate() - pickedDate.getDay())
+    );
+    let pickedDateMondayF = pickedDateMonday
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .reverse()
+      .join('-');
     let historyMode = document.getElementById('lineMode').value;
 
-    setHistoryMode(historyMode)
+    let nextWeek = new Date(
+      pickedDateMonday.setDate(
+        pickedDateMonday.getDate() - pickedDateMonday.getDay()
+      ) +
+        7 * 24 * 60 * 60 * 1000
+    );
+    let nextWeekF = nextWeek
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .reverse()
+      .join('-');
+
+    setHistoryMode(historyMode);
 
     fetch(`/api/getStatsHistory`, {
       method: 'POST',
@@ -174,8 +240,12 @@ export default function dashboard() {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         historyMode,
-        month: pickedDate.split('-')[1],
-        year: pickedDate.split('-')[0],
+        day: pickedDateMondayF.split('-')[0],
+        month: pickedDateMondayF.split('-')[1],
+        year: pickedDateMondayF.split('-')[2],
+        day2: nextWeekF.split('-')[0],
+        month2: nextWeekF.split('-')[1],
+        year2: nextWeekF.split('-')[2],
         token: session.token,
       }),
     })
@@ -222,7 +292,7 @@ export default function dashboard() {
         totalDishes,
         year,
       });
-    }else if (historyMode === 'day') {
+    } else if (historyMode === 'day') {
       result.map((el) => {
         fiado[el._id] = el.fiado;
         sold[el._id] = el.sold;
@@ -244,13 +314,21 @@ export default function dashboard() {
 
   const lineChart = () => {
     let category = '';
-    let dataSetLabel = ''
-    if(value === 'totalDishes') category = 'Total de platos', dataSetLabel = 'Platos'
-    if(value === 'earnings') category = 'Dinero ganado neto', dataSetLabel = 'Dinero'
-    if(value === 'totalFiadoDishes') category = 'Total de platos fiados', dataSetLabel = 'Platos'
-    if(value === 'totalSoldDishes') category = 'Total de platos pagados', dataSetLabel = 'Platos'
-    if(value === 'fiado') category = 'Total de dinero en platos fiados', dataSetLabel = 'Dinero'
-    if(value === 'sold') category = 'Total de dinero en platos pagados', dataSetLabel = 'Dinero'
+    let dataSetLabel = '';
+    if (value === 'totalDishes')
+      (category = 'Total de platos'), (dataSetLabel = 'Platos');
+    if (value === 'earnings')
+      (category = 'Dinero ganado neto'), (dataSetLabel = 'Dinero');
+    if (value === 'totalFiadoDishes')
+      (category = 'Total de platos fiados'), (dataSetLabel = 'Platos');
+    if (value === 'totalSoldDishes')
+      (category = 'Total de platos pagados'), (dataSetLabel = 'Platos');
+    if (value === 'fiado')
+      (category = 'Total de dinero en platos fiados'),
+        (dataSetLabel = 'Dinero');
+    if (value === 'sold')
+      (category = 'Total de dinero en platos pagados'),
+        (dataSetLabel = 'Dinero');
     if (loadedHistory) {
       if (historyMode === 'month') {
         return (
@@ -387,10 +465,10 @@ export default function dashboard() {
                   aria-label="Default select example"
                   // onChange={(e) => putHistoryMode(e.target.value)}
                 >
-                  <option value="month" defaultValue>
-                    Mes
+                  <option value="day" defaultValue>
+                    Dia
                   </option>
-                  <option value="day">Dia</option>
+                  <option value="month">Mes</option>
                   <option value="year">Año</option>
                 </select>
               </div>
@@ -400,10 +478,8 @@ export default function dashboard() {
             </div>
             <input type="submit" value="Buscar" />
           </form>
-          <div className={"row"}>
-            <div className="col">
-              {lineChart()}
-            </div>
+          <div className={'row'}>
+            <div className="col">{lineChart()}</div>
           </div>
         </div>
         <br />
