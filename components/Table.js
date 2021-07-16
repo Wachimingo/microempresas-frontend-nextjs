@@ -22,10 +22,16 @@ export default function Table(props) {
                       ' ' +
                       classes.middleCol +
                       ' ' +
-                      fondo
+                      fondo +
+                      ' ' +
+                      classes.cellWidth
                     }
                   >
-                    {typeof(el[body]) === 'number' ? body === 'totalPrice' || body === 'price' ?`$${el[body].toFixed(2)}`: el[body] : el[body]}
+                    {typeof el[body] === 'number'
+                      ? body === 'totalPrice' || body === 'price'
+                        ? `$${el[body].toFixed(2)}`
+                        : el[body]
+                      : el[body]}
                   </div>
                 );
               })}
@@ -43,7 +49,14 @@ export default function Table(props) {
           return (
             <div
               key={i}
-              className={'col ' + classes.headerRow + ' ' + classes.middleCol}
+              className={
+                'col ' +
+                classes.headerRow +
+                ' ' +
+                classes.middleCol +
+                ' ' +
+                classes.cellWidth
+              }
             >
               {el}
             </div>

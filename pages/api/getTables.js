@@ -22,6 +22,17 @@ export default async (req, res) => {
         },
       }
     );
+  } else if (req.body.type === 'stats') {
+    records = await fetch(
+      `http://localhost:3001/api/v1/bills/detailedBilling?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
+      {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          Authorization: req.headers.authorization,
+        },
+      }
+    );
   }
 
   const result = await records.json();

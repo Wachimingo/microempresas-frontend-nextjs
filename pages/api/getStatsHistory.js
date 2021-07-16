@@ -2,7 +2,7 @@ export default async (req, res) => {
   let stats;
 
   if (req.body.historyMode === 'month') {
-    stats = await fetch('http://localhost:3001/api/v1/bills/stats/months', {
+    stats = await fetch('http://localhost:3001/api/v1/stats/months', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -15,7 +15,7 @@ export default async (req, res) => {
       }),
     });
   } else if (req.body.historyMode === 'year') {
-    stats = await fetch('http://localhost:3001/api/v1/bills/stats/years', {
+    stats = await fetch('http://localhost:3001/api/v1/stats/years', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -28,7 +28,7 @@ export default async (req, res) => {
       }),
     });
   } else if (req.body.historyMode === 'week') {
-    stats = await fetch('http://localhost:3001/api/v1/bills/stats/week', {
+    stats = await fetch('http://localhost:3001/api/v1/stats/week', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -41,7 +41,7 @@ export default async (req, res) => {
       }),
     });
   } else if (req.body.historyMode === 'day') {
-    stats = await fetch('http://localhost:3001/api/v1/bills/stats/day', {
+    stats = await fetch('http://localhost:3001/api/v1/stats/day', {
       method: 'POST',
       mode: 'cors',
       headers: {

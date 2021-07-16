@@ -49,9 +49,9 @@ export default function sellHistory() {
     if (type === 'grupal') {
       return (
         <Table
-          headers={['ID', 'Total de Platos', 'Total', 'Estado', 'Dia', 'Fecha']}
+          headers={['ID', 'Total de Platos', 'Total', 'Estado', 'Cliente', 'Dia', 'Fecha']}
           items={items}
-          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'day','createdAt']}
+          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'customer', 'day','createdAt']}
         />
       );
     } else if (type === 'individual') {
@@ -62,8 +62,12 @@ export default function sellHistory() {
           body={['_id', 'name', 'day','createdAt', 'price']}
         />
       );
-    } else if (type === 'fiado') {
-      // return <DetailedBill session={cookie.session}/>
+    } else if (type === 'stats') {
+      return (
+        <>
+        
+        </>
+      );
     }
   };
 

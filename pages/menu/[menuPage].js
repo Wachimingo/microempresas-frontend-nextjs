@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {useContext} from 'react'
+import { useContext } from 'react';
 import AuthContext from './../../context/authContext';
 import dynamic from 'next/dynamic';
 const classes = require('./../../styles/menu.module.css');
 import { BsCloudUpload } from 'react-icons/bs';
 import CarousselSSR from './../../components/Caroussel';
-// import CardsSSR from './../../components/Cards';
 import MenuAdmin from './../../components/MenuAdmin';
 
 const SellCards = dynamic(() => import('./../../components/SellCards'), {
@@ -17,9 +16,9 @@ const CardsSSR = dynamic(() => import('./../../components/Cards'), {
   ssr: true,
 });
 
-export default function Menu({ items, totalRecords }) {
+export default function Menu({ items, totalRecords, itemsForToday }) {
   const router = useRouter();
-  const {session} = useContext(AuthContext)
+  const { session } = useContext(AuthContext);
 
   const { menuPage } = router.query;
   // console.log(cookie.session)
@@ -35,13 +34,14 @@ export default function Menu({ items, totalRecords }) {
   );
 
   const NoSSRElements = (page) => {
+
     if (page === 'carusel') {
       return (
         <MenuAdmin
           title={'Carusel de Platillos para hoy'}
           componentName={'Carusel'}
           visible={false}
-          Component={<CarousselSSR items={items} />}
+          Component={<CarousselSSR items={itemsForToday} />}
         />
       );
     } else if (page === 'sell') {
@@ -50,7 +50,7 @@ export default function Menu({ items, totalRecords }) {
           title={'Vender platos'}
           componentName={'Vender Platos'}
           visible={false}
-          Component={<SellCards items={items} session={session} />}
+          Component={<SellCards items={itemsForToday} session={session} />}
         />
       );
     } else if (page === 'catalog') {
@@ -65,7 +65,13 @@ export default function Menu({ items, totalRecords }) {
             title={'Catalogo'}
             componentName={'Catalogo'}
             visible={false}
-            Component={<CardsSSR items={items} totalRecords={totalRecords} session={session} />}
+            Component={
+              <CardsSSR
+                items={items}
+                totalRecords={totalRecords}
+                session={session}
+              />
+            }
           />
         </>
       );
@@ -82,7 +88,7 @@ export default function Menu({ items, totalRecords }) {
   };
   return (
     <div>
-      <div className='text-center'>{NoSSRElements(menuPage)}</div>
+      <div className="text-center">{NoSSRElements(menuPage)}</div>
     </div>
   );
 }
@@ -92,9 +98,18 @@ export async function getServerSideProps(context) {
     method: 'GET',
     mode: 'cors',
   });
+  const resForToday = await fetch(
+    'http://localhost:3001/api/v1/menu/forToday',
+    {
+      method: 'GET',
+      mode: 'cors',
+    }
+  );
   const data = await res.json();
+  const data2 = await resForToday.json();
+  const itemsForToday = data2.data
   const items = data.data.doc;
-  const totalRecords = data.data.totalRecords
+  const totalRecords = data.data.totalRecords;
   // console.log(data.data.totalRecords)
   if (!data) {
     return {
@@ -103,6 +118,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { items, totalRecords }, // will be passed to the page component as props
+    props: { items, totalRecords, itemsForToday }, // will be passed to the page component as props
   };
 }

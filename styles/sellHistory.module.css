@@ -18,6 +18,11 @@
     border-right: 1px solid;
 }
 
+.cellWidth{
+    width: 10px;
+    overflow: hidden;
+}
+
 .paginationNav{
     padding-left: 45%;
 }
