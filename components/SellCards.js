@@ -186,7 +186,7 @@ export default function SellCards(props) {
                   className={classes.hoverCard}
                 >
                   <Image
-                    src={'/dishes/' + el.image}
+                    src={el.image !== undefined  ? `/dishes/${el.image}` : `/dishes/stockDishImg.png`}
                     className="card-img-top"
                     alt="me"
                     width="1000"

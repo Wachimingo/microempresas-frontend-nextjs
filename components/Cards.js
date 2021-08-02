@@ -15,8 +15,6 @@ import {
   BsGearFill,
 } from 'react-icons/bs';
 
-
-
 export default function Cards(props) {
   //Clone props.items to filter object
   let [filterObject, setFilterObject] = useState(
@@ -133,7 +131,7 @@ export default function Cards(props) {
                 {cardButtons(el, el.id, i, el.image)}
                 <div className={classes.hoverCard}>
                   <Image
-                    src={`/dishes/${el.image}`}
+                    src={el.image !== undefined  ? `/dishes/${el.image}` : `/dishes/stockDishImg.png`}
                     className="card-img-top"
                     alt="me"
                     width="1000"

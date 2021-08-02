@@ -37,8 +37,7 @@ export default function sell() {
 
     return (
         <div>
-            <TopBar logged={cookie.session ? true : false} />
-            
+            <TopBar logged={cookie.session ? true : false} />            
         </div>
     )
 }
