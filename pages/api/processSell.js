@@ -1,5 +1,6 @@
 export default async (req, res) => {
-  const processSell = await fetch(`http://192.168.1.2:3001/api/v1/bills`, {
+  // console.log(req.body.customer)
+  const processSell = await fetch(`http://localhost:3001/api/v1/bills`, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -12,6 +13,7 @@ export default async (req, res) => {
       customer: req.body.customer,
       day: req.body.day,
       isFiado: req.body.isFiado,
+      peding: req.body.pending
     }),
   });
 

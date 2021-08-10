@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
@@ -8,7 +8,8 @@ import { useRouter } from 'next/router';
 
 const classes = require('./../styles/login.module.css');
 
-export default function SignIn() {
+export default memo(function SignIn() {
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -25,8 +26,10 @@ export default function SignIn() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        userName,
         email,
         password,
+        passwordConfirm
       }),
     })
       .then((res) => res.json())
@@ -51,7 +54,7 @@ export default function SignIn() {
         router.push('/');
       }
     } else {
-      toast.error('Error!');
+      toast.error(res.data.message);
     }
   };
 
@@ -62,7 +65,19 @@ export default function SignIn() {
           <h3>Ingresar</h3>
 
           <div className="form-group">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="usuario">Nombre de usuario</label>
+            <input
+              type="text"
+              id="usuario"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="form-control"
+              placeholder="Usuario"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
@@ -74,7 +89,7 @@ export default function SignIn() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Clave</label>
             <input
               type="password"
               id="password"
@@ -86,14 +101,14 @@ export default function SignIn() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Confirmar password</label>
+            <label htmlFor="password">Confirmar clave</label>
             <input
               type="password"
               id="passwordConfirm"
               value={passwordConfirm}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
               className="form-control"
-              placeholder="Enter password"
+              placeholder="Enter password again"
             />
           </div>
           <br />
@@ -127,4 +142,4 @@ export default function SignIn() {
       </div>
     </div>
   );
-}
+})

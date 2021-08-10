@@ -1,6 +1,6 @@
 export default async (req, res) => {
   const records = await fetch(
-    `http://localhost:3001/api/v1/bills/?limit=100`,
+    `http://localhost:3001/api/v1/bills/pendingorders/?limit=1`,
     {
       method: 'GET',
       mode: 'cors',

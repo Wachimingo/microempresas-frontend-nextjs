@@ -6,6 +6,7 @@ export default async (req, res) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        name: req.body.userName,
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm
@@ -13,7 +14,6 @@ export default async (req, res) => {
     });
   
     const data = await login.json();
-  
     if (login.ok) {
       res.status(201).json({
         status: 'success',
@@ -25,7 +25,7 @@ export default async (req, res) => {
       res.status(401).json({
           status: 'failed',
           data: {
-            message: data.message[0].message
+            message: data.message
           },
         });
     }

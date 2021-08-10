@@ -1,5 +1,5 @@
 export default async (req, res) => {
-    const addDishesToBill = await fetch(`http://192.168.1.2:3001/api/v1/bills/detailedBilling`, {
+    const addDishesToBill = await fetch(`http://localhost:3001/api/v1/bills/detailedBilling`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -11,7 +11,7 @@ export default async (req, res) => {
         dish: req.body.dish,
         name: req.body.name,
         price: req.body.price,
-        // amount: req.body.amount,
+        amount: req.body.amount,
         day: req.body.day,
       }),
     });

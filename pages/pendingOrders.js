@@ -37,7 +37,7 @@ export default function pendingOrders() {
                   height="100"
                 />
                 <div className={`${classes.pendingOrderCardsBody}`}>
-                  <h5 className={``}>{el.customer}</h5>
+                  <h5 className={``}>Cliente: {el.customer}</h5>
                   <p className={``}>Total de Platos: {el.totalDishes}</p>
                   <p className={``}>Hora: {el.dayTime}</p>
                   <p className={``}>Fecha {el.day} {el.createdAt}</p>
