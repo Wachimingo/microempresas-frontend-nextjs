@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import { BsFillTrashFill, BsCheck, BsFlagFill } from 'react-icons/bs';
 import { ToastContainer, toast } from 'react-toastify';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
+import AuthContext from '../context/authContext';
 import 'react-toastify/dist/ReactToastify.css';
 const classes = require('./../styles/menu.module.css');
 import SearchBar from './NavigationItems/SearchBar';
@@ -11,9 +13,11 @@ import dynamic from 'next/dynamic';
 // });
 
 export default function SellCards(props) {
+  const router = useRouter();
   let [filterObject, setFilterObject] = useState(
     JSON.parse(JSON.stringify(props.items))
   );
+  const [session] = useContext(AuthContext);
   const [customerName, setCustomerName] = useState(null);
   let [counterDish, setCounterDish] = useState(0);
   let [counterPrice, setCounterPrice] = useState(0);
@@ -102,7 +106,23 @@ export default function SellCards(props) {
     }
   };
 
-  const processSell = (fiado, token, msg) => {
+  const checkIfLogin = (fiado, token, msg) => {
+    if (session === undefined) {
+      router.push({
+        pathname: '/login',
+        query: { page: '/menu/sell' },
+      });
+    } else {
+      if (session.user.role !== 'admin') {
+        setCustomerName(session.user.name);
+        processSell(fiado, token, msg, true);
+      } else {
+        processSell(fiado, token, msg, false);
+      }
+    }
+  };
+
+  const processSell = (fiado, token, msg, pending) => {
     setCustomerName(null);
     if (counterPrice < 0 && counterDish < 1) {
       setCustomerName(null);
@@ -128,6 +148,7 @@ export default function SellCards(props) {
             day: week[day],
             isFiado: fiado,
             customer: customerName,
+            pending,
           }),
         })
           .then((res) => res.json())
@@ -186,7 +207,11 @@ export default function SellCards(props) {
                   className={classes.hoverCard}
                 >
                   <Image
-                    src={el.image !== undefined  ? `/dishes/${el.image}` : `/dishes/stockDishImg.png`}
+                    src={
+                      el.image !== undefined
+                        ? `/dishes/${el.image}`
+                        : `/dishes/stockDishImg.png`
+                    }
                     className="card-img-top"
                     alt="me"
                     width="1000"
@@ -230,7 +255,7 @@ export default function SellCards(props) {
           type="button"
           className={'btn btn-success '}
           onClick={(e) =>
-            processSell(false, props.session.token, 'Factura creada!')
+            checkIfLogin(false, props.session.token, 'Factura creada!')
           }
         >
           <BsCheck /> Procesar venta
@@ -240,7 +265,7 @@ export default function SellCards(props) {
           type="button"
           className={'btn btn-danger ' + classes.fiado}
           onClick={(e) =>
-            processSell(true, props.session.token, 'Factura creada!')
+            checkIfLogin(true, props.session.token, 'Factura creada!')
           }
         >
           <BsFlagFill /> Fiar

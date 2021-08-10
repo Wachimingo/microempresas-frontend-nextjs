@@ -90,6 +90,19 @@
   margin-left: 26vw;
   margin-bottom: 1vw;
 }
+.pendingOrderCards{
+  width: 98%;
+  margin-left: 1vw;
+  margin-top: 1vh;
+}
+.pendingOrderCardsImage{
+  display: inline-block;
+}
+.pendingOrderCardsBody{
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 1vw;
+}
 @media screen and (max-width: 800px) {
   .centered{
     padding-left: 2vw;

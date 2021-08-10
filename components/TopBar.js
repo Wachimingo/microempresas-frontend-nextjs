@@ -48,6 +48,11 @@ export default function TopBar(props) {
                     <a className="nav-link">Vender</a>
                   </Link>
                 </li>
+                <li>
+                  <Link href="/pendingOrders" passHref>
+                    <a className="nav-link">Pedidos</a>
+                  </Link>
+                </li>
                 <li className="nav-item">
                   <Link href="/menu/catalog" passHref>
                     <a className="nav-link">Catalogo</a>
@@ -191,6 +196,9 @@ export default function TopBar(props) {
                 </Link>
               </li>
             </ul>
+            <Link href="/signing" passHref>
+              <a className="nav-link">Registrase</a>
+            </Link>
             <Link href="/login" passHref>
               <a className="nav-link">Login</a>
             </Link>

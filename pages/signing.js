@@ -1,4 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
+import { useContext } from 'react';
+import Link from 'next/link';
 import AuthContext from '../context/authContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,15 +8,17 @@ import { useRouter } from 'next/router';
 
 const classes = require('./../styles/login.module.css');
 
-export default function login() {
-  const [email, setEmail] = useState('a@b.com');
-  const [password, setPassword] = useState('pass123456');
+export default function SignIn() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [hasAgreed, setHasAgreed] = useState(false)
   const { setSession } = useContext(AuthContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('/api/login', {
+    fetch('/api/signing', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -41,25 +45,15 @@ export default function login() {
   const cookieSettup = (res) => {
     if (res.data.data !== undefined) {
       setSession(res.data.data.data);
-      if(router.query.page){
-        router.push(`${router.query.page}`);  
-      }else{
-      router.push('/');
-    }
+      if (router.query.page) {
+        router.push(`${router.query.page}`);
+      } else {
+        router.push('/');
+      }
     } else {
-      toast.error('Correo o Contraseña equivocada!');
+      toast.error('Error!');
     }
   };
-
-  const goToSigning = () => {
-    if(router.query.page !== undefined){
-    router.push({
-      pathname: '/signing',
-      query: `${router.query.page}`
-    })}else {
-      router.push('/signing')
-    }
-  }
 
   return (
     <div>
@@ -92,27 +86,40 @@ export default function login() {
           </div>
 
           <div className="form-group">
+            <label htmlFor="password">Confirmar password</label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              value={passwordConfirm}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
+              placeholder="Enter password"
+            />
+          </div>
+          <br />
+          <div className="form-group">
             <div className="custom-control custom-checkbox">
               <input
                 type="checkbox"
                 className="custom-control-input"
                 id="customCheck1"
+                onChange={(e)=>setHasAgreed(!hasAgreed)}
               />
               <label className="custom-control-label" htmlFor="customCheck1">
-                Remember me
+                <Link href="/agreement" passHref>
+                  <a>Acepto los terminos y condiciones</a>
+                </Link>
               </label>
             </div>
           </div>
-
-          <button type="submit" className="btn btn-primary btn-block">
+          <br />
+          {
+              hasAgreed ? <button type="submit" className="btn btn-primary btn-block">
+              Submit
+            </button> : <button type="submit" className="btn btn-primary btn-block" disabled>
             Submit
           </button>
-          <button type="button" className={"btn btn-info btn-block " + classes.moveRight } onClick={(e)=>goToSigning()}>
-            Registrarse
-          </button>
-          <p className="forgot-password text-right">
-            Forgot <a href="#">password?</a>
-          </p>
+          }
         </form>
       </div>
       <div>

@@ -2,12 +2,12 @@ import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 import React from 'react';
 import Webcam from 'react-webcam';
-import Script from 'next/script'
+import Script from 'next/script';
 import { drawKeypoints, drawSkeleton } from './../components/tsUtils';
 export default function App() {
   const webcamRef = React.useRef(null);
   const canvasRef = React.useRef(null);
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
 
   const detectWebcamFeed = async (posenet_model) => {
     if (
@@ -30,7 +30,7 @@ export default function App() {
         nmsRadius: 20,
       });
       console.log(pose);
-      setCount(pose.length)
+      setCount(pose.length);
       drawResult(pose, video, videoWidth, videoHeight, canvasRef);
     }
   };
@@ -49,14 +49,14 @@ export default function App() {
     const ctx = canvas.current.getContext('2d');
     canvas.current.width = videoWidth;
     canvas.current.height = videoHeight;
-    for(let i=0; i < pose.length; i++){
-    drawKeypoints(pose[i]['keypoints'], 0.6, ctx);
-    drawSkeleton(pose[i]['keypoints'], 0.7, ctx);
-  }
+    for (let i = 0; i < pose.length; i++) {
+      drawKeypoints(pose[i]['keypoints'], 0.6, ctx);
+      drawSkeleton(pose[i]['keypoints'], 0.7, ctx);
+    }
   };
   return (
     <div className="App">
-      <Script src="https://unpkg.com/ml5@0.1.1/dist/ml5.min.js"/>
+      <Script src="https://unpkg.com/ml5@0.1.1/dist/ml5.min.js" />
       <header className="App-header">
         <Webcam
           ref={webcamRef}

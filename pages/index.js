@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import Link from 'next/link';
 import AuthContext from '../context/authContext';
 import Image from 'next/image';
 // import dynamic from 'next/dynamic';
@@ -29,11 +30,13 @@ export default function Menu({ items }) {
       <div className={'text-center '}>
         <h1>Bienvenido a Comedor Buen Amancer</h1>
         <br />
-
         <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
         <br />
         {SSRElements}
         {/* <Mic/> */}
+        <Link href="/menu/sell" passHref>
+          <a className="btn btn-success">Comprar</a>
+        </Link>
       </div>
     </div>
   );
