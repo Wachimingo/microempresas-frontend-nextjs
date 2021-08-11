@@ -13,7 +13,7 @@ export default async (req, res) => {
       customer: req.body.customer,
       day: req.body.day,
       isFiado: req.body.isFiado,
-      peding: req.body.pending
+      isPending: req.body.pending
     }),
   });
 

@@ -8,7 +8,6 @@ export default async (req, res) => {
       mode: 'cors',
       headers: {
         Authorization: `Bearer ${req.headers.authorization}`,
-        'content-type': 'application/json'
       },
       body: JSON.stringify({
         forToday: req.body.forToday,

@@ -103,6 +103,26 @@
   vertical-align: top;
   padding-left: 1vw;
 }
+.pendingOrderCardsInnerCard{
+  display: inline-block;
+  padding-right: 2vw;
+}
+.collapseCard{
+  margin-left: 5vw;
+  width: 94%;
+}
+.collapseInnerCard{
+  background-color: lightgrey;
+}
+.activated{
+  background-color: lightblue;
+}
+.pendingOrderButton{
+  display: inline-block;
+  width: 46%;
+  margin-left: 1vw;
+  margin-top: 1vh;
+}
 @media screen and (max-width: 800px) {
   .centered{
     padding-left: 2vw;
@@ -140,5 +160,14 @@
     width: 100%;
     margin-left: 0vw;
     margin-bottom: 0vw;
+  }
+  .pendingOrderCardsInnerCard{
+    display: block;
+    padding-right: 2vw;
+  }
+  .collapseCard{
+    margin-left: 1vw;
+    width: 100%;
+    background-color: lightgray;
   }
 }
