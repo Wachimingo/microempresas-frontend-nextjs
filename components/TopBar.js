@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import {useContext} from 'react'
+import { useContext } from 'react';
 import AuthContext from '../context/authContext';
 import Link from 'next/link';
 const classes = require('./../styles/topbar.module.css');
 
 export default function TopBar(props) {
   const router = useRouter();
-  const {session, quitSession} = useContext(AuthContext)
+  const { session, quitSession } = useContext(AuthContext);
 
   if (session) {
     // console.log(session)
@@ -33,11 +33,11 @@ export default function TopBar(props) {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link href="/" passHref>
-                  <a className="nav-link">Home</a>
-                </Link>
-              </li>
+                <li className="nav-item">
+                  <Link href="/" passHref>
+                    <a className="nav-link">Home</a>
+                  </Link>
+                </li>
                 <li className="nav-item">
                   <Link href="/dashboard" passHref>
                     <a className="nav-link">DashBoard</a>
@@ -48,10 +48,33 @@ export default function TopBar(props) {
                     <a className="nav-link">Vender</a>
                   </Link>
                 </li>
-                <li>
-                  <Link href="/pendingOrders" passHref>
-                    <a className="nav-link">Pedidos</a>
-                  </Link>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Pedidos
+                  </a>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li>
+                      <Link href="/orders/isPending" passHref>
+                        <a className="dropdown-item">Pendientes</a>
+                      </Link>
+                    </li>
+                    <Link href="/orders/isReady" passHref>
+                      <a className="dropdown-item">Listos para retirar</a>
+                    </Link>
+                    <Link href="/orders/isCompleted" passHref>
+                      <a className="dropdown-item">Completados</a>
+                    </Link>
+                  </ul>
                 </li>
                 <li className="nav-item">
                   <Link href="/menu/catalog" passHref>
@@ -124,11 +147,11 @@ export default function TopBar(props) {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link href="/" passHref>
-                  <a className="nav-link">Home</a>
-                </Link>
-              </li>
+                <li className="nav-item">
+                  <Link href="/" passHref>
+                    <a className="nav-link">Home</a>
+                  </Link>
+                </li>
                 <li>
                   <Link href="/menu/carusel" passHref>
                     <a className="nav-link">Platos de hoy</a>
@@ -137,6 +160,16 @@ export default function TopBar(props) {
                 <li className="nav-item">
                   <Link href="/menu/catalog" passHref>
                     <a className="nav-link">Catalogo</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/menu/sell" passHref>
+                    <a className="nav-link">Comprar</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/orders/user" passHref>
+                    <a className="nav-link">Mis Pedidos</a>
                   </Link>
                 </li>
                 <li>

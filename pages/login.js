@@ -105,7 +105,7 @@ export default function login() {
           </div>
 
           <button type="submit" className="btn btn-primary btn-block">
-            Submit
+            Ingresar
           </button>
           <button type="button" className={"btn btn-info btn-block " + classes.moveRight } onClick={(e)=>goToSigning()}>
             Registrarse

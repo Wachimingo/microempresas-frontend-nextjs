@@ -37,21 +37,28 @@ export default function Menu({ items, totalRecords, itemsForToday }) {
 
     if (page === 'carusel') {
       return (
+        <>
         <MenuAdmin
           title={'Carusel de Platillos para hoy'}
           componentName={'Carusel'}
           visible={false}
           Component={<CarousselSSR items={itemsForToday} />}
         />
+        <Link href="/menu/sell" passHref>
+          <a className="btn btn-success">Comprar</a>
+        </Link>
+        </>
       );
     } else if (page === 'sell') {
       return (
+        <>
         <MenuAdmin
           title={'Vender platos'}
           componentName={'Vender Platos'}
           visible={false}
           Component={<SellCards items={itemsForToday} session={session} />}
         />
+        </>
       );
     } else if (page === 'catalog') {
       return (
