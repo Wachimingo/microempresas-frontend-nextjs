@@ -9,8 +9,7 @@ export default function TopBar(props) {
   const { session, quitSession } = useContext(AuthContext);
 
   if (session) {
-    // console.log(session)
-    if (session.user.role === 'admin') {
+    if (session.role === 'admin') {
       return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container-fluid">
@@ -124,7 +123,7 @@ export default function TopBar(props) {
           </div>
         </nav>
       );
-    } else if (session.user.role === 'user') {
+    } else if (session.role === 'user') {
       return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container-fluid">

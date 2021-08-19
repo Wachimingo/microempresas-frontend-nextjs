@@ -115,8 +115,8 @@ export async function getServerSideProps(context) {
   const data = await res.json();
   const data2 = await resForToday.json();
   const itemsForToday = data2.data
-  const items = data.data.doc;
-  const totalRecords = data.data.totalRecords;
+  const items = data.records;
+  const totalRecords = data.totalRecords;
   // console.log(data.data.totalRecords)
   if (!data) {
     return {

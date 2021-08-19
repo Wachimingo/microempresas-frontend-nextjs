@@ -14,38 +14,28 @@ export default async (req, res) => {
           ifValue: req.body.ifValue,
         }),
       });
+      // records = await fetch(`http://localhost:8080/getPendingOrders`, {
+      //   method: 'GET',
+      //   mode: 'cors',
+      //   headers: {
+      //     Authorization: req.headers.authorization,
+      //   }
+      // });
     } else if (req.method === 'PATCH') {
-      if (req.body.completed) {
-        records = await fetch(
-          `http://localhost:3001/api/v1/bills/${req.body.id}`,
-          {
-            method: 'PATCH',
-            mode: 'cors',
-            headers: {
-              Authorization: req.headers.authorization,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              isCompleted: req.body.completed,
-            }),
-          }
-        );
-      } else if (req.body.pending) {
-        records = await fetch(
-          `http://localhost:3001/api/v1/bills/${req.body.id}`,
-          {
-            method: 'PATCH',
-            mode: 'cors',
-            headers: {
-              Authorization: req.headers.authorization,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              isPending: req.body.pending,
-            }),
-          }
-        );
-      }
+      records = await fetch(
+        `http://localhost:3001/api/v1/bills/${req.body.id}`,
+        {
+          method: 'PATCH',
+          mode: 'cors',
+          headers: {
+            Authorization: req.headers.authorization,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: req.body.status,
+          }),
+        }
+      );
     } else if (req.method === 'DELETE') {
       records = await fetch(
         `http://localhost:3001/api/v1/bills/${req.body.id}`,
@@ -59,7 +49,8 @@ export default async (req, res) => {
       );
     }
   } else if (req.body.role === 'user') {
-    records = await fetch(`http://localhost:3001/api/v1/bills/ownedOrders`, {
+    // console.log(req.body)
+    records = await fetch(`http://localhost:3001/api/v1/bills/ownedOrders?sort=-status`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -77,20 +68,18 @@ export default async (req, res) => {
     return;
   }
 
-  const result = await records.json();
-  // console.log(result);
+  const data = await records.json();
+  // console.log(data);
   if (records.ok) {
     res.status(201).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data,
     });
   } else {
     res.status(401).json({
       status: 'failed',
       data: {
-        message: result.message[0].message,
+        message: data.message[0].message,
       },
     });
   }

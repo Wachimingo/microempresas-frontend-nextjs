@@ -48,7 +48,7 @@ export async function getServerSideProps(context) {
     mode: 'cors',
   });
   const data = await res.json();
-  const items = data.data.doc;
+  const items = data.records;
   // console.log(data.data.doc)
   if (!data) {
     return {

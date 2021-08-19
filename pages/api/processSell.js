@@ -1,5 +1,5 @@
 export default async (req, res) => {
-  // console.log(req.body.customer)
+  // console.log(req.body)
   const processSell = await fetch(`http://localhost:3001/api/v1/bills`, {
     method: 'POST',
     mode: 'cors',
@@ -13,24 +13,22 @@ export default async (req, res) => {
       customer: req.body.customer,
       day: req.body.day,
       isFiado: req.body.isFiado,
-      isPending: req.body.pending
+      status: req.body.status
     }),
   });
 
-  const result = await processSell.json();
+  const data = await processSell.json();
 
   if (processSell.ok) {
     res.status(201).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data
     });
   } else {
     res.status(401).json({
       status: 'failed',
       data: {
-        message: result.message,
+        message: data.message,
       },
     });
   }

@@ -14,7 +14,7 @@ export const AuthProvider = ({children}) => {
       }, [session]);
 
     const quitSession = async() => {
-        setSession(null)
+        setSession('')
         // removeCookie('session');
         router.replace('/');
       };

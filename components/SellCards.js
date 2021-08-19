@@ -37,11 +37,11 @@ export default memo(function SellCards(props) {
   ];
 
   useEffect(() => {
-    if (session.user !== undefined) {
-      setLoaded(true);
-      setCustomerName(session.user.name)
+    if (session !== null) {
+      // setLoaded(true);
+      setCustomerName(session.name)
     } else {
-      setLoaded(!false)
+      // setLoaded(false)
     }
 
     props.items.map((el) => {
@@ -82,13 +82,13 @@ export default memo(function SellCards(props) {
 
   //TODO: remove the loop, and just add the total amount of the dish instead
 
-  const addDishesToBill = (billId, token) => {
+  const addDishesToBill = (billId) => {
     for (let id of dishes) {
       fetch(`/api/addDishesToBill`, {
         method: 'POST',
         mode: 'cors',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -110,21 +110,22 @@ export default memo(function SellCards(props) {
   };
 
   const checkIfLogin = (fiado, token, msg) => {
-    if (session === undefined) {
+    if (session === null) {
       router.push({
         pathname: '/login',
         query: { page: '/menu/sell' },
       });
     } else {
-      if (session.user.role === 'admin') {
-        processSell(fiado, token, msg, false);
+      if (session.role === 'admin') {
+        processSell(fiado, msg, 'Completed');
       } else {
-        processSell(fiado, token, msg, true);
+        processSell(fiado, msg, 'Pending');
       }
     }
   };
 
-  const processSell = (fiado, token, msg, pending) => {
+  const processSell = (fiado, msg, stat) => {
+    // console.log(session)
     if (counterPrice < 0 && counterDish < 1) {
       toast.error('No ha seleccionado platos para facturar');
     } else {
@@ -137,7 +138,7 @@ export default memo(function SellCards(props) {
           method: 'POST',
           mode: 'cors',
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${session.token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -146,12 +147,12 @@ export default memo(function SellCards(props) {
             day: week[day],
             isFiado: fiado,
             customer: customerName,
-            pending,
+            status: stat,
           }),
         })
           .then((res) => res.json())
           // .then((res)=>console.log(res))
-          .then((res) => billCreationValidation(res, msg, token))
+          .then((res) => billCreationValidation(res, msg))
           .then(
             (counterDish = 0),
             (counterPrice = 0),
@@ -163,11 +164,12 @@ export default memo(function SellCards(props) {
   };
 
   const billCreationValidation = (res, msg, token) => {
-    if (res.data.result !== undefined) {
+    if (res.data.record !== undefined) {
       toast.success(msg);
-      addDishesToBill(res.data.result.data.data._id, token);
+      // console.log(res)
+      addDishesToBill(res.data.record._id, token);
     } else {
-      console.log(res);
+      // console.log(res);
       toast.error(res.data.message);
     }
   };
@@ -179,9 +181,9 @@ export default memo(function SellCards(props) {
   //   callback: () => document.querySelectorAll(`[id^=counter_`)[0].innerHTML = document.querySelectorAll(`[id^=counter_`)[0].innerHTML*1 +1
   // },]
 
-  if (!loaded) {
-    return <>cargando...</>;
-  } else {
+  // if (!loaded) {
+  //   return <>cargando...</>;
+  // } else {
     return (
       <>
         {/* <Mic commands={commands}/> */}
@@ -194,7 +196,7 @@ export default memo(function SellCards(props) {
           type="customer"
           className={'form-control ' + classes.customerName}
           id="customer"
-          value={session.user.role === 'admin' ? '' : customerName}
+          value={session !== null ? '' : customerName}
           aria-describedby="customerHelp"
           onChange={(e) => setCustomerName(e.target.value)}
         />
@@ -267,15 +269,15 @@ export default memo(function SellCards(props) {
             type="button"
             className={'btn btn-success '}
             onClick={(e) =>
-              checkIfLogin(false, session.token, 'Factura creada!')
+              checkIfLogin(false, 'Factura creada!')
             }
           >
-            <BsCheck /> {session.user.role === 'admin' ? 'Procesar venta' : 'Realizar pedido'}
+            <BsCheck /> {session !== null ? 'Procesar venta' : 'Realizar pedido'}
           </button>
           {/* Fiado is to lend this dish to the client with the promise to pay afterward */}
           <button
             type="button"
-            className={session.user.role === 'admin' ? `btn btn-danger ${classes.fiado}` : 'd-none'}
+            className={session !== null ? `btn btn-danger ${classes.fiado}` : 'd-none'}
             onClick={(e) =>
               checkIfLogin(true, session.token, 'Factura creada!')
             }
@@ -290,5 +292,5 @@ export default memo(function SellCards(props) {
         </div>
       </>
     );
-  }
+  // }
 });

@@ -29,18 +29,12 @@ export default function login() {
       // .then((res) => console.log(res))
       .then(
         (res) => cookieSettup(res),
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setError(error);
-        }
       );
   };
 
   const cookieSettup = (res) => {
-    if (res.data.data !== undefined) {
-      setSession(res.data.data.data);
+    if (res.data.user !== undefined) {
+      setSession(res.data.user);
       if(router.query.page){
         router.push(`${router.query.page}`);  
       }else{
