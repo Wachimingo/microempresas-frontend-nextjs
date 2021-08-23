@@ -35,7 +35,8 @@ export default memo(function pendingOrders() {
         }),
       })
         .then((res) => res.json())
-        .then((res) => setItems(res.data.records), setLoaded(true));
+        .then((res) => checkIfEmpty(res))
+        .then(() => setLoaded(true));
       // .then((res) => console.log(res))
     } else if (window.location.href.split('/').pop() === 'isReady') {
       fetch(`/api/orders`, {
@@ -85,7 +86,8 @@ export default memo(function pendingOrders() {
       }),
     })
       .then((res) => res.json())
-      .then((res) => setItems(res.data.records), setLoaded(true));
+      .then((res) => setItems(res.data.records))
+      .then(() => setLoaded(true));
     // .then((res) => console.log(res))
   };
 
@@ -132,6 +134,21 @@ export default memo(function pendingOrders() {
       document.getElementById(`item-${id}`).className = 'd-none';
       document.getElementById(`buttons-${id}`).classList.add('d-none');
     }
+  };
+
+  const checkIfEmpty = (res) => {
+    if (res.data.records !== undefined) {
+      setItems(res.data.records);
+    } else if (res.data !== undefined) {
+      // res.data.map((el, i) => {
+      //   console.log(el);
+      // });
+      // console.log(res)
+      setItems(res.data);
+    } else {
+      console.log('ERROR');
+    }
+    // console.log(res.data)
   };
 
   const cancelOrder = (id) => {
@@ -230,6 +247,7 @@ export default memo(function pendingOrders() {
   } else {
     return (
       <div>
+        {console.log(items)}
         <h1>Pedidos en linea </h1>
         {items.map((el, i) => {
           return (
@@ -272,7 +290,7 @@ export default memo(function pendingOrders() {
               >
                 <Card className={classes.collapseInnerCard}>
                   <CardBody>
-                    {el.dishes.map((el, i) => {
+                    {/* {el.dishes.map((el, i) => {
                       return (
                         <div
                           className={classes.pendingOrderCardsInnerCard}
@@ -299,7 +317,7 @@ export default memo(function pendingOrders() {
                           </div>
                         </div>
                       );
-                    })}
+                    })} */}
                   </CardBody>
                 </Card>
               </Collapse>

@@ -1,5 +1,5 @@
 export default async (req, res) => {
-    const addDishesToBill = await fetch(`http://localhost:3001/api/v1/bills/detailedBilling`, {
+    const addDishesToBill = await fetch(`${process.env.backend_nodejs}/api/v1/bills/detailedBilling`, {
       method: 'POST',
       mode: 'cors',
       headers: {

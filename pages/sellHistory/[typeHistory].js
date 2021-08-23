@@ -33,16 +33,16 @@ export default function sellHistory() {
       }),
     })
       .then((res) => res.json())
-      // .then((res) => console.log(res.data.result.data.doc))
+      // .then((res) => console.log(res))
       .then((res) => {
-        setItems(res.data.result.data.doc),
-          setTotalRecords(res.data.result.data.totalRecords);
+        setItems(res.data.records),
+          setTotalRecords(res.data.totalRecords);
       })
       .then(() => setLoaded(true));
   }, [typeHistory]);
 
   const parentItemsUpdate = (res) => {
-    setItems(res.data.result.data.doc);
+    setItems(res.data.records);
   };
 
   const itemList = (type) => {

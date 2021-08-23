@@ -9,7 +9,7 @@ export default async (req, res) => {
 
     // console.log(filePath)
   const deleteDish = await fetch(
-    `http://192.168.1.2:3001/api/v1/menu/${req.body.id}`,
+    `${process.env.backend_nodejs}/api/v1/menu/${req.body.id}`,
     {
       method: 'DELETE',
       mode: 'cors',

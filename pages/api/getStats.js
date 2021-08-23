@@ -1,5 +1,5 @@
 export default async (req, res) => {
-  const stats = await fetch('http://localhost:3001/api/v1/stats', {
+  const stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats`, {
     method: 'POST',
     mode: 'cors',
     headers: {

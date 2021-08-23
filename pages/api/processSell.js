@@ -1,6 +1,6 @@
 export default async (req, res) => {
   // console.log(req.body)
-  const processSell = await fetch(`http://localhost:3001/api/v1/bills`, {
+  const processSell = await fetch(`${process.env.backend_nodejs}/api/v1/bills`, {
     method: 'POST',
     mode: 'cors',
     headers: {
