@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import AuthContext from '../context/authContext';
+import ParamsContext from '../context/paramsContext';
 import Link from 'next/link';
 const classes = require('./../styles/topbar.module.css');
 

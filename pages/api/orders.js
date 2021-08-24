@@ -1,8 +1,9 @@
 export default async (req, res) => {
   let records = [];
+  // console.log(req.body.url)
   if (req.body.role === 'admin') {
     if (req.method === 'POST') {
-      records = await fetch(`${process.env.backend_orders}/api/v1/bills/orders`, {
+      records = await fetch(`${req.body.url}/api/v1/bills/orders`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -16,7 +17,7 @@ export default async (req, res) => {
       });
     } else if (req.method === 'PATCH') {
       records = await fetch(
-        `${process.env.backend_nodejs}/api/v1/bills/${req.body.id}`,
+        `${req.body.url}/api/v1/bills/${req.body.id}`,
         {
           method: 'PATCH',
           mode: 'cors',
@@ -31,7 +32,7 @@ export default async (req, res) => {
       );
     } else if (req.method === 'DELETE') {
       records = await fetch(
-        `${process.env.backend_nodejs}/api/v1/bills/${req.body.id}`,
+        `${req.body.url}/api/v1/bills/${req.body.id}`,
         {
           method: 'DELETE',
           mode: 'cors',
@@ -43,7 +44,7 @@ export default async (req, res) => {
     }
   } else if (req.body.role === 'user') {
     // console.log(req.body)
-    records = await fetch(`${process.env.backend_nodejs}/api/v1/bills/ownedOrders?sort=-status`, {
+    records = await fetch(`${req.body.url}/api/v1/bills/ownedOrders?sort=-status`, {
       method: 'POST',
       mode: 'cors',
       headers: {
