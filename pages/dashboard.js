@@ -379,7 +379,6 @@ export default function dashboard() {
   } else {
     return (
       <div>
-        {/* <TopBar logged={cookie.session ? true : false} /> */}
         <div className="container">
           <h1>Estadisticas</h1>
           <form id="donutForm" onSubmit={loadNewData}>

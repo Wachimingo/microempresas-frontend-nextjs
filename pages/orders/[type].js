@@ -92,10 +92,14 @@ export default memo(function pendingOrders() {
   };
 
   const toggle = (id) => {
-    document.getElementById(id).classList.toggle('show');
-    document
-      .getElementById(`item-${id}`)
-      .classList.toggle(`${classes.activated}`);
+    let outerElement = document.getElementById(id);
+    if (outerElement) {
+      outerElement.classList.toggle(`${classes.activated}`);
+    }
+    let innerElement = document.getElementById(`item-${id}`);
+    if (innerElement) {
+      innerElement.classList.toggle(`${classes.activated}`);
+    }
   };
 
   const completeOrder = (id) => {
@@ -247,7 +251,7 @@ export default memo(function pendingOrders() {
   } else {
     return (
       <div>
-        {console.log(items)}
+        {/* {console.log(items)} */}
         <h1>Pedidos en linea </h1>
         {items.map((el, i) => {
           return (
@@ -290,34 +294,38 @@ export default memo(function pendingOrders() {
               >
                 <Card className={classes.collapseInnerCard}>
                   <CardBody>
-                    {/* {el.dishes.map((el, i) => {
-                      return (
-                        <div
-                          className={classes.pendingOrderCardsInnerCard}
-                          key={`inner-${i}`}
-                        >
-                          <Image
-                            src={`/dishes/${el.dish.image}`}
-                            className={`${classes.pendingOrderCardsImage}`}
-                            alt="me"
-                            width="100"
-                            height="100"
-                          />
-                          <div className={`${classes.pendingOrderCardsBody}`}>
-                            <h5 className={``}>
-                              Cantidad de platos: {el.amount}
-                            </h5>
-                            <p className={``}>
-                              Precio unitario: ${el.dish.price}
-                            </p>
-                            <p className={``}>
-                              Precio total del mismo plato: $
-                              {el.dish.price * el.amount}
-                            </p>
+                    {el.dishes ? (
+                      el.dishes.map((el, i) => {
+                        return (
+                          <div
+                            className={classes.pendingOrderCardsInnerCard}
+                            key={`inner-${i}`}
+                          >
+                            <Image
+                              src={`/dishes/${el.dish.image}`}
+                              className={`${classes.pendingOrderCardsImage}`}
+                              alt="me"
+                              width="100"
+                              height="100"
+                            />
+                            <div className={`${classes.pendingOrderCardsBody}`}>
+                              <h5 className={``}>
+                                Cantidad de platos: {el.amount}
+                              </h5>
+                              <p className={``}>
+                                Precio unitario: ${el.dish.price}
+                              </p>
+                              <p className={``}>
+                                Precio total del mismo plato: $
+                                {el.dish.price * el.amount}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })} */}
+                        );
+                      })
+                    ) : (
+                      <h2 key={i}>No hay platos que mostrar</h2>
+                    )}
                   </CardBody>
                 </Card>
               </Collapse>

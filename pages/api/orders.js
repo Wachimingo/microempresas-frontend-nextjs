@@ -14,13 +14,6 @@ export default async (req, res) => {
           ifValue: req.body.ifValue,
         }),
       });
-      // records = await fetch(`http://localhost:8080/getPendingOrders`, {
-      //   method: 'GET',
-      //   mode: 'cors',
-      //   headers: {
-      //     Authorization: req.headers.authorization,
-      //   }
-      // });
     } else if (req.method === 'PATCH') {
       records = await fetch(
         `${process.env.backend_nodejs}/api/v1/bills/${req.body.id}`,
