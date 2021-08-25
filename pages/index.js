@@ -62,31 +62,3 @@ export default function Menu() {
     </div>
   );
 }
-
-// export async function getServerSideProps(context) {
-//   const { setParams } = useContext(ParamsContext);
-  // const res = await fetch(`${process.env.backend_nodejs}/api/v1/menu?limit=100`, {
-  //   method: 'GET',
-  //   mode: 'cors',
-  // });
-//   const data = await res.json();
-//   const items = data.records;
-
-//   const res2 = await fetch(`${process.env.backend_nodejs}/api/v1/params`, {
-//     method: 'GET',
-//     mode: 'cors',
-//   });
-//   const data2 = await res2.json();
-//   const params = data2.records;
-//   setParams(params)
-//   // console.log(data2)
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   return {
-//     props: { items }, // will be passed to the page component as props
-//   };
-// }

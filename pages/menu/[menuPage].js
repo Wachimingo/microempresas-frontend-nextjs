@@ -1,27 +1,36 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from './../../context/authContext';
-import dynamic from 'next/dynamic';
 const classes = require('./../../styles/menu.module.css');
 import { BsCloudUpload } from 'react-icons/bs';
 import CarousselSSR from './../../components/Caroussel';
+import SellCards from './../../components/SellCards';
+import CardsSSR from './../../components/Cards';
 import MenuAdmin from './../../components/MenuAdmin';
 
-const SellCards = dynamic(() => import('./../../components/SellCards'), {
-  ssr: true,
-});
-
-const CardsSSR = dynamic(() => import('./../../components/Cards'), {
-  ssr: true,
-});
-
-export default function Menu({ items, totalRecords, itemsForToday }) {
+export default function Menu() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
-
   const { menuPage } = router.query;
-  // console.log(cookie.session)
+
+  const [items, setItems] = useState([])
+  const [totalRecords, setTotalRecords] = useState(0)
+
+  useEffect(() => {
+    fetch(`/api/getMenu`, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((res) => res.json())
+      // .then((res) => console.log(res))
+      .then((res) => updateValues(res));
+  }, []);
+
+  const updateValues = (res) => {
+    setItems(res.data.records)
+    setTotalRecords(res.data.totalRecords)
+  }
 
   const addButton = (
     <>
@@ -34,30 +43,29 @@ export default function Menu({ items, totalRecords, itemsForToday }) {
   );
 
   const NoSSRElements = (page) => {
-
     if (page === 'carusel') {
       return (
         <>
-        <MenuAdmin
-          title={'Carusel de Platillos para hoy'}
-          componentName={'Carusel'}
-          visible={false}
-          Component={<CarousselSSR items={itemsForToday} />}
-        />
-        <Link href="/menu/sell" passHref>
-          <a className="btn btn-success">Comprar</a>
-        </Link>
+          <MenuAdmin
+            title={'Carusel de Platillos para hoy'}
+            componentName={'Carusel'}
+            visible={false}
+            Component={<CarousselSSR items={items} />}
+          />
+          <Link href="/menu/sell" passHref>
+            <a className="btn btn-success">Comprar</a>
+          </Link>
         </>
       );
     } else if (page === 'sell') {
       return (
         <>
-        <MenuAdmin
-          title={'Vender platos'}
-          componentName={'Vender Platos'}
-          visible={false}
-          Component={<SellCards items={itemsForToday} session={session} />}
-        />
+          <MenuAdmin
+            title={'Vender platos'}
+            componentName={'Vender Platos'}
+            visible={false}
+            Component={<SellCards items={items} session={session} />}
+          />
         </>
       );
     } else if (page === 'catalog') {
@@ -100,31 +108,31 @@ export default function Menu({ items, totalRecords, itemsForToday }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const res = await fetch('http://localhost:3001/api/v1/menu?limit=100', {
-    method: 'GET',
-    mode: 'cors',
-  });
-  const resForToday = await fetch(
-    'http://localhost:3001/api/v1/menu/forToday',
-    {
-      method: 'GET',
-      mode: 'cors',
-    }
-  );
-  const data = await res.json();
-  const data2 = await resForToday.json();
-  const itemsForToday = data2.data
-  const items = data.records;
-  const totalRecords = data.totalRecords;
-  // console.log(data.data.totalRecords)
-  if (!data) {
-    return {
-      notFound: true,
-    };
-  }
+// export async function getServerSideProps(context) {
+//   const res = await fetch('http://localhost:3001/api/v1/menu?limit=100', {
+//     method: 'GET',
+//     mode: 'cors',
+//   });
+//   const resForToday = await fetch(
+//     'http://localhost:3001/api/v1/menu/forToday',
+//     {
+//       method: 'GET',
+//       mode: 'cors',
+//     }
+//   );
+//   const data = await res.json();
+//   const data2 = await resForToday.json();
+//   const itemsForToday = data2.data;
+//   const items = data.records;
+//   const totalRecords = data.totalRecords;
+//   // console.log(data.data.totalRecords)
+//   if (!data) {
+//     return {
+//       notFound: true,
+//     };
+//   }
 
-  return {
-    props: { items, totalRecords, itemsForToday }, // will be passed to the page component as props
-  };
-}
+//   return {
+//     props: { items, totalRecords, itemsForToday }, // will be passed to the page component as props
+//   };
+// }

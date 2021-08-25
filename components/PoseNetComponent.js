@@ -4,7 +4,7 @@ import React from 'react';
 import Webcam from 'react-webcam';
 import Script from 'next/script';
 import { drawKeypoints, drawSkeleton } from './../components/tsUtils';
-export default function App() {
+export default function App(props) {
   const webcamRef = React.useRef(null);
   const canvasRef = React.useRef(null);
   const [count, setCount] = React.useState(0);
@@ -29,7 +29,7 @@ export default function App() {
         scoreThreshold: 0.7,
         nmsRadius: 20,
       });
-      console.log(pose);
+      props.updateCounter(pose);
       setCount(pose.length);
       drawResult(pose, video, videoWidth, videoHeight, canvasRef);
     }
