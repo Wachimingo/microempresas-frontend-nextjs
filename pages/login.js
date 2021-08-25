@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 const classes = require('./../styles/login.module.css');
 
 export default function login() {
-  const [email, setEmail] = useState('a@b.com');
-  const [password, setPassword] = useState('pass123456');
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const { setSession } = useContext(AuthContext);
   const router = useRouter();
 
