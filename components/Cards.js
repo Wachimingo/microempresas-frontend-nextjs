@@ -16,20 +16,18 @@ import {
 } from 'react-icons/bs';
 
 export default function Cards(props) {
-  //Clone props.items to filter object
-  let [filterObject, setFilterObject] = useState(
-    JSON.parse(JSON.stringify(props.items))
-  );
-  const [visible, setVisible] = useState('d-none')
+  let [filterObject = [...props.items], setFilterObject] = useState();
 
-  useEffect(()=>{
-    if(props.session){
-      setVisible('')
+  const [visible, setVisible] = useState('d-none');
+
+  useEffect(() => {
+    if (props.session) {
+      setVisible('');
     }
-  },[])
+  }, []);
 
   // const notify = (text) => toast(text);
-  const cardButtons = (el,id, i, fileName) => (
+  const cardButtons = (el, id, i, fileName) => (
     <div key={i} className={visible}>
       {/* Button to Delete Card */}
       <button
@@ -79,7 +77,10 @@ export default function Cards(props) {
       >
         <BsChevronCompactDown />
       </button>
-      <Link href={{ pathname: '/addDish', query: { data: JSON.stringify(el) }}} passHref>
+      <Link
+        href={{ pathname: '/addDish', query: { data: JSON.stringify(el) } }}
+        passHref
+      >
         <button type="button" className={'btn btn-warning'}>
           <BsGearFill />
         </button>
@@ -88,30 +89,29 @@ export default function Cards(props) {
   );
 
   const setNewFilteredObject = (obj) => {
-    setFilterObject(obj);
+    setFilterObject(obj)
   };
 
   const setNewItems = (res) => {
-    setFilterObject(res.data.doc);
+    setFilterObject(res.data.records);
   };
 
-  return (
-    <>
-      <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
-      <div className={classes.paginationControls}>
-        <PaginationControls
-          totalRecords={props.totalRecords}
-          limit={100}
-          toUpdateParent={setNewItems}
-          url={`http://localhost:3001/api/v1/menu`}
-          method={'GET'}
-        />
-      </div>
+  if (filterObject.length > 0 && props.totalRecords > 0) {
+    return (
+      <>
+        <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
+        <div className={classes.paginationControls}>
+          <PaginationControls
+            totalRecords={props.totalRecords}
+            limit={100}
+            toUpdateParent={setNewItems}
+            url={`${process.env.backend_nodejs}/api/v1/menu`}
+            method={'GET'}
+          />
+        </div>
 
-      <div className={classes.centerCard}>
-        {
-          // console.log(filterObject),
-          filterObject.map((el, i) => {
+        <div className={classes.centerCard}>
+          {filterObject.map((el, i) => {
             // console.log(el)
             let colorBorder = '';
             el.forToday
@@ -131,7 +131,11 @@ export default function Cards(props) {
                 {cardButtons(el, el.id, i, el.image)}
                 <div className={classes.hoverCard}>
                   <Image
-                    src={el.image !== undefined  ? `/dishes/${el.image}` : `/dishes/stockDishImg.png`}
+                    src={
+                      el.image !== undefined
+                        ? `/dishes/${el.image}`
+                        : `/dishes/stockDishImg.png`
+                    }
                     className="card-img-top"
                     alt="me"
                     width="1000"
@@ -144,12 +148,12 @@ export default function Cards(props) {
                 </div>
               </div>
             );
-          })
-        }
-        <div>
-          <ToastContainer />
+          })}
+          <div>
+            <ToastContainer />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else return <h1>Cargando...</h1>;
 }

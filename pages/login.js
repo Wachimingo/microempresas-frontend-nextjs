@@ -41,7 +41,7 @@ export default function login() {
       router.push('/');
     }
     } else {
-      toast.error('Correo o Contraseña equivocada!');
+      toast.error(res.data.message);
     }
   };
 

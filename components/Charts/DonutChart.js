@@ -27,6 +27,7 @@ export default memo(function DonutChart(props) {
     },
     options: props.options,
   };
+  
   useEffect(() => {
     if (chartId !== undefined) {
       let ctx = document.getElementById(chartId).getContext('2d');

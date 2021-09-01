@@ -43,10 +43,34 @@ export default function TopBar(props) {
                     <a className="nav-link">DashBoard</a>
                   </Link>
                 </li>
-                <li>
-                  <Link href="/menu/sell" passHref>
-                    <a className="nav-link">Vender</a>
-                  </Link>
+                <li className="nav-item"></li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Menu
+                  </a>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li>
+                      <Link href="/menu/sell" passHref>
+                        <a className="dropdown-item">Vender</a>
+                      </Link>
+                    </li>
+                    <Link href="/menu/catalog" passHref>
+                      <a className="dropdown-item">Catalogo</a>
+                    </Link>
+                    <Link href="/menu/carusel" passHref>
+                      <a className="dropdown-item">Carusel</a>
+                    </Link>
+                  </ul>
                 </li>
                 <li className="nav-item dropdown">
                   <a
@@ -76,16 +100,6 @@ export default function TopBar(props) {
                     </Link>
                   </ul>
                 </li>
-                <li className="nav-item">
-                  <Link href="/menu/catalog" passHref>
-                    <a className="nav-link">Catalogo</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/menu/carusel" passHref>
-                    <a className="nav-link">Carusel</a>
-                  </Link>
-                </li>
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle"
@@ -114,7 +128,40 @@ export default function TopBar(props) {
                     </Link>
                   </ul>
                 </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Inventario
+                  </a>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li>
+                      <Link href="/inventory" passHref>
+                        <a className="dropdown-item">Reportar Compras</a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/ingredients" passHref>
+                        <a className="dropdown-item">ingredientes</a>
+                      </Link>
+                    </li>
+                    <Link href="/existence" passHref>
+                      <a className="dropdown-item">Existencias</a>
+                    </Link>
+                  </ul>
+                </li>
               </ul>
+              <Link href="/peopleCounter" passHref>
+                <a className="nav-link">Contador</a>
+              </Link>
               <Link href="/" passHref>
                 <a className="nav-link" onClick={quitSession}>
                   Logout

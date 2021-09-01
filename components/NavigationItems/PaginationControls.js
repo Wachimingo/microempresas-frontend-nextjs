@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function PaginationControls(props) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [total, setTotal] = useState(Math.ceil(props.totalRecords / props.limit));
+  const [total = Math.ceil(props.totalRecords / props.limit), setTotal] = useState();
 
   useEffect(()=>{
     setTotal(Math.ceil(props.totalRecords / props.limit))

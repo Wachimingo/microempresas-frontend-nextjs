@@ -5,3 +5,19 @@
 .formBody{
     width: 50%;
 }
+
+.InLineBlock{
+    display: inline-block;
+}
+
+.Table{
+    margin-left: 20vw;
+    width: 50%;
+}
+.actions > div > button{
+    height: 3vh;
+}
+
+.paginationNav{
+    margin-left: 40vw;
+}

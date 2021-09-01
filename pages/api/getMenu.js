@@ -8,7 +8,7 @@ export default async (req, res) => {
   );
 
   const data = await result.json();
-//   console.log(data)
+  // console.log(data)
   if (result.ok) {
     res.status(200).json({
       status: 'success',

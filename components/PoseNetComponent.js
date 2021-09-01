@@ -1,13 +1,13 @@
-import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs-backend-webgl';
 import * as posenet from '@tensorflow-models/posenet';
 import React from 'react';
 import Webcam from 'react-webcam';
 import Script from 'next/script';
 import { drawKeypoints, drawSkeleton } from './../components/tsUtils';
+
 export default function App(props) {
   const webcamRef = React.useRef(null);
   const canvasRef = React.useRef(null);
-  const [count, setCount] = React.useState(0);
 
   const detectWebcamFeed = async (posenet_model) => {
     if (
@@ -26,11 +26,10 @@ export default function App(props) {
       const pose = await posenet_model.estimateMultiplePoses(video, {
         flipHorizontal: false,
         maxDetections: 5,
-        scoreThreshold: 0.7,
+        scoreThreshold: 1,
         nmsRadius: 20,
       });
-      props.updateCounter(pose);
-      setCount(pose.length);
+      props.updateCounter(pose.length);
       drawResult(pose, video, videoWidth, videoHeight, canvasRef);
     }
   };
@@ -39,7 +38,7 @@ export default function App(props) {
       inputResolution: { width: 640, height: 480 },
       scale: 0.8,
     });
-    //
+    
     setInterval(() => {
       detectWebcamFeed(posenet_model);
     }, 100);
@@ -87,7 +86,6 @@ export default function App(props) {
           }}
         />
       </header>
-      <h1>{count}</h1>
     </div>
   );
 }

@@ -129,6 +129,7 @@ export default function dashboard() {
   }
 
   useEffect(() => {
+    let isConnected = true;
     fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
@@ -144,7 +145,15 @@ export default function dashboard() {
       .then((res) => res.json())
       // .then((res) => console.log(res))
       .then((res) => valitateIfemtpy(res))
-      .then(() => setLoaded(true));
+      .then(() => setLoaded(true))
+      .catch((error) => {
+        if (isConnected) {
+          setState((prevState) => ({
+            ...prevState,
+            error,
+          }));
+        }
+      });
 
     fetch(`/api/getStatsHistory`, {
       method: 'POST',
@@ -165,6 +174,9 @@ export default function dashboard() {
       // .then((res) => console.log(res.data.result))
       .then((res) => fillingArrayForLineChart(res.data.result, historyMode))
       .then(() => setLoadedHistory(true));
+
+      // cancel subscription to useEffect
+    return () => (isConnected = false);
   }, []);
 
   const valitateIfemtpy = (res) => {
@@ -483,7 +495,7 @@ export default function dashboard() {
         </div>
         <br />
         <Script
-          src="https://google.com"
+          src=""
           onLoad={() => {
             document.getElementById('donutDate').value = dateTime
               .toISOString()

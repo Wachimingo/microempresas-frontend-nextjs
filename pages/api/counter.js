@@ -3,7 +3,7 @@ import path from 'path';
 var newpath =
   path.join(`${__dirname}/../../../../`, 'json-files') + '/counter.json';
 
-export default async (req, res) => {
+export default (req, res) => {
   //   console.log(req.body);
   let data = JSON.parse(fs.readFileSync(newpath));
   if (req.method === 'GET') {
@@ -14,11 +14,11 @@ export default async (req, res) => {
   } else if (req.method === 'POST') {
     data = req.body;
     // console.log(data)
-    fs.writeFile(newpath, data, (err) => {
-      res.status(201).json({
-        status: 'success',
-        data,
-      });
+    fs.writeFileSync(newpath, data);
+    res.status(201).json({
+      status: 'success',
     });
+  } else {
+    console.log('ERROR');
   }
 };

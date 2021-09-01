@@ -1,35 +1,35 @@
 export default async (req, res) => {
-  const login = await fetch(`${process.env.backend_nodejs}/api/v1/users/login`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: req.body.email,
-      password: req.body.password,
-    }),
-  });
+  const login = await fetch(
+    `${process.env.backend_nodejs}/api/v1/users/login`,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: req.body.email,
+        password: req.body.password,
+      }),
+    }
+  );
 
   const data = await login.json();
-  data.user.token = data.token
-
   // console.log(data)
 
   if (login.ok) {
+    data.user.token = data.token;
     res.status(201).json({
       status: 'success',
       data: {
         user: data.user,
-      }
+      },
     });
   } else {
     res.status(401).json({
-        status: 'failed',
-        data: {
-          message: data.message[0].message
-        },
-      });
+      status: 'failed',
+      data,
+    });
   }
 };
 

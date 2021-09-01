@@ -19,23 +19,21 @@ export default function peopleCounter() {
   });
 
   function updateCounter(counter) {
-    // setCount(counter)
-    console.log('excuted by timer')
     fetch('/api/counter', {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({
         count: counter,
       }),
-    }).then((res) => res.json());
-  };
+    })
+      .then((res) => res.json())
+      // .then((res) => console.log(res))
+      .then((res) => setCount(res.data));
+  }
 
   return (
     <div>
       <h1>Contador en archivo {count}</h1>
-      <button type="button" onClick={(e) => updateCounter(6)}>
-        6
-      </button>
       <PoseNetComponent updateCounter={updateCounter} />
     </div>
   );
