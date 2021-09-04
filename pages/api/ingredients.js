@@ -58,7 +58,7 @@ export default async (req, res) => {
   }
 
   const data = await records.json();
-  console.log(data);
+  // console.log(data);
   if (records.ok) {
     res.status(201).json({
       status: 'success',
