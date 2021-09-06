@@ -163,6 +163,7 @@ export default memo(function SellCards(props) {
   };
   return (
     <>
+    <h1>{session.role === 'admin' ? 'Vender platos' : 'Comprar Platos'}</h1>
       <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
       {/* Customer name input */}
       <label htmlFor="customer" className="form-label">

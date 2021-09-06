@@ -61,7 +61,6 @@ export default function Menu() {
       return (
         <>
           <MenuAdmin
-            title={'Vender platos'}
             componentName={'Vender Platos'}
             visible={false}
             Component={<SellCards items={items} session={session} />}
