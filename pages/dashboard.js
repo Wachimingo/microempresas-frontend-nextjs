@@ -19,7 +19,7 @@ export default function dashboard() {
   let dateTime = new Date();
   let nextWeek = new Date(
     dateTime.setDate(dateTime.getDate() - dateTime.getDay() + 1) +
-      7 * 24 * 60 * 60 * 1000
+    7 * 24 * 60 * 60 * 1000
   );
   let today = dateTime
     .toISOString()
@@ -95,6 +95,8 @@ export default function dashboard() {
   });
   const [value, setValue] = useState('totalDishes');
   const [historyMode, setHistoryMode] = useState('day');
+  const [lineDate = dateTime.toISOString().split('T')[0], setLineDate] = useState();
+  const [donutDate = dateTime.toISOString().split('T')[0], setDonutDate] = useState();
 
   const options = {
     plugins: {
@@ -175,22 +177,20 @@ export default function dashboard() {
       .then((res) => fillingArrayForLineChart(res.data.result, historyMode))
       .then(() => setLoadedHistory(true));
 
-      // cancel subscription to useEffect
+    // cancel subscription to useEffect
     return () => (isConnected = false);
-  }, []);
+  }, [stats]);
 
   const valitateIfemtpy = (res) => {
-    if (res.data.result[0] !== undefined) {
+    if (res.data.result.length > 0) {
       setStats(res.data.result[0]);
     }
   };
 
   const loadNewData = (e) => {
     e.preventDefault();
-
     let pickedDate = document.getElementById('donutDate').value;
     let mode = document.getElementById('donutList').value;
-
     fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
@@ -229,6 +229,9 @@ export default function dashboard() {
       .split('-')
       .reverse()
       .join('-');
+
+    // console.log(pickedDate, lineDate, pickedDateMondayF)
+
     let historyMode = document.getElementById('lineMode').value;
 
     let nextWeek = new Date(
@@ -409,7 +412,7 @@ export default function dashboard() {
                 </select>
               </div>
               <div className="col">
-                <input type="date" id="donutDate" className="form-control" />
+                <input type="date" value={donutDate} onChange={(e) => setDonutDate(e.target.value)} id="donutDate" className="form-control" />
               </div>
             </div>
             <input type="submit" value="Buscar" />
@@ -474,7 +477,7 @@ export default function dashboard() {
                   id="lineMode"
                   className="form-select"
                   aria-label="Default select example"
-                  // onChange={(e) => putHistoryMode(e.target.value)}
+                // onChange={(e) => putHistoryMode(e.target.value)}
                 >
                   <option value="day" defaultValue>
                     Dia
@@ -484,7 +487,7 @@ export default function dashboard() {
                 </select>
               </div>
               <div className="col">
-                <input type="date" id="lineDate" className="form-control" />
+                <input type="date" id="lineDate" className="form-control" value={lineDate} onChange={(e) => setLineDate(e.target.value)} />
               </div>
             </div>
             <input type="submit" value="Buscar" />
@@ -494,17 +497,6 @@ export default function dashboard() {
           </div>
         </div>
         <br />
-        <Script
-          src=""
-          onLoad={() => {
-            document.getElementById('donutDate').value = dateTime
-              .toISOString()
-              .split('T')[0];
-            document.getElementById('lineDate').value = dateTime
-              .toISOString()
-              .split('T')[0];
-          }}
-        />
       </div>
     );
   }

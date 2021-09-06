@@ -6,7 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 // Register the plugin to all charts:
 Chart.plugins.register(ChartDataLabels);
 
-export default memo(function DonutChart(props) {
+export default function DonutChart(props) {
   let chartId = props.chartId;
   let config = {
     type: 'doughnut',
@@ -68,4 +68,4 @@ export default memo(function DonutChart(props) {
       </Script>
     </>
   );
-})
+}

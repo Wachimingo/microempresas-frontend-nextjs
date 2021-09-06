@@ -3,7 +3,7 @@ import Script from 'next/script';
 import Chart from 'chart.js';
 // const classes = import('./../../styles/dashboard.module.css')
 
-export default memo(function LineChart(props) {
+export default function LineChart(props) {
   let chartId = props.chartId;
   let config = {
     type: 'line',
@@ -63,4 +63,4 @@ export default memo(function LineChart(props) {
       <Script>{destroyCanvas(chartId)}</Script>
     </>
   );
-});
+};
