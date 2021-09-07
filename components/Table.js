@@ -28,7 +28,7 @@ export default function Table(props) {
                     }
                   >
                     {typeof el[body] === 'number'
-                      ? body === 'totalPrice' || body === 'price'
+                      ? body === 'totalPrice' || body === 'price' || body === 'payed'
                         ? `$${el[body].toFixed(2)}`
                         : el[body]
                       : el[body]}

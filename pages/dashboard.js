@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
-import Script from 'next/script';
 const classes = import('./../styles/dashboard.module.css');
 const BarChart = dynamic(() => import('../components/Charts/BarChart'), {
   ssr: true,
@@ -11,7 +10,7 @@ const LineChart = dynamic(() => import('../components/Charts/LineChart'), {
   ssr: true,
 });
 const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
-  ssr: true,
+  ssr: false,
 });
 
 export default function dashboard() {

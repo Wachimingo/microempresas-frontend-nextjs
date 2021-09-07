@@ -7,6 +7,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.plugins.register(ChartDataLabels);
 
 export default function DonutChart(props) {
+  // console.log(props.labels)
   let chartId = props.chartId;
   let config = {
     type: 'doughnut',

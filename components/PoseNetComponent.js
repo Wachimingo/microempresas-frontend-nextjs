@@ -1,4 +1,4 @@
-import * as tf from '@tensorflow/tfjs-backend-webgl';
+import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 import React from 'react';
 import Webcam from 'react-webcam';

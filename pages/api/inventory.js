@@ -14,6 +14,7 @@ export default async (req, res) => {
             amount: req.body.amount,
             ingredient: req.body.productID,
             totalPrice: req.body.totalPrice,
+            createdAt: req.body.createdAt
         }),
       });
     } else if (req.method === 'PATCH') {

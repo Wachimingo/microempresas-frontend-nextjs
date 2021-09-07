@@ -10,6 +10,7 @@ import PaginationControls from './../components/NavigationItems/PaginationContro
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
+const loader = require('./../styles/loader.module.css');
 
 export default function inventory() {
   const router = useRouter();
@@ -24,6 +25,9 @@ export default function inventory() {
   const [ingredients, setIngredients] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
+  // let dateTime = new Date();
+  let today = new Date().toISOString().split('T')[0].split('-').reverse().join('-');
 
   useEffect(() => {
     fetch(`/api/inventory`, {
@@ -58,8 +62,8 @@ export default function inventory() {
 
   const updateItems = (res) => {
     res.data.records.map((el, i) => {
-        res.data.records[i].ingredient_id = el.ingredient._id;
-        res.data.records[i].ingredient_name = el.ingredient.name;
+      res.data.records[i].ingredient_id = el.ingredient._id;
+      res.data.records[i].ingredient_name = el.ingredient.name;
     });
     setItems(res.data.records);
     setTotalRecords(res.data.totalRecords);
@@ -80,6 +84,7 @@ export default function inventory() {
         productID,
         totalPrice,
         id: itemID,
+        createdAt: today
       }),
     })
       .then((res) => res.json())
@@ -143,7 +148,7 @@ export default function inventory() {
                     className="form-select"
                     aria-label="Default select example"
                     value={productID}
-                    onChange={(e) => setProduct(e.target.value)}
+                    onChange={(e) => setProductID(e.target.value)}
                   >
                     {ingredients.map((el, i) => {
                       return (
@@ -230,7 +235,7 @@ export default function inventory() {
               method={'GET'}
             />
           </div>
-          <div className={`${classes.InLineBlock} ${classes.Table}`}>
+          <div className={`${classes.InLineBlock} ${classes.Table2}`}>
             <Table
               headers={[
                 'ID',
@@ -249,11 +254,11 @@ export default function inventory() {
                 'quantity',
                 'pricePerUnit',
                 'totalPrice',
-                'addedDate',
+                'createdAt',
               ]}
             />
           </div>
-          <div className={`${classes.InLineBlock} ${classes.actions}`}>
+          <div className={`${classes.InLineBlock} ${classes.actions2}`}>
             {items.map((el, i) => {
               return (
                 <div key={el._id + i}>
@@ -284,5 +289,8 @@ export default function inventory() {
         </div>
       </div>
     );
-  } else return <h1>Cargando...</h1>;
+  } else return (<>
+    <h1>Cargando...</h1>
+    <div className={`${loader.ldsSpinner}`}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </>)
 }

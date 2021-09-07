@@ -10,6 +10,7 @@ import PaginationControls from './../components/NavigationItems/PaginationContro
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
+const loader = require('./../styles/loader.module.css');
 
 export default function ingredients() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function ingredients() {
           ? toast.success('Ingrediente a sido añadido')
           : toast.success('Ingrediente a sido modificado')
       );
-      location.reload();
+    location.reload();
   };
 
   const removeItem = (id, name) => {
@@ -211,5 +212,8 @@ export default function ingredients() {
         </div>
       </div>
     );
-  } else return <h1>Cargando...</h1>;
+  } else return (<>
+    <h1>Cargando...</h1>
+    <div className={`${loader.ldsSpinner}`}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </>);
 }

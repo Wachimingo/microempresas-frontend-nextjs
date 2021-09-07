@@ -14,8 +14,18 @@
     margin-left: 20vw;
     width: 50%;
 }
+.Table2{
+    margin-left: 10vw;
+    width: 80%;
+}
 .actions > div > button{
     height: 3vh;
+    margin-bottom: 0.2vh;
+}
+
+.actions2 > div > button{
+    height: 4vh;
+    margin-bottom: 0.2vh;
 }
 
 .paginationNav{
