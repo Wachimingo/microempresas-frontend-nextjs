@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 const PoseNetComponent = dynamic(
   () => import('./../components/PoseNetComponent'),
   {
-    ssr: true,
+    ssr: false,
   }
 );
 
@@ -18,23 +18,26 @@ export default function peopleCounter() {
       .then((res) => setCount(res.data));
   });
 
-  function updateCounter(counter) {
-    fetch('/api/counter', {
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify({
-        count: counter,
-      }),
-    })
-      .then((res) => res.json())
-      // .then((res) => console.log(res))
-      .then((res) => setCount(res.data));
+  function updateCounterget(counter) {
+    // fetch('/api/counter', {
+    //   method: 'POST',
+    //   mode: 'cors',
+    //   body: JSON.stringify({
+    //     count: counter,
+    //   }),
+    // })
+    //   .then((res) => res.json())
+    //   // .then((res) => console.log(res))
+    //   .then((res) => setCount(res.data));
+    setCount(counter)
   }
 
   return (
     <div>
       <h1>Contador en archivo {count}</h1>
-      <PoseNetComponent updateCounter={updateCounter} />
+      <PoseNetComponent 
+        updateCounterget={updateCounterget} 
+      />
     </div>
   );
 }
