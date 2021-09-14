@@ -17,7 +17,25 @@ export default async (req, res) => {
     }),
   });
 
+  if (req.body.isFiado && req.body.role === 'user') {
+    let newBalance = -(req.body.currentBalance * 1 + req.body.totalPrice * 1)
+    const updateBalance = await fetch(`${process.env.backend_nodejs}/api/v1/users/updateuser/${req.body.id}`, {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Authorization: req.headers.authorization,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        balance: newBalance
+      }),
+    });
+    const balance = await updateBalance.json()
+  }
+
   const data = await processSell.json();
+
+  // console.log(data, balance)
 
   if (processSell.ok) {
     res.status(201).json({

@@ -1,9 +1,9 @@
 export default async (req, res) => {
   let records = [];
-  // console.log(req.body.url)
-  if (req.body.role === 'admin') {
+  // console.log(req.query)
+  if (req.query.role === 'admin') {
     if (req.method === 'POST') {
-      records = await fetch(`${process.env.backend_orders}/api/v1/bills/orders`, {
+      records = await fetch(`${process.env.backend_orders}/api/v1/bills/orders?limit=${req.body.limit}&page=${req.body.page}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -11,8 +11,8 @@ export default async (req, res) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          status: req.body.status,
-          ifValue: req.body.ifValue,
+          status: req.query.status,
+          ifValue: req.query.ifValue,
         }),
       });
     } else if (req.method === 'PATCH') {
@@ -42,9 +42,9 @@ export default async (req, res) => {
         }
       );
     }
-  } else if (req.body.role === 'user') {
+  } else if (req.query.role === 'user') {
     // console.log(req.body)
-    records = await fetch(`${process.env.backend_orders}/api/v1/bills/ownedOrders?sort=-status`, {
+    records = await fetch(`${process.env.backend_orders}/api/v1/bills/ownedOrders?limit=${req.body.limit}&page=${req.body.page}`, {
       method: 'POST',
       mode: 'cors',
       headers: {

@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import AuthContext from '../context/authContext';
+
 import dynamic from 'next/dynamic';
 const PoseNetComponent = dynamic(
   () => import('./../components/PoseNetComponent'),
@@ -9,7 +11,11 @@ const PoseNetComponent = dynamic(
 
 export default function peopleCounter() {
   const [count, setCount] = useState(0);
+  const [loaded, setLoaded] = useState(false)
+  const { session } = useContext(AuthContext);
+
   useEffect(() => {
+    if(Object.entries(session).length === 0 || session.role === 'user') return;
     fetch('/api/counter', {
       method: 'GET',
       mode: 'cors',
@@ -19,16 +25,6 @@ export default function peopleCounter() {
   });
 
   function updateCounterget(counter) {
-    // fetch('/api/counter', {
-    //   method: 'POST',
-    //   mode: 'cors',
-    //   body: JSON.stringify({
-    //     count: counter,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   // .then((res) => console.log(res))
-    //   .then((res) => setCount(res.data));
     setCount(counter)
   }
 

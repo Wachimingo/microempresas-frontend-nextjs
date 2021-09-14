@@ -13,6 +13,7 @@ export default memo(function SellCards(props) {
   let [filterObject = [...props.items], setFilterObject] = useState();
   const { session } = useContext(AuthContext);
   const [customerName, setCustomerName] = useState();
+  const [balance, setBalance] = useState(0);
   let [counterDish, setCounterDish] = useState(0);
   let [counterPrice, setCounterPrice] = useState(0);
   let [dishes] = useState([]);
@@ -29,18 +30,24 @@ export default memo(function SellCards(props) {
   ];
 
   useEffect(() => {
-    if (session !== null) {
-      // setLoaded(true);
-      setCustomerName(session.name);
-    } else {
-      // setLoaded(false)
-    }
-
     props.items.map((el) => {
       window['counter_' + el.id] = 0;
       window['name_' + el.id] = el.name;
       window['price_' + el.id] = el.price;
     });
+
+    fetch(`/api/getBalance?id=${session._id}`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    })
+      .then((res) => res.json())
+      // .then((res) => console.log(res))
+      .then((res) => {
+        setBalance(res.data.record.balance)
+      })
   }, [props]);
 
   const setNewFilteredObject = (obj) => {
@@ -121,6 +128,10 @@ export default memo(function SellCards(props) {
         toast.error(
           'No ha ingresado el nombre del cliente a quien le fiara el plato'
         );
+      } else if (session.balance > 9) {
+        toast.error(
+          'No se puede fiar esta orden, su saldo es negativo'
+        );
       } else {
         fetch(`/api/processSell`, {
           method: 'POST',
@@ -136,6 +147,9 @@ export default memo(function SellCards(props) {
             isFiado: fiado,
             customer: customerName,
             status: stat,
+            id: session._id,
+            currentBalance: session.balance,
+            role: session.role
           }),
         })
           .then((res) => res.json())
@@ -163,7 +177,8 @@ export default memo(function SellCards(props) {
   };
   return (
     <>
-    <h1>{session.role === 'admin' ? 'Vender platos' : 'Comprar Platos'}</h1>
+      <h1>{session.role === 'admin' ? 'Vender platos' : 'Comprar Platos'}</h1>
+      <h1>{session.role === 'admin' ? '' : 'Su saldo es de: ' + balance}</h1>
       <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
       {/* Customer name input */}
       <label htmlFor="customer" className="form-label">
@@ -180,53 +195,54 @@ export default memo(function SellCards(props) {
         {
           // console.log(filterObject),
           filterObject.map((el, i) => {
-            if(el.forToday){
-            return (
-              <div
-                key={i}
-                id={i}
-                className={'card '}
-                style={{
-                  width: '18rem',
-                  display: 'inline-block',
-                  marginRight: '2vw',
-                }}
-              >
-                <h2 id={`counter_${el.id}`}>0</h2>
+            if (el.forToday) {
+              return (
                 <div
-                  onClick={(e) => upCounter(el.id, el.price)}
-                  className={classes.hoverCard}
+                  key={i}
+                  id={i}
+                  className={'card '}
+                  style={{
+                    width: '18rem',
+                    display: 'inline-block',
+                    marginRight: '2vw',
+                  }}
                 >
-                  <Image
-                    src={
-                      el.image !== undefined
-                        ? `/dishes/${el.image}`
-                        : `/dishes/stockDishImg.png`
-                    }
-                    className="card-img-top"
-                    alt="me"
-                    width="1000"
-                    height="1000"
-                  />
-                  <div className="card-body">
-                    <h5 id={el.id + ' name'} className="card-title">
-                      {el.name}
-                    </h5>
-                    <h5 id={el.id + ' price'} className="card-text">
-                      {el.price}
-                    </h5>
-                    <p className="card-text">{el.description}</p>
+                  <h2 id={`counter_${el.id}`}>0</h2>
+                  <div
+                    onClick={(e) => upCounter(el.id, el.price)}
+                    className={classes.hoverCard}
+                  >
+                    <Image
+                      src={
+                        el.image !== undefined
+                          ? `/dishes/${el.image}`
+                          : `/dishes/stockDishImg.png`
+                      }
+                      className="card-img-top"
+                      alt="me"
+                      width="1000"
+                      height="1000"
+                    />
+                    <div className="card-body">
+                      <h5 id={el.id + ' name'} className="card-title">
+                        {el.name}
+                      </h5>
+                      <h5 id={el.id + ' price'} className="card-text">
+                        {el.price}
+                      </h5>
+                      <p className="card-text">{el.description}</p>
+                    </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={(e) => lowerCounter(el.id, el.price)}
+                    className={'btn btn-danger'}
+                  >
+                    <BsFillTrashFill /> Remover
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) => lowerCounter(el.id, el.price)}
-                  className={'btn btn-danger'}
-                >
-                  <BsFillTrashFill /> Remover
-                </button>
-              </div>
-            );} else return null
+              );
+            } else return null
           })
         }
         {/* Section to see purchase details */}
@@ -267,5 +283,4 @@ export default memo(function SellCards(props) {
       </div>
     </>
   );
-  // }
 });

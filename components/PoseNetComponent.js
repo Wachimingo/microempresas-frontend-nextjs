@@ -1,7 +1,8 @@
 import * as posenet from '@tensorflow-models/posenet';
 // import * as tf from '@tensorflow/tfjs';
 import * as tf from '@tensorflow/tfjs-core';
-// import '@tensorflow/tfjs-backend-wasm';
+import '@tensorflow/tfjs-backend-wasm';
+import {setWasmPaths} from '@tensorflow/tfjs-backend-wasm';
 // import '@tensorflow/tfjs-backend-webgl';
 import React from 'react';
 import Webcam from 'react-webcam';
@@ -44,7 +45,6 @@ export default function App(props) {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
       // Make Estimation
-
       posenet_model.estimateMultiplePoses(video, {
         flipHorizontal: false,
         maxDetections: 5,
@@ -58,12 +58,14 @@ export default function App(props) {
     tf.dispose(posenet_model)
     tf.disposeVariables()
     tf.engine().endScope()
-    console.log('Tensors afters:', tf.memory().numTensors)
-    console.log('Memory:', window.performance.memory.totalJSHeapSize)
+    // console.log('Tensors afters:', tf.memory().numTensors)
+    // console.log('Memory:', window.performance.memory.totalJSHeapSize)
   };
 
   const runPosenet = async () => {
-    // await tf.setBackend('wasm')
+    const usePlatformFetch = true;
+    setWasmPaths('/wasm/', usePlatformFetch)
+    await tf.setBackend('wasm')
     setInterval(() => {
       detectWebcamFeed();
     }, 5000);

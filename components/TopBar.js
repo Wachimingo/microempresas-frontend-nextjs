@@ -88,16 +88,20 @@ export default function TopBar(props) {
                     aria-labelledby="navbarDropdown"
                   >
                     <li>
-                      <Link href="/orders/isPending" passHref>
+                      <Link href={`/orders/Pending?token=${session.token}&role=${session.role}`} passHref>
                         <a className="dropdown-item">Pendientes</a>
                       </Link>
                     </li>
-                    <Link href="/orders/isReady" passHref>
+                    <li>
+                    <Link href={`/orders/isReady?token=${session.token}&role=${session.role}`} passHref>
                       <a className="dropdown-item">Listos para retirar</a>
                     </Link>
-                    <Link href="/orders/isCompleted" passHref>
+                    </li>
+                    <li>
+                    <Link href={`/orders/Completed?token=${session.token}&role=${session.role}`} passHref>
                       <a className="dropdown-item">Completados</a>
                     </Link>
+                    </li>
                   </ul>
                 </li>
                 <li className="nav-item dropdown">
@@ -214,20 +218,37 @@ export default function TopBar(props) {
                     <a className="nav-link">Comprar</a>
                   </Link>
                 </li>
-                <li>
-                  <Link href="/orders/user" passHref>
-                    <a className="nav-link">Mis Pedidos</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/review" passHref>
-                    <a className="nav-link">Reseñar</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/askForTomorrow" passHref>
-                    <a className="nav-link">Solicitar un Plato para mañana</a>
-                  </Link>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Mis Pedidos
+                  </a>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li>
+                      <Link href={`/orders/Pending?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                        <a className="dropdown-item">Pendientes</a>
+                      </Link>
+                    </li>
+                    <li>
+                    <Link href={`/orders/isReady?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                      <a className="dropdown-item">Listos para retirar</a>
+                    </Link>
+                    </li>
+                    <li>
+                    <Link href={`/orders/Completed?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                      <a className="dropdown-item">Completados</a>
+                    </Link>
+                    </li>
+                  </ul>
                 </li>
               </ul>
               <Link href="/" passHref>

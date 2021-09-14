@@ -1,111 +1,32 @@
 import { useState, useEffect, useContext, memo } from 'react';
 import { useRouter } from 'next/router';
+import PaginationControls from './../../components/NavigationItems/PaginationControls';
 import AuthContext from '../../context/authContext';
 import ParamsContext from '../../context/paramsContext';
 import Image from 'next/image';
 import { Collapse, CardBody, Card } from 'reactstrap';
 const classes = require('./../../styles/menu.module.css');
 
-export default memo(function pendingOrders() {
+export default function pendingOrders({ items, totalRecords }) {
   const router = useRouter();
   const { type } = router.query;
   const { session } = useContext(AuthContext);
+  const [backend, setBackend] = useState('js')
+  let [filterObject = [...items], setFilterObject] = useState();
   const { params } = useContext(ParamsContext);
-  const [items, setItems] = useState([]);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (session.role === 'admin') {
-      getAllPendingOrders();
-    } else if (session.role === 'user') {
-      getOwnedPendingOrders();
-    }
-  }, [type]);
-
-  const getAllPendingOrders = () => {
-    if (window.location.href.split('/').pop() === 'isPending') {
-      fetch(`/api/orders`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          role: session.role,
-          status: 'status',
-          ifValue: 'Pending',
-          url: params[0].paramValue
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => checkIfEmpty(res))
-        .then(() => setLoaded(true));
-      // .then((res) => console.log(res))
-    } else if (window.location.href.split('/').pop() === 'isReady') {
-      fetch(`/api/orders`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          role: session.role,
-          status: 'status',
-          ifValue: 'isReady',
-          url: params[0].paramValue
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => setItems(res.data.records), setLoaded(true));
-      // .then((res) => console.log(res))
-    } else if (window.location.href.split('/').pop() === 'isCompleted') {
-      fetch(`/api/orders`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          role: session.role,
-          status: 'status',
-          ifValue: 'Completed',
-          url: params[0].paramValue
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => setItems(res.data.records), setLoaded(true));
-      // .then((res) => console.log(res))
-    }
-  };
-
-  const getOwnedPendingOrders = () => {
-    fetch(`/api/orders`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: session._id,
-        role: session.role,
-        url: params[0].paramValue
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => setItems(res.data.records))
-      .then(() => setLoaded(true));
-    // .then((res) => console.log(res))
-  };
+  
 
   const toggle = (id) => {
+    // console.log(backend)
+    if(backend === 'py') return;
     document.getElementById(id).classList.toggle('show');
     document
       .getElementById(`item-${id}`)
       .classList.toggle(`${classes.activated}`);
-  };
+  };  
 
   const completeOrder = (id) => {
-    if (window.location.href.split('/').pop() === 'isPending') {
+    if (router.query.type === 'Pending') {
       fetch(`/api/orders`, {
         method: 'PATCH',
         mode: 'cors',
@@ -123,7 +44,7 @@ export default memo(function pendingOrders() {
       // .then((res) => console.log(res));
       document.getElementById(`item-${id}`).className = 'd-none';
       document.getElementById(`buttons-${id}`).classList.add('d-none');
-    } else if (window.location.href.split('/').pop() === 'isReady') {
+    } else if (router.query.type === 'isReady') {
       fetch(`/api/orders`, {
         method: 'PATCH',
         mode: 'cors',
@@ -142,21 +63,6 @@ export default memo(function pendingOrders() {
       document.getElementById(`item-${id}`).className = 'd-none';
       document.getElementById(`buttons-${id}`).classList.add('d-none');
     }
-  };
-
-  const checkIfEmpty = (res) => {
-    if (res.data.records !== undefined) {
-      setItems(res.data.records);
-    } else if (res.data !== undefined) {
-      // res.data.map((el, i) => {
-      //   console.log(el);
-      // });
-      // console.log(res)
-      setItems(res.data);
-    } else {
-      console.log('ERROR');
-    }
-    // console.log(res.data)
   };
 
   const cancelOrder = (id) => {
@@ -178,7 +84,7 @@ export default memo(function pendingOrders() {
   };
 
   const buttons = (id, status) => {
-    if (window.location.href.split('/').pop() === 'isPending') {
+    if (router.query.type === 'Pending') {
       return (
         <div id={`buttons-${id}`} className="">
           <button
@@ -199,7 +105,7 @@ export default memo(function pendingOrders() {
           </button>
         </div>
       );
-    } else if (window.location.href.split('/').pop() === 'isReady') {
+    } else if (router.query.type === 'isReady') {
       return (
         <div id={`buttons-${id}`} className="">
           <button
@@ -220,9 +126,9 @@ export default memo(function pendingOrders() {
           </button>
         </div>
       );
-    } else if (window.location.href.split('/').pop() === 'isCompleted') {
+    } else if (router.query.type === 'Completed') {
       return <></>;
-    } else if (window.location.href.split('/').pop() === 'user') {
+    } else if (router.query.role === 'user') {
       if (status === 'Pending' || status === 'isReady') {
         return (
           <>
@@ -239,7 +145,13 @@ export default memo(function pendingOrders() {
         return <></>;
       }
     }
+    // console.log(router.query.type)
   };
+
+  const parentItemsUpdate = (res) => {
+    setFilterObject(res.data.records);
+  };
+
 
   const sayStatus = (status) => {
     if (status === 'Pending') {
@@ -250,15 +162,24 @@ export default memo(function pendingOrders() {
       return <h4>Orden previa</h4>;
     }
   };
-
-  if (!loaded) {
-    return <></>;
-  } else {
+  
     return (
       <div>
-        {/* {console.log(items)} */}
-        <h1>Pedidos en linea </h1>
-        {items.map((el, i) => {
+        {/* {console.log(filterObject)} */}
+        <h1>Pedidos en linea</h1>
+        <div className={classes.paginationNav}>
+          <PaginationControls
+            token={session.token}
+            totalRecords={totalRecords}
+            limit={10}
+            sort={null}
+            toUpdateParent={parentItemsUpdate}
+            type={null}
+            url={`/api/orders?status=status&ifValue=${router.query.type}&role=${session.role}`}
+            method={'POST'}
+          />
+        </div>
+        {filterObject.map((el, i) => {
           return (
             <div key={el.id}>
               {sayStatus(el.status)}
@@ -355,5 +276,53 @@ export default memo(function pendingOrders() {
         <br />
       </div>
     );
+};
+
+export async function getServerSideProps({query}) {
+  // Get external data from the file system, API, DB, etc.
+  // console.log(query) // here is the data of the url { blogname: 'wfe436' }
+  let res = []
+
+  if (query.role === 'admin') {
+    res = await fetch(`${process.env.backend_orders}/api/v1/bills/orders`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${query.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: 'status',
+        ifValue: query.type,
+      }),
+    });
+  } else if (query.role === 'user') {
+    res = await fetch(`${process.env.backend_orders}/api/v1/bills/ownedOrders?sort=-status`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${query.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: query.id,
+        status: 'status',
+        ifValue: query.type,
+      }),
+    });
+  } else {
+    return {
+      notFound: true,
+    };
   }
-});
+
+  const data = await res.json()
+  const items = data.records
+  const totalRecords = data.totalRecords.length > 0 ? data.totalRecords[0].total : 1
+
+  // console.log(data)
+
+  return {
+    props: { items, totalRecords }, // will be passed to the page component as props
+  };
+}
