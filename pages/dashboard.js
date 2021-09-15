@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useContext } from 'react';
+import Script from 'next/script'
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
 const classes = import('./../styles/dashboard.module.css');
@@ -66,14 +67,7 @@ export default function dashboard() {
     'Viernes',
     'Sabado',
   ];
-  let [stats, setStats] = useState({
-    fiado: 0,
-    sold: 0,
-    earnings: 0,
-    totalSoldDishes: 0,
-    totalFiadoDishes: 0,
-    TotalDishes: 0,
-  });
+  let [stats, setStats] = useState({});
   let fiado = [];
   let sold = [];
   let earnings = [];
@@ -82,20 +76,11 @@ export default function dashboard() {
   let totalDishes = [];
   const [loaded, setLoaded] = useState(false);
   const [loadedHistory, setLoadedHistory] = useState(false);
-  const [pickedDate, setPickedDate] = useState(today);
+  // const [pickedDate = dateTime.toISOString().split('T')[0], setPickedDate] = useState();
   const [mode, setMode] = useState('day');
-  const [valuesArray, setValuesArray] = useState({
-    fiado,
-    sold,
-    earnings,
-    totalFiadoDishes,
-    totalSoldDishes,
-    totalDishes,
-  });
+  const [valuesArray, setValuesArray] = useState({});
   const [value, setValue] = useState('totalDishes');
   const [historyMode, setHistoryMode] = useState('day');
-  const [lineDate = dateTime.toISOString().split('T')[0], setLineDate] = useState();
-  const [donutDate = dateTime.toISOString().split('T')[0], setDonutDate] = useState();
 
   const options = {
     plugins: {
@@ -130,7 +115,6 @@ export default function dashboard() {
   }
 
   useEffect(() => {
-    let isConnected = true;
     fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
@@ -147,21 +131,13 @@ export default function dashboard() {
       // .then((res) => console.log(res))
       .then((res) => valitateIfemtpy(res))
       .then(() => setLoaded(true))
-      .catch((error) => {
-        if (isConnected) {
-          setState((prevState) => ({
-            ...prevState,
-            error,
-          }));
-        }
-      });
 
     fetch(`/api/getStatsHistory`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        historyMode,
+        mode: historyMode,
         day: monday.split('-')[0],
         month: monday.split('-')[1],
         year: monday.split('-')[2],
@@ -175,21 +151,25 @@ export default function dashboard() {
       // .then((res) => console.log(res.data.result))
       .then((res) => fillingArrayForLineChart(res.data.result, historyMode))
       .then(() => setLoadedHistory(true));
-
-    // cancel subscription to useEffect
-    return () => (isConnected = false);
-  }, [stats]);
+  }, []);
 
   const valitateIfemtpy = (res) => {
-    if (res.data.result.length > 0) {
-      setStats(res.data.result[0]);
+    if (res.data.result !== undefined) {
+      if (res.data.result.length > 0) {
+        setStats(res.data.result[0]);
+      } else {
+        setStats({})
+      }
+    } else {
+      setStats({})
     }
   };
 
-  const loadNewData = (e) => {
-    e.preventDefault();
-    let pickedDate = document.getElementById('donutDate').value;
-    let mode = document.getElementById('donutList').value;
+  const loadNewData = () => {
+
+    let pickedDate = document.getElementById('calendar').value;
+    let mode = document.getElementById('timeFrame').value;
+
     fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
@@ -205,23 +185,12 @@ export default function dashboard() {
       .then((res) => res.json())
       // .then((res) => console.log(res))
       .then((res) => valitateIfemtpy(res));
-  };
 
-  const putValue = (category) => {
-    setValue(category);
-  };
-
-  const putHistoryMode = (mode) => {
-    setHistoryMode(mode);
-  };
-
-  const loadNewStatsHistory = (e) => {
-    e.preventDefault();
-
-    let pickedDate = new Date(document.getElementById('lineDate').value);
+    let pickedDateH = new Date(document.getElementById('calendar').value);
     let pickedDateMonday = new Date(
-      pickedDate.setDate(pickedDate.getDate() - pickedDate.getDay())
+      pickedDateH.setDate(pickedDateH.getDate() - pickedDateH.getDay())
     );
+
     let pickedDateMondayF = pickedDateMonday
       .toISOString()
       .split('T')[0]
@@ -229,15 +198,12 @@ export default function dashboard() {
       .reverse()
       .join('-');
 
-    // console.log(pickedDate, lineDate, pickedDateMondayF)
-
-    let historyMode = document.getElementById('lineMode').value;
 
     let nextWeek = new Date(
       pickedDateMonday.setDate(
         pickedDateMonday.getDate() - pickedDateMonday.getDay()
       ) +
-        7 * 24 * 60 * 60 * 1000
+      7 * 24 * 60 * 60 * 1000
     );
     let nextWeekF = nextWeek
       .toISOString()
@@ -246,83 +212,90 @@ export default function dashboard() {
       .reverse()
       .join('-');
 
-    setHistoryMode(historyMode);
+      setHistoryMode(mode);
 
-    fetch(`/api/getStatsHistory`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        historyMode,
-        day: pickedDateMondayF.split('-')[0],
-        month: pickedDateMondayF.split('-')[1],
-        year: pickedDateMondayF.split('-')[2],
-        day2: nextWeekF.split('-')[0],
-        month2: nextWeekF.split('-')[1],
-        year2: nextWeekF.split('-')[2],
-        token: session.token,
-      }),
-    })
-      .then((res) => res.json())
-      // .then((res) => console.log(res.data))
-      .then((res) => fillingArrayForLineChart(res.data.result, historyMode));
+      fetch(`/api/getStatsHistory`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          mode,
+          day: pickedDateMondayF.split('-')[0],
+          month: pickedDateMondayF.split('-')[1],
+          year: pickedDateMondayF.split('-')[2],
+          day2: nextWeekF.split('-')[0],
+          month2: nextWeekF.split('-')[1],
+          year2: nextWeekF.split('-')[2],
+          token: session.token,
+        }),
+      })
+        .then((res) => res.json())
+        // .then((res) => console.log(res.data))
+        .then((res) => fillingArrayForLineChart(res.data.result, historyMode));
+  };
+
+  const putValue = (category) => {
+    setValue(category);
   };
 
   const fillingArrayForLineChart = (result, historyMode) => {
-    if (historyMode === 'month') {
-      result.map((el) => {
-        fiado[el._id] = el.fiado;
-        sold[el._id] = el.sold;
-        earnings[el._id] = el.earnings;
-        totalSoldDishes[el._id] = el.totalSoldDishes;
-        totalFiadoDishes[el._id] = el.totalFiadoDishes;
-        totalDishes[el._id] = el.totalFiadoDishes + el.totalSoldDishes;
-      });
-      setValuesArray({
-        fiado,
-        sold,
-        earnings,
-        totalFiadoDishes,
-        totalSoldDishes,
-        totalDishes,
-      });
-    } else if (historyMode === 'year') {
-      let year = [];
-      result.map((el) => {
-        fiado.push(el.fiado);
-        sold.push(el.sold);
-        earnings.push(el.earnings);
-        totalSoldDishes.push(el.totalSoldDishes);
-        totalFiadoDishes.push(el.totalFiadoDishes);
-        year.push(el._id);
-        totalDishes.push(el.totalFiadoDishes + el.totalSoldDishes);
-      });
-      setValuesArray({
-        fiado,
-        sold,
-        earnings,
-        totalFiadoDishes,
-        totalSoldDishes,
-        totalDishes,
-        year,
-      });
-    } else if (historyMode === 'day') {
-      result.map((el) => {
-        fiado[el._id] = el.fiado;
-        sold[el._id] = el.sold;
-        earnings[el._id] = el.earnings;
-        totalSoldDishes[el._id] = el.totalSoldDishes;
-        totalFiadoDishes[el._id] = el.totalFiadoDishes;
-        totalDishes[el._id] = el.totalFiadoDishes + el.totalSoldDishes;
-      });
-      setValuesArray({
-        fiado,
-        sold,
-        earnings,
-        totalFiadoDishes,
-        totalSoldDishes,
-        totalDishes,
-      });
+    // console.log(result)
+    if (result !== undefined) {
+      if (historyMode === 'month') {
+        result.map((el) => {
+          fiado[el._id] = el.fiado;
+          sold[el._id] = el.sold;
+          earnings[el._id] = el.earnings;
+          totalSoldDishes[el._id] = el.totalSoldDishes;
+          totalFiadoDishes[el._id] = el.totalFiadoDishes;
+          totalDishes[el._id] = el.totalFiadoDishes + el.totalSoldDishes;
+        });
+        setValuesArray({
+          fiado,
+          sold,
+          earnings,
+          totalFiadoDishes,
+          totalSoldDishes,
+          totalDishes,
+        });
+      } else if (historyMode === 'year') {
+        let year = [];
+        result.map((el) => {
+          fiado.push(el.fiado);
+          sold.push(el.sold);
+          earnings.push(el.earnings);
+          totalSoldDishes.push(el.totalSoldDishes);
+          totalFiadoDishes.push(el.totalFiadoDishes);
+          year.push(el._id);
+          totalDishes.push(el.totalFiadoDishes + el.totalSoldDishes);
+        });
+        setValuesArray({
+          fiado,
+          sold,
+          earnings,
+          totalFiadoDishes,
+          totalSoldDishes,
+          totalDishes,
+          year,
+        });
+      } else if (historyMode === 'day') {
+        result.map((el) => {
+          fiado[el._id] = el.fiado;
+          sold[el._id] = el.sold;
+          earnings[el._id] = el.earnings;
+          totalSoldDishes[el._id] = el.totalSoldDishes;
+          totalFiadoDishes[el._id] = el.totalFiadoDishes;
+          totalDishes[el._id] = el.totalFiadoDishes + el.totalSoldDishes;
+        });
+        setValuesArray({
+          fiado,
+          sold,
+          earnings,
+          totalFiadoDishes,
+          totalSoldDishes,
+          totalDishes,
+        });
+      }
     }
   };
 
@@ -395,11 +368,11 @@ export default function dashboard() {
       <div>
         <div className="container">
           <h1>Estadisticas</h1>
-          <form id="donutForm" onSubmit={loadNewData}>
+          <div>
             <div className="row">
               <div className="col">
                 <select
-                  id="donutList"
+                  id="timeFrame"
                   className="form-select"
                   aria-label="Default select example"
                 >
@@ -411,11 +384,11 @@ export default function dashboard() {
                 </select>
               </div>
               <div className="col">
-                <input type="date" value={donutDate} onChange={(e) => setDonutDate(e.target.value)} id="donutDate" className="form-control" />
+                <input type="date" id="calendar" className="form-control" />
               </div>
             </div>
-            <input type="submit" value="Buscar" />
-          </form>
+            <input type="button" value="Buscar" onClick={() => loadNewData()} />
+          </div>
           <div className="row">
             <div className="col">
               <DonutChart
@@ -452,50 +425,39 @@ export default function dashboard() {
             </div>
           </div>
           <h1>Historiales</h1>
-          <form id="lineForm" onSubmit={loadNewStatsHistory}>
-            <div className="row">
-              <div className="col">
-                <select
-                  id="lineCategory"
-                  className="form-select"
-                  aria-label="Default select example"
-                  onChange={(e) => putValue(e.target.value)}
-                >
-                  <option value="totalDishes" defaultValue>
-                    Total de Platos
-                  </option>
-                  <option value="earnings">Ganancias</option>
-                  <option value="fiado">Fiado</option>
-                  <option value="sold">Vendido</option>
-                  <option value="totalFiadoDishes">Platos fiados</option>
-                  <option value="totalSoldDishes">Platos pagados</option>
-                </select>
-              </div>
-              <div className="col">
-                <select
-                  id="lineMode"
-                  className="form-select"
-                  aria-label="Default select example"
-                // onChange={(e) => putHistoryMode(e.target.value)}
-                >
-                  <option value="day" defaultValue>
-                    Dia
-                  </option>
-                  <option value="month">Mes</option>
-                  <option value="year">Año</option>
-                </select>
-              </div>
-              <div className="col">
-                <input type="date" id="lineDate" className="form-control" value={lineDate} onChange={(e) => setLineDate(e.target.value)} />
-              </div>
+          <div className="row">
+            <div className="col">
+              <select
+                id="lineCategory"
+                className="form-select"
+                aria-label="Default select example"
+                onChange={(e) => putValue(e.target.value)}
+              >
+                <option value="totalDishes" defaultValue>
+                  Total de Platos
+                </option>
+                <option value="earnings">Ganancias</option>
+                <option value="fiado">Fiado</option>
+                <option value="sold">Vendido</option>
+                <option value="totalFiadoDishes">Platos fiados</option>
+                <option value="totalSoldDishes">Platos pagados</option>
+              </select>
             </div>
-            <input type="submit" value="Buscar" />
-          </form>
+          </div>
+
           <div className={'row'}>
             <div className="col">{lineChart()}</div>
           </div>
         </div>
         <br />
+        <Script
+          src="http://google.com"
+          onLoad={() => {
+            document.getElementById('calendar').value = dateTime
+              .toISOString()
+              .split('T')[0];
+          }}
+        />
       </div>
     );
   }

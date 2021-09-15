@@ -39,7 +39,7 @@ export default function TopBar(props) {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link href="/dashboard" passHref>
+                  <Link href={`/dashboard`} passHref>
                     <a className="nav-link">DashBoard</a>
                   </Link>
                 </li>

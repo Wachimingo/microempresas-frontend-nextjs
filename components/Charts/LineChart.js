@@ -1,12 +1,14 @@
 import { useEffect, memo } from 'react';
 import Script from 'next/script';
 import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 // const classes = import('./../../styles/dashboard.module.css')
 
-export default function LineChart(props) {
+export default memo(function LineChart(props) {
   let chartId = props.chartId;
   let config = {
     type: 'line',
+    plugins: [ChartDataLabels],
     data: {
       labels: props.labels,
       datasets: [
@@ -63,4 +65,4 @@ export default function LineChart(props) {
       <Script>{destroyCanvas(chartId)}</Script>
     </>
   );
-};
+})
