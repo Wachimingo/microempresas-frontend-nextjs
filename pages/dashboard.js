@@ -4,9 +4,9 @@ import Script from 'next/script'
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
 const classes = import('./../styles/dashboard.module.css');
-const BarChart = dynamic(() => import('../components/Charts/BarChart'), {
-  ssr: true,
-});
+// const BarChart = dynamic(() => import('../components/Charts/BarChart'), {
+//   ssr: true,
+// });
 const LineChart = dynamic(() => import('../components/Charts/LineChart'), {
   ssr: true,
 });
@@ -16,25 +16,21 @@ const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
 
 export default function dashboard() {
   const { session } = useContext(AuthContext);
-  let dateTime = new Date();
-  let nextWeek = new Date(
+  const dateTime = new Date();
+  // console.log(dateTime)
+  const nextWeek = new Date(
     dateTime.setDate(dateTime.getDate() - dateTime.getDay() + 1) +
     7 * 24 * 60 * 60 * 1000
   );
-  let today = dateTime
-    .toISOString()
-    .split('T')[0]
-    .split('-')
-    .reverse()
-    .join('-');
-  let nextWeekF = nextWeek
+
+  const nextWeekF = nextWeek
     .toISOString()
     .split('T')[0]
     .split('-')
     .reverse()
     .join('-');
 
-  let monday = new Date(
+  const monday = new Date(
     dateTime.setDate(dateTime.getDate() - dateTime.getDay() + 1)
   )
     .toISOString()
@@ -93,28 +89,14 @@ export default function dashboard() {
     circumference: 1 * Math.PI,
   };
 
-  function getMondays() {
-    var d = new Date(),
-      month = d.getMonth(),
-      mondays = [];
-
-    d.setDate(1);
-
-    // Get the first Monday in the month
-    while (d.getDay() !== 1) {
-      d.setDate(d.getDate() + 1);
-    }
-
-    // Get all the other Mondays in the month
-    while (d.getMonth() === month) {
-      mondays.push(new Date(d.getTime()));
-      d.setDate(d.getDate() + 7);
-    }
-
-    return mondays;
-  }
-
   useEffect(() => {
+    const today = new Date()
+    .toISOString()
+    .split('T')[0]
+    .split('-')
+    .reverse()
+    .join('-');
+
     fetch(`/api/getStats`, {
       method: 'POST',
       mode: 'cors',
@@ -131,6 +113,8 @@ export default function dashboard() {
       // .then((res) => console.log(res))
       .then((res) => valitateIfemtpy(res))
       .then(() => setLoaded(true))
+
+    // console.log(nextWeekF)
 
     fetch(`/api/getStatsHistory`, {
       method: 'POST',
@@ -167,8 +151,8 @@ export default function dashboard() {
 
   const loadNewData = () => {
 
-    let pickedDate = document.getElementById('calendar').value;
-    let mode = document.getElementById('timeFrame').value;
+    const pickedDate = document.getElementById('calendar').value;
+    const mode = document.getElementById('timeFrame').value;
 
     fetch(`/api/getStats`, {
       method: 'POST',
@@ -186,12 +170,12 @@ export default function dashboard() {
       // .then((res) => console.log(res))
       .then((res) => valitateIfemtpy(res));
 
-    let pickedDateH = new Date(document.getElementById('calendar').value);
-    let pickedDateMonday = new Date(
+    const pickedDateH = new Date(document.getElementById('calendar').value);
+    const pickedDateMonday = new Date(
       pickedDateH.setDate(pickedDateH.getDate() - pickedDateH.getDay())
     );
 
-    let pickedDateMondayF = pickedDateMonday
+    const pickedDateMondayF = pickedDateMonday
       .toISOString()
       .split('T')[0]
       .split('-')
@@ -199,13 +183,13 @@ export default function dashboard() {
       .join('-');
 
 
-    let nextWeek = new Date(
+    const nextWeek = new Date(
       pickedDateMonday.setDate(
         pickedDateMonday.getDate() - pickedDateMonday.getDay()
       ) +
       7 * 24 * 60 * 60 * 1000
     );
-    let nextWeekF = nextWeek
+    const nextWeekF = nextWeek
       .toISOString()
       .split('T')[0]
       .split('-')
@@ -453,7 +437,7 @@ export default function dashboard() {
         <Script
           src="http://google.com"
           onLoad={() => {
-            document.getElementById('calendar').value = dateTime
+            document.getElementById('calendar').value = new Date()
               .toISOString()
               .split('T')[0];
           }}
