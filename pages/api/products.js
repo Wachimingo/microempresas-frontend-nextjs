@@ -2,7 +2,7 @@ export default async (req, res) => {
   let records = [];
   // console.log(req.method, req.body.id)
   if (req.method === 'POST') {
-    records = await fetch(`${process.env.backend_nodejs}/api/v1/ingredients`, {
+    records = await fetch(`${process.env.backend_nodejs}/api/v1/products`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -16,7 +16,7 @@ export default async (req, res) => {
     });
   } else if (req.method === 'PATCH') {
     records = await fetch(
-      `${process.env.backend_nodejs}/api/v1/ingredients/${req.body.id}`,
+      `${process.env.backend_nodejs}/api/v1/products/${req.body.id}`,
       {
         method: 'PATCH',
         mode: 'cors',
@@ -32,7 +32,7 @@ export default async (req, res) => {
     );
   } else if (req.method === 'DELETE') {
     records = await fetch(
-      `${process.env.backend_nodejs}/api/v1/ingredients/${req.body.id}`,
+      `${process.env.backend_nodejs}/api/v1/products/${req.body.id}`,
       {
         method: 'DELETE',
         mode: 'cors',
@@ -43,7 +43,7 @@ export default async (req, res) => {
     );
   } else if (req.method === 'GET') {
     records = await fetch(
-      `${process.env.backend_nodejs}/api/v1/ingredients?limit=100`,
+      `${process.env.backend_nodejs}/api/v1/products?limit=100`,
       {
         method: 'GET',
         mode: 'cors',

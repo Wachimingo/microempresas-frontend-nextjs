@@ -141,25 +141,22 @@ export default function TopBar(props) {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    Inventario
+                    Gastos
                   </a>
                   <ul
                     className="dropdown-menu"
                     aria-labelledby="navbarDropdown"
                   >
                     <li>
-                      <Link href="/inventory" passHref>
+                      <Link href="/expenses" passHref>
                         <a className="dropdown-item">Reportar Compras</a>
                       </Link>
                     </li>
                     <li>
-                      <Link href="/ingredients" passHref>
-                        <a className="dropdown-item">ingredientes</a>
+                      <Link href="/products" passHref>
+                        <a className="dropdown-item">Productos</a>
                       </Link>
                     </li>
-                    <Link href="/existence" passHref>
-                      <a className="dropdown-item">Existencias</a>
-                    </Link>
                   </ul>
                 </li>
               </ul>
