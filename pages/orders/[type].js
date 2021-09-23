@@ -7,23 +7,22 @@ import Image from 'next/image';
 import { Collapse, CardBody, Card } from 'reactstrap';
 const classes = require('./../../styles/menu.module.css');
 
-export default function pendingOrders({ items, totalRecords }) {
+export default function pendingOrders({ items, totalRecords, backend }) {
   const router = useRouter();
   const { type } = router.query;
   const { session } = useContext(AuthContext);
-  const [backend, setBackend] = useState('js')
   let [filterObject = [...items], setFilterObject] = useState();
   const { params } = useContext(ParamsContext);
-  
+
 
   const toggle = (id) => {
     // console.log(backend)
-    if(backend === 'py') return;
+    if (backend === 'py') return;
     document.getElementById(id).classList.toggle('show');
     document
       .getElementById(`item-${id}`)
       .classList.toggle(`${classes.activated}`);
-  };  
+  };
 
   const completeOrder = (id) => {
     if (router.query.type === 'Pending') {
@@ -89,9 +88,8 @@ export default function pendingOrders({ items, totalRecords }) {
         <div id={`buttons-${id}`} className="">
           <button
             type="button"
-            className={`btn btn-success ${classes.pendingOrderButton} ${
-              session.role !== 'admin' ? 'd-none' : ''
-            }`}
+            className={`btn btn-success ${classes.pendingOrderButton} ${session.role !== 'admin' ? 'd-none' : ''
+              }`}
             onClick={(e) => completeOrder(id)}
           >
             Orden Lista
@@ -110,9 +108,8 @@ export default function pendingOrders({ items, totalRecords }) {
         <div id={`buttons-${id}`} className="">
           <button
             type="button"
-            className={`btn btn-success ${classes.pendingOrderButton} ${
-              session.role !== 'admin' ? 'd-none' : ''
-            }`}
+            className={`btn btn-success ${classes.pendingOrderButton} ${session.role !== 'admin' ? 'd-none' : ''
+              }`}
             onClick={(e) => completeOrder(id)}
           >
             Completar pedido
@@ -149,7 +146,13 @@ export default function pendingOrders({ items, totalRecords }) {
   };
 
   const parentItemsUpdate = (res) => {
-    setFilterObject(res.data.records);
+    // console.log(res)
+    if(res.data.records !== undefined){
+      setFilterObject(res.data.records);
+    } else {
+      totalRecords = 0;
+      backend = 'py'
+    }
   };
 
 
@@ -162,123 +165,123 @@ export default function pendingOrders({ items, totalRecords }) {
       return <h4>Orden previa</h4>;
     }
   };
-  
-    return (
-      <div>
-        {/* {console.log(filterObject)} */}
-        <h1>Pedidos en linea</h1>
-        <div className={classes.paginationNav}>
-          <PaginationControls
-            token={session.token}
-            totalRecords={totalRecords}
-            limit={10}
-            sort={null}
-            toUpdateParent={parentItemsUpdate}
-            type={null}
-            url={`/api/orders?status=status&ifValue=${router.query.type}&role=${session.role}`}
-            method={'POST'}
-          />
-        </div>
-        {filterObject.map((el, i) => {
-          return (
-            <div key={el.id}>
-              {sayStatus(el.status)}
-              <div
-                id={`item-${el.id}`}
-                className={`card ${classes.pendingOrderCards}`}
-                onClick={(e) => toggle(el.id)}
-                style={
-                  el.status === 'isReady'
-                    ? { backgroundColor: 'lightgreen' }
-                    : el.status === 'Completed'
+
+  return (
+    <div>
+      {/* {console.log(filterObject)} */}
+      <h1>Pedidos en linea</h1>
+      <div className={classes.paginationNav}>
+        <PaginationControls
+          token={session.token}
+          totalRecords={totalRecords}
+          limit={10}
+          sort={null}
+          toUpdateParent={parentItemsUpdate}
+          type={null}
+          url={`/api/orders?status=status&ifValue=${router.query.type}&role=${session.role}`}
+          method={'POST'}
+        />
+      </div>
+      {filterObject.map((el, i) => {
+        return (
+          <div key={el.id}>
+            {sayStatus(el.status)}
+            <div
+              id={`item-${el.id}`}
+              className={`card ${classes.pendingOrderCards}`}
+              onClick={(e) => toggle(el.id)}
+              style={
+                el.status === 'isReady'
+                  ? { backgroundColor: 'lightgreen' }
+                  : el.status === 'Completed'
                     ? { backgroundColor: 'lightgray' }
                     : {}
-                }
-              >
-                <div className={classes.hoverCard}>
-                  <Image
-                    src={`/dishes/stockDishImg.png`}
-                    className={`${classes.pendingOrderCardsImage}`}
-                    alt="me"
-                    width="100"
-                    height="100"
-                  />
-                  <div className={`${classes.pendingOrderCardsBody}`}>
-                    <h5 className={``}>Cliente: {el.customer}</h5>
-                    <p className={``}>Total de Platos: {el.totalDishes}</p>
-                    <p className={``}>Hora: {el.dayTime}</p>
-                    <p className={``}>
-                      Fecha {el.day} {el.createdAt}
-                    </p>
-                  </div>
+              }
+            >
+              <div className={classes.hoverCard}>
+                <Image
+                  src={`/dishes/stockDishImg.png`}
+                  className={`${classes.pendingOrderCardsImage}`}
+                  alt="me"
+                  width="100"
+                  height="100"
+                />
+                <div className={`${classes.pendingOrderCardsBody}`}>
+                  <h5 className={``}>Cliente: {el.customer}</h5>
+                  <p className={``}>Total de Platos: {el.totalDishes}</p>
+                  <p className={``}>Hora: {el.dayTime}</p>
+                  <p className={``}>
+                    Fecha {el.day} {el.createdAt}
+                  </p>
                 </div>
               </div>
-              <Collapse
-                id={el.id}
-                isOpen={false}
-                className={classes.collapseCard}
-              >
-                <Card className={classes.collapseInnerCard}>
-                  <CardBody>
-                    {el.dishes !== undefined ? (
-                      el.dishes.map((el, i) => {
-                        return (
-                          <div
-                            className={classes.pendingOrderCardsInnerCard}
-                            key={`inner-${i}`}
-                          >
-                            <Image
-                              src={`/dishes/${el.dish.image}`}
-                              className={`${classes.pendingOrderCardsImage}`}
-                              alt="me"
-                              width="100"
-                              height="100"
-                            />
-                            <div className={`${classes.pendingOrderCardsBody}`}>
-                              <h5 className={``}>
-                                Cantidad de platos: {el.amount}
-                              </h5>
-                              <p className={``}>
-                                Precio unitario: ${el.dish.price}
-                              </p>
-                              <p className={``}>
-                                Precio total del mismo plato: $
-                                {el.dish.price * el.amount}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div
-                        className={classes.pendingOrderCardsInnerCard}
-                        key={`inner-${i}`}
-                      >
-                        <Image
-                          src={`/dishes/stockDishImg.png`}
-                          className={`${classes.pendingOrderCardsImage}`}
-                          alt="me"
-                          width="100"
-                          height="100"
-                        />
-                        <div className={`${classes.pendingOrderCardsBody}`}>
-                          <h2>No hay informacion para mostrar</h2>
-                        </div>
-                      </div>
-                    )}
-                  </CardBody>
-                </Card>
-              </Collapse>
-              {buttons(el.id, el.status)}
             </div>
-          );
-        })}
-        <br />
-      </div>
-    );
+            <Collapse
+              id={el.id}
+              isOpen={false}
+              className={classes.collapseCard}
+            >
+              <Card className={classes.collapseInnerCard}>
+                <CardBody>
+                  {el.dishes !== undefined ? (
+                    el.dishes.map((el, i) => {
+                      return (
+                        <div
+                          className={classes.pendingOrderCardsInnerCard}
+                          key={`inner-${i}`}
+                        >
+                          <Image
+                            src={`/dishes/${el.dish.image}`}
+                            className={`${classes.pendingOrderCardsImage}`}
+                            alt="me"
+                            width="100"
+                            height="100"
+                          />
+                          <div className={`${classes.pendingOrderCardsBody}`}>
+                            <h5 className={``}>
+                              Cantidad de platos: {el.amount}
+                            </h5>
+                            <p className={``}>
+                              Precio unitario: ${el.dish.price}
+                            </p>
+                            <p className={``}>
+                              Precio total del mismo plato: $
+                              {el.dish.price * el.amount}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div
+                      className={classes.pendingOrderCardsInnerCard}
+                      key={`inner-${i}`}
+                    >
+                      <Image
+                        src={`/dishes/stockDishImg.png`}
+                        className={`${classes.pendingOrderCardsImage}`}
+                        alt="me"
+                        width="100"
+                        height="100"
+                      />
+                      <div className={`${classes.pendingOrderCardsBody}`}>
+                        <h2>No hay informacion para mostrar</h2>
+                      </div>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </Collapse>
+            {buttons(el.id, el.status)}
+          </div>
+        );
+      })}
+      <br />
+    </div>
+  );
 };
 
-export async function getServerSideProps({query}) {
+export async function getServerSideProps({ query }) {
   // Get external data from the file system, API, DB, etc.
   // console.log(query) // here is the data of the url { blogname: 'wfe436' }
   let res = []
@@ -317,12 +320,13 @@ export async function getServerSideProps({query}) {
   }
 
   const data = await res.json()
-  const items = data.records
-  const totalRecords = data.totalRecords.length > 0 ? data.totalRecords[0].total : 1
 
+  const items = data.records !== undefined ? data.records : data
+  const totalRecords = data.totalRecords !== undefined ? data.totalRecords.length > 0 ? data.totalRecords[0].total : 1 : 1
+  const backend = data.records !== undefined ? 'js' : 'py'
   // console.log(data)
 
   return {
-    props: { items, totalRecords }, // will be passed to the page component as props
+    props: { items, totalRecords, backend }, // will be passed to the page component as props
   };
 }

@@ -1,7 +1,7 @@
 export default async (req, res) => {
   let stats;
 
-  if (req.body.historyMode === 'month') {
+  if (req.body.mode === 'month') {
     stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats/months`, {
       method: 'POST',
       mode: 'cors',
@@ -14,7 +14,7 @@ export default async (req, res) => {
         year: req.body.year,
       }),
     });
-  } else if (req.body.historyMode === 'year') {
+  } else if (req.body.mode === 'year') {
     stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats/years`, {
       method: 'POST',
       mode: 'cors',
@@ -27,7 +27,7 @@ export default async (req, res) => {
         year: req.body.year,
       }),
     });
-  } else if (req.body.historyMode === 'week') {
+  } else if (req.body.mode === 'week') {
     stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats/week`, {
       method: 'POST',
       mode: 'cors',
@@ -40,7 +40,7 @@ export default async (req, res) => {
         year: req.body.year,
       }),
     });
-  } else if (req.body.historyMode === 'day') {
+  } else if (req.body.mode === 'day') {
     stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats/day`, {
       method: 'POST',
       mode: 'cors',
@@ -62,6 +62,7 @@ export default async (req, res) => {
   const data = await stats.json();
 
   // console.log(data)
+
   if (stats.ok) {
     res.status(200).json({
       status: 'success',

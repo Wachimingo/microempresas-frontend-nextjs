@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import AuthContext from './../context/authContext';
-import Table from './../components/Table';
+import AuthContext from '../context/authContext';
+import Table from '../components/Table';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import PaginationControls from './../components/NavigationItems/PaginationControls';
+import PaginationControls from '../components/NavigationItems/PaginationControls';
 
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
 const loader = require('./../styles/loader.module.css');
 
-export default function ingredients() {
+export default function products() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
   const [name, setName] = useState('');
@@ -23,7 +23,7 @@ export default function ingredients() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/ingredients`, {
+    fetch(`/api/products`, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -47,7 +47,7 @@ export default function ingredients() {
   const addItemHandler = (e, mode) => {
     if (e) e.preventDefault();
     if (name === '') return;
-    fetch(`/api/ingredients`, {
+    fetch(`/api/products`, {
       method: mode,
       mode: 'cors',
       headers: {
@@ -70,7 +70,7 @@ export default function ingredients() {
   };
 
   const removeItem = (id, name) => {
-    fetch(`/api/ingredients`, {
+    fetch(`/api/products`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
@@ -91,7 +91,7 @@ export default function ingredients() {
     setExpires(el.expires);
   };
 
-  if (items.length > 0 && totalRecords > 0) {
+  if (loaded) {
     return (
       <div>
         <h1>Ingresar ingredientes o producto</h1>
@@ -118,6 +118,7 @@ export default function ingredients() {
                     className="form-control"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required  
                   />
                 </div>
                 <div className="input-group">
@@ -214,6 +215,5 @@ export default function ingredients() {
     );
   } else return (<>
     <h1>Cargando...</h1>
-    <div className={`${loader.ldsSpinner}`}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
   </>);
 }

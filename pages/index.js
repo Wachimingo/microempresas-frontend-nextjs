@@ -1,32 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
 import Image from 'next/image';
 const classes = require('./../styles/menu.module.css');
 import CarousselSSR from '../components/Caroussel';
 import MenuAdmin from '../components/MenuAdmin';
 
 export default function Menu({ items }) {
-  const { setParams } = useContext(ParamsContext);
   const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    fetch(`/api/params`, {
-      method: 'GET',
-      mode: 'cors',
-    })
-      .then((res) => res.json())
-      // .then((res) => console.log(res))
-      .then((res) => setParams(res.data.records));
-
-    fetch('/api/counter', {
-      method: 'GET',
-      mode: 'cors',
-    })
-      .then((res) => res.json())
-      .then((res) => setCount(res.data));
-  }, []);
 
   // Server side render component
   const SSRElements = (

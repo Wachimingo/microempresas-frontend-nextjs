@@ -3,14 +3,12 @@ import Script from 'next/script';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-// Register the plugin to all charts:
-Chart.plugins.register(ChartDataLabels);
-
-export default function DonutChart(props) {
+export default memo(function DonutChart(props) {
   // console.log(props.labels)
   let chartId = props.chartId;
   let config = {
     type: 'doughnut',
+    plugins: [ChartDataLabels],
     data: {
       labels: props.labels,
       datasets: [
@@ -69,4 +67,4 @@ export default function DonutChart(props) {
       </Script>
     </>
   );
-}
+})

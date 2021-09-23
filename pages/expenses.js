@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import AuthContext from './../context/authContext';
-import Table from './../components/Table';
+import AuthContext from '../context/authContext';
+import Table from '../components/Table';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import PaginationControls from './../components/NavigationItems/PaginationControls';
+import PaginationControls from '../components/NavigationItems/PaginationControls';
 
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
 const loader = require('./../styles/loader.module.css');
 
-export default function inventory() {
+export default function expenses() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
   const [metric, setMetric] = useState('');
@@ -22,7 +22,7 @@ export default function inventory() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemID, setItemID] = useState();
   const [items, setItems] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
+  const [products, setProducts] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
@@ -30,7 +30,7 @@ export default function inventory() {
   let today = new Date().toISOString().split('T')[0].split('-').reverse().join('-');
 
   useEffect(() => {
-    fetch(`/api/inventory`, {
+    fetch(`/api/expenses`, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -44,7 +44,8 @@ export default function inventory() {
         updateItems(res);
       })
       .then(() => setLoaded(true));
-    fetch(`/api/ingredients`, {
+
+    fetch(`/api/products`, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -55,23 +56,29 @@ export default function inventory() {
       .then((res) => res.json())
       // .then((res) => console.log(res))
       .then((res) => {
-        setIngredients(res.data.records);
+        setProducts(res.data.records);
       })
       .then(() => setLoaded(true));
   }, []);
 
   const updateItems = (res) => {
-    res.data.records.map((el, i) => {
-      res.data.records[i].ingredient_id = el.ingredient._id;
-      res.data.records[i].ingredient_name = el.ingredient.name;
-    });
-    setItems(res.data.records);
-    setTotalRecords(res.data.totalRecords);
+    // console.log(res.data.records);
+    if (res.data.records !== undefined) {
+      res.data.records.map((el, i) => {
+        res.data.records[i].product_id = el.product._id;
+        res.data.records[i].ingredient_name = el.product.name;
+      });
+      setItems(res.data.records);
+      setTotalRecords(res.data.totalRecords);
+    }
   };
 
   const addItemHandler = (e, mode) => {
     if (e) e.preventDefault();
-    fetch(`/api/inventory`, {
+
+    if(metric === '' || amount < 1 || productID === '' || totalPrice <= 0) toast.error('Por favor llene todos los campos')
+
+    fetch(`/api/expenses`, {
       method: mode,
       mode: 'cors',
       headers: {
@@ -97,7 +104,7 @@ export default function inventory() {
   };
 
   const removeItem = (id, name) => {
-    fetch(`/api/inventory`, {
+    fetch(`/api/expenses`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
@@ -118,10 +125,10 @@ export default function inventory() {
     setMetric(el.metric);
     setAmount(el.amount);
     setProductName(el.ingredient_name);
-    setProductID(el.ingredient_id);
+    setProductID(el.product_id);
   };
 
-  if (items.length > 0 && totalRecords > 0) {
+  if (loaded) {
     return (
       <div>
         <h1>Ingresar ingredientes o producto</h1>
@@ -144,23 +151,26 @@ export default function inventory() {
                     Producto
                   </span>
                   <select
-                    id="ingredients"
+                    id="products"
                     className="form-select"
                     aria-label="Default select example"
                     value={productID}
                     onChange={(e) => setProductID(e.target.value)}
+                    required
                   >
-                    {ingredients.map((el, i) => {
+                    <option  value=''>
+                      Seleccione un producto
+                    </option>
+                    {products.map((el) => {
                       return (
-                        <>
-                          <option key={'ingredient' + el._id} value={el._id}>
-                            {el.name}
-                          </option>
-                        </>
+                        <option key={'ingredient' + el._id} value={el._id}>
+                          {el.name}
+                        </option>
                       );
                     })}
                   </select>
                 </div>
+                <br />
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
@@ -173,12 +183,14 @@ export default function inventory() {
                     className="form-control"
                     value={metric}
                     onChange={(e) => setMetric(e.target.value)}
+                    placeholder='Ingrese si es libra, botella, bolsa, etc'
                   />
                 </div>
+                <br />
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
-                    style={{ width: '6vw' }}
+                    style={{ width: '10vw' }}
                   >
                     Total de unidades
                   </span>
@@ -189,10 +201,11 @@ export default function inventory() {
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
+                <br />
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
-                    style={{ width: '6vw' }}
+                    style={{ width: '10vw' }}
                   >
                     Total Cancelado
                   </span>
@@ -231,7 +244,7 @@ export default function inventory() {
               limit={10}
               toUpdateParent={updateItems}
               type={null}
-              url={'/api/inventory'}
+              url={'/api/expenses'}
               method={'GET'}
             />
           </div>
@@ -291,6 +304,5 @@ export default function inventory() {
     );
   } else return (<>
     <h1>Cargando...</h1>
-    <div className={`${loader.ldsSpinner}`}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
   </>)
 }

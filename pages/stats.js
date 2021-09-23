@@ -1,15 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../context/authContext';
-import Table from './../components/Table';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Menu() {
-    let dateTime = new Date();
+    const dateTime = new Date();
     const { session } = useContext(AuthContext);
     const [item, setItem] = useState([])
     const [loaded, setLoaded] = useState(false)
     const [date = dateTime.toISOString().split('T')[0], setDate] = useState();
     useEffect(() => {
-        fetch(`/api/getOutcome?limit=100&day=07&month=09&year=2021&mode=day`,
+        const today = new Date()
+            .toISOString()
+            .split('T')[0]
+            .split('-')
+            .reverse()
+            .join('-');
+        fetch(`/api/getOutcome?limit=100&day=${today.split('-')[0]}&month=${today.split('-')[1]}&year=${today.split('-')[2]}&mode=day`,
             {
                 method: 'GET',
                 mode: 'cors',
@@ -20,18 +27,23 @@ export default function Menu() {
         )
             .then((res) => res.json())
             // .then((res) => console.log(res))
-            .then((res) => updateResults(res.data.records))
+            .then((res) => updateResults(res.data.records, today))
             .then(() => setLoaded(true));
     }, [])
 
-    const updateResults = (records) => {
+    const updateResults = (records, day) => {
         setItem(records)
+        if(records.earnings.length > 0 && records.expenses.length > 0){
+            toast.success(`Datos del ${day}`)
+        }else {
+            toast.error(`No hay datos de ${day}`)
+        }
     }
 
     const getStats = () => {
-        let pickedDate = document.getElementById('calendar').value;
-        let mode = document.getElementById('calendarMode').value;
-        fetch(`/api/getExpenses?limit=100&day=${pickedDate.split('-')[2]}&month=${pickedDate.split('-')[1]}&year=${pickedDate.split('-')[0]}&mode=${mode}`,
+        const pickedDate = document.getElementById('calendar').value;
+        const mode = document.getElementById('calendarMode').value;
+        fetch(`/api/getOutcome?limit=100&day=${pickedDate.split('-')[2]}&month=${pickedDate.split('-')[1]}&year=${pickedDate.split('-')[0]}&mode=${mode}`,
             {
                 method: 'GET',
                 mode: 'cors',
@@ -42,7 +54,7 @@ export default function Menu() {
         )
             .then((res) => res.json())
             // .then((res) => console.log(res))
-            .then((res) => setItem(res.data.records));
+            .then((res) => updateResults(res.data.records, pickedDate));
     }
 
     if (!loaded) {
@@ -89,7 +101,7 @@ export default function Menu() {
 
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div className="container">
                     <div className="row">
                         <div className="col">
@@ -98,12 +110,15 @@ export default function Menu() {
                                     {/* {console.log(items[0].expense)} */}
                                     <h5 className="card-title">Ganancias netas</h5>
                                     {
-                                        (item.earnings.length > 0 ? item.earnings[0].earning *1 : 0) - (item.expenses.length > 0 ? item.expenses[0].expense*1 : 0)
+                                        (item.earnings.length > 0 ? item.earnings[0].earning * 1 : 0) - (item.expenses.length > 0 ? item.expenses[0].expense * 1 : 0)
                                     }
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <ToastContainer />
                 </div>
             </>
         );

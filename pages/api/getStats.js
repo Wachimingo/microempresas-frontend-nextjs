@@ -15,6 +15,7 @@ export default async (req, res) => {
   });
 
   const data = await stats.json();
+  // console.log(data)
   if (stats.ok) {
     res.status(200).json({
       status: 'success',
