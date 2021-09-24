@@ -1,17 +1,11 @@
 export default async (req, res) => {
-  const stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats`, {
-    method: 'POST',
+  // console.log(req.query, req.headers.authorization)
+  const stats = await fetch(`${process.env.backend_nodejs}/api/v1/stats?mode=${req.query.mode}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
+    method: 'GET',
     mode: 'cors',
     headers: {
-      Authorization: `Bearer ${req.body.token}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      mode: req.body.mode,
-      day: req.body.day,
-      month: req.body.month,
-      year: req.body.year,
-    }),
+      Authorization: `${req.headers.authorization}`,
+    }
   });
 
   const data = await stats.json();

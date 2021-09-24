@@ -62,26 +62,28 @@ export default function login() {
           <h3>Ingresar</h3>
 
           <div className="form-group">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Correo electronico</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
-              placeholder="Enter email"
+              placeholder="Ingrese su correo electronico"
+              require
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Contraseña</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
-              placeholder="Enter password"
+              placeholder="Ingrese su contraseña"
+              require
             />
           </div>
 
@@ -93,7 +95,7 @@ export default function login() {
                 id="customCheck1"
               />
               <label className="custom-control-label" htmlFor="customCheck1">
-                Remember me
+                Recordar session
               </label>
             </div>
           </div>
@@ -105,7 +107,7 @@ export default function login() {
             Registrarse
           </button>
           <p className="forgot-password text-right">
-            Forgot <a href="#">password?</a>
+            Olvido su <a href="#">clave?</a>
           </p>
         </form>
       </div>

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
+// import ParamsContext from '../context/paramsContext';
 import Link from 'next/link';
 const classes = require('./../styles/topbar.module.css');
 
@@ -64,12 +64,21 @@ export default function TopBar(props) {
                         <a className="dropdown-item">Vender</a>
                       </Link>
                     </li>
-                    <Link href="/menu/catalog" passHref>
-                      <a className="dropdown-item">Catalogo</a>
-                    </Link>
-                    <Link href="/menu/carusel" passHref>
-                      <a className="dropdown-item">Carusel</a>
-                    </Link>
+                    <li>
+                      <Link href="/menu/catalog" passHref>
+                        <a className="dropdown-item">Catalogo</a>
+                      </Link>
+                      </li>
+                      <li>
+                      <Link href="/addDish" passHref>
+                        <a className="dropdown-item">Agregar menu</a>
+                      </Link>
+                      </li>
+                      <li>
+                      <Link href="/menu/carusel" passHref>
+                        <a className="dropdown-item">Carusel</a>
+                      </Link>
+                      </li>
                   </ul>
                 </li>
                 <li className="nav-item dropdown">
@@ -93,14 +102,14 @@ export default function TopBar(props) {
                       </Link>
                     </li>
                     <li>
-                    <Link href={`/orders/isReady?token=${session.token}&role=${session.role}`} passHref>
-                      <a className="dropdown-item">Listos para retirar</a>
-                    </Link>
+                      <Link href={`/orders/isReady?token=${session.token}&role=${session.role}`} passHref>
+                        <a className="dropdown-item">Listos para retirar</a>
+                      </Link>
                     </li>
                     <li>
-                    <Link href={`/orders/Completed?token=${session.token}&role=${session.role}`} passHref>
-                      <a className="dropdown-item">Completados</a>
-                    </Link>
+                      <Link href={`/orders/Completed?token=${session.token}&role=${session.role}`} passHref>
+                        <a className="dropdown-item">Completados</a>
+                      </Link>
                     </li>
                   </ul>
                 </li>
@@ -236,14 +245,14 @@ export default function TopBar(props) {
                       </Link>
                     </li>
                     <li>
-                    <Link href={`/orders/isReady?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
-                      <a className="dropdown-item">Listos para retirar</a>
-                    </Link>
+                      <Link href={`/orders/isReady?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                        <a className="dropdown-item">Listos para retirar</a>
+                      </Link>
                     </li>
                     <li>
-                    <Link href={`/orders/Completed?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
-                      <a className="dropdown-item">Completados</a>
-                    </Link>
+                      <Link href={`/orders/Completed?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                        <a className="dropdown-item">Completados</a>
+                      </Link>
                     </li>
                   </ul>
                 </li>

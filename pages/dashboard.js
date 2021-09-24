@@ -97,17 +97,12 @@ export default function dashboard() {
     .reverse()
     .join('-');
 
-    fetch(`/api/getStats`, {
-      method: 'POST',
+    fetch(`/api/getStats?mode=${mode}&day=${today.split('-')[0]}&month=${today.split('-')[1]}&year=${today.split('-')[2]}`, {
+      method: 'GET',
       mode: 'cors',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        mode,
-        day: today.split('-')[0],
-        month: today.split('-')[1],
-        year: today.split('-')[2],
-        token: session.token,
-      }),
+      headers: { 
+        'Authorization': `Bearer ${session.token}`
+       }
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
@@ -116,20 +111,10 @@ export default function dashboard() {
 
     // console.log(nextWeekF)
 
-    fetch(`/api/getStatsHistory`, {
-      method: 'POST',
+    fetch(`/api/getStatsHistory?mode=${mode}&day=${monday.split('-')[0]}&month=${monday.split('-')[1]}&year=${monday.split('-')[2]}&day2=${nextWeekF.split('-')[0]}&month2=${nextWeekF.split('-')[1]}&year2=${nextWeekF.split('-')[2]}`, {
+      method: 'GET',
       mode: 'cors',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        mode: historyMode,
-        day: monday.split('-')[0],
-        month: monday.split('-')[1],
-        year: monday.split('-')[2],
-        day2: nextWeekF.split('-')[0],
-        month2: nextWeekF.split('-')[1],
-        year2: nextWeekF.split('-')[2],
-        token: session.token,
-      }),
+      headers: { Authorization: `Bearer ${session.token}` },
     })
       .then((res) => res.json())
       // .then((res) => console.log(res.data.result))
@@ -154,17 +139,10 @@ export default function dashboard() {
     const pickedDate = document.getElementById('calendar').value;
     const mode = document.getElementById('timeFrame').value;
 
-    fetch(`/api/getStats`, {
-      method: 'POST',
+    fetch(`/api/getStats?mode=${mode}&day=${pickedDate.split('-')[2]}&month=${pickedDate.split('-')[1]}&year=${pickedDate.split('-')[0]}`, {
+      method: 'GET',
       mode: 'cors',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        mode,
-        day: pickedDate.split('-')[2],
-        month: pickedDate.split('-')[1],
-        year: pickedDate.split('-')[0],
-        token: session.token,
-      }),
+      headers: { Authorization: `Bearer ${session.token}` },
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
@@ -198,20 +176,10 @@ export default function dashboard() {
 
       setHistoryMode(mode);
 
-      fetch(`/api/getStatsHistory`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          mode,
-          day: pickedDateMondayF.split('-')[0],
-          month: pickedDateMondayF.split('-')[1],
-          year: pickedDateMondayF.split('-')[2],
-          day2: nextWeekF.split('-')[0],
-          month2: nextWeekF.split('-')[1],
-          year2: nextWeekF.split('-')[2],
-          token: session.token,
-        }),
+      fetch(`/api/getStatsHistory?mode=${mode}&day=${pickedDateMondayF.split('-')[0]}&month=${pickedDateMondayF.split('-')[1]}&year=${pickedDateMondayF.split('-')[2]}&day2=${nextWeekF.split('-')[0]}&month2=${nextWeekF.split('-')[1]}&year2=${nextWeekF.split('-')[2]}`, {
+        method: 'GET',
+      mode: 'cors',
+      headers: { Authorization: `Bearer ${session.token}` },
       })
         .then((res) => res.json())
         // .then((res) => console.log(res.data))

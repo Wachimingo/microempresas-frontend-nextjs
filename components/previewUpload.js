@@ -15,7 +15,7 @@ class ImageFile extends React.Component {
       imgTag = (
         <div className="row">
           <div className="small-9 small-centered columns">
-            <img className="thumbnail" src={this.props.imageURI} width='400px'></img>
+            <img className="thumbnail" src={this.props.imageURI} width='100%'></img>
           </div>
         </div>
       );

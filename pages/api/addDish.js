@@ -49,17 +49,20 @@ export default async (req, res) => {
 
   if (addDish.ok) {
     if (Object.keys(data.files).length > 0) {
-      var oldpath = data.files.image.path;
-      var modifiedPath = `${oldpath.split('.')[0]}-new.${
-        oldpath.split('.')[1]
+      const oldpath = data.files.image.path;
+      const modifiedPath = `${path.join(`${__dirname}/../../../../`, 'public/') + oldpath.split('\\')[oldpath.split('\\').length - 1].split('.')[0]}-new.${
+        oldpath.split('.')[oldpath.split('.').length - 1]
       }`;
+      // console.log("modifed path: " + modifiedPath)
+      // console.log("oldpath: " + oldpath)
+      // console.log(path.join(`${__dirname}/../../../../`, 'public'))
       sharp(oldpath)
         .resize(500, 500)
         .toFormat('jpeg')
         .jpeg({ quality: 90 })
         .toFile(modifiedPath)
         .then(() => {
-          var newpath =
+          const newpath =
             path.join(`${__dirname}/../../../../`, 'public') +
             '/dishes/' +
             fileName;
@@ -77,14 +80,15 @@ export default async (req, res) => {
           });
         });
     }
-
+    
     res.status(201).json({
       status: 'success',
       data: {
         result,
       },
     });
-  } else {
+  } 
+  else {
     if(Object.keys(data.files).length > 0){
     fs.unlink(data.files.image.path, (err) => {
       if (err) {

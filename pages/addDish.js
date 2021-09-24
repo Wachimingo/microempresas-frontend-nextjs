@@ -1,4 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AuthContext from './../context/authContext';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -17,44 +19,37 @@ export default function addDish({ item }) {
   const [image, setImage] = useState(`/dishes/${item.image}`);
   const [uploadImage, setUploadImage] = useState();
 
-  useEffect(() => {
-    if (item) {
-      // setName(item.name);
-      // setDescription(item.description);
-      // setPrice(item.price);
-      // // setImage(item.image);
-    }
-  }, []);
-
   const isForTodayHanlder = () => {
     setIsForTodayState(!isForTodayState);
   };
 
   const addItemHandler = (e) => {
-    //convertir este form en un json, para convertirlo en form en el API
     e.preventDefault();
-    //Using form data to be able to sent the image to node.js backend
-    var formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('price', price);
-    if (image !== undefined && image.filename !== '') {
-      formData.append('image', uploadImage);
-    }
-    formData.append('forToday', isForTodayState);
+    if (price <= 0) { toast.error('El precio no puede ser 0 o menor') }
+    else {
+      //Using form data to be able to sent the image to node.js backend
+      var formData = new FormData();
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('price', price);
+      if (image !== undefined && image.filename !== '') {
+        formData.append('image', uploadImage);
+      }
+      formData.append('forToday', isForTodayState);
 
-    // console.log(formData);
-    fetch(`/api/addDish`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Authorization: `${session.token}`,
-      },
-      body: formData,
-    })
-      .then((res) => res.json())
-      // .then((res) => console.log(res));
-      .then((res) => router.push('/'));
+      // console.log(formData);
+      fetch(`/api/addDish`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Authorization: `${session.token}`,
+        },
+        body: formData,
+      })
+        .then((res) => res.json())
+        // .then((res) => console.log(res));
+        .then((res) => router.push('/menu/catalog'));
+    }
   };
 
   const clearState = () => {
@@ -64,7 +59,7 @@ export default function addDish({ item }) {
     setImage('');
   };
 
-  const imageHandler =(e) => {
+  const imageHandler = (e) => {
     let reader = new FileReader();
     setUploadImage(e.target.files[0]);
     reader.onload = function (ev) {
@@ -82,8 +77,7 @@ export default function addDish({ item }) {
             <form onSubmit={addItemHandler}>
               <div className="input-group">
                 <span
-                  className={'input-group-text ' + classes.labelsText}
-                  style={{ width: '6vw' }}
+                  className={`input-group-text ${classes.labelsText}`}
                 >
                   Nombre
                 </span>
@@ -92,13 +86,13 @@ export default function addDish({ item }) {
                   className="form-control"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
+                  require
                 />
               </div>
               <br />
               <div className="input-group">
                 <span
-                  className={'input-group-text ' + classes.labelsText}
-                  style={{ width: '6vw' }}
+                  className={`input-group-text ${classes.labelsText}`}
                 >
                   Descripcion
                 </span>
@@ -112,8 +106,7 @@ export default function addDish({ item }) {
               <br />
               <div className="input-group">
                 <span
-                  className={'input-group-text ' + classes.labelsText}
-                  style={{ width: '6vw' }}
+                  className={`input-group-text ${classes.labelsText}`}
                 >
                   Precio
                 </span>
@@ -124,14 +117,15 @@ export default function addDish({ item }) {
                   onChange={(e) => setPrice(e.target.value)}
                   value={price}
                 />
-                {/* Foto upload */}
-                <span className="input-group-text">Foto</span>
-                <input
-                  type="file"
-                  className="form-control"
-                  onChange={imageHandler}
-                />
               </div>
+              <br />
+              {/* Foto upload */}
+              <span className={`input-group-text ${classes.labelsText}`}>Foto</span>
+              <input
+                type="file"
+                className="form-control"
+                onChange={imageHandler}
+              />
               <br />
               <div className="input-group">
                 <input
@@ -165,9 +159,13 @@ export default function addDish({ item }) {
               </div>
             </form>
           </div>
-          <div className="col">            
-            <ImageFile imageURI={image} />
-          </div>
+
+        </div>
+        <div className={`${classes.imageViewer}`}>
+          <ImageFile imageURI={image} />
+        </div>
+        <div>
+          <ToastContainer />
         </div>
       </div>
     </div>
