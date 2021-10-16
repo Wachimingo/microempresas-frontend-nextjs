@@ -17,8 +17,8 @@
   text-align: center;
 }
 .carouselSize {
-  width: 15vw;
-  margin-left: 42vw;
+  width: 25%;
+  margin-left: 37vw;
   padding-bottom: 10vh;
 }
 .paginationNav{
@@ -132,7 +132,7 @@
   }
   .carouselSize {
     width: 95vw;
-    margin-left: 0vh;
+    margin-left: 1vh;
     padding-bottom: 8vh;
   }
   .centerCarousel {
@@ -140,7 +140,7 @@
     margin-bottom: 2vh;
   }
   .centerCard {
-    margin-left: 10%;
+    margin-left: 2vw;
     margin-bottom: 2vh;
   }
   .centerSellCard {
@@ -172,5 +172,8 @@
     margin-left: 1vw;
     width: 100%;
     background-color: lightgray;
+  }
+  .paginationControls {
+    margin-left: 32vw;
   }
 }

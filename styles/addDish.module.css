@@ -42,6 +42,10 @@
     .imageViewer{
         width: 30vw;
         margin-top: 2vh;
-    margin-left: 15vw;
+        margin-left: 15vw;
     }
+    .actions2 > div > button{
+        display: none;
+    }
+    
 }
