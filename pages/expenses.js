@@ -146,7 +146,6 @@ export default function expenses() {
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
-                    style={{ width: '6vw' }}
                   >
                     Producto
                   </span>
@@ -174,7 +173,6 @@ export default function expenses() {
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
-                    style={{ width: '6vw' }}
                   >
                     Unidad
                   </span>
@@ -190,7 +188,6 @@ export default function expenses() {
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
-                    style={{ width: '10vw' }}
                   >
                     Total de unidades
                   </span>
@@ -205,7 +202,6 @@ export default function expenses() {
                 <div className="input-group">
                   <span
                     className={'input-group-text ' + classes.labelsText}
-                    style={{ width: '10vw' }}
                   >
                     Total Cancelado
                   </span>

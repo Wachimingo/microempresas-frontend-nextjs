@@ -1,19 +1,19 @@
 export default async (req, res) => {
   let records = [];
-  // console.log(req.query)
+  console.log(req.query)
   if (req.query.role === 'admin') {
-    if (req.method === 'POST') {
-      records = await fetch(`${process.env.backend_orders}/api/v1/bills/orders?limit=${req.body.limit}&page=${req.body.page}`, {
-        method: 'POST',
+    if (req.method === 'GET') {
+      records = await fetch(`${process.env.backend_orders}/api/v1/bills/orders?limit=${req.body.limit}&page=${req.body.page}&status=${req.query.status}&ifValue=${req.query.ifValue}`, {
+        method: 'GET',
         mode: 'cors',
         headers: {
           Authorization: req.headers.authorization,
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          status: req.query.status,
-          ifValue: req.query.ifValue,
-        }),
+        // body: JSON.stringify({
+        //   status: req.query.status,
+        //   ifValue: req.query.ifValue,
+        // }),
       });
     } else if (req.method === 'PATCH') {
       records = await fetch(
@@ -64,7 +64,7 @@ export default async (req, res) => {
 
   const data = await records.json();
 
-  // console.log(data);
+  console.log(data);
   if (records.ok) {
     res.status(201).json({
       status: 'success',

@@ -16,7 +16,7 @@ import {
 } from 'react-icons/bs';
 
 export default function Cards(props) {
-  let [filterObject = [...props.items], setFilterObject] = useState();
+  let [filterObject = [...props.items] ?? [], setFilterObject] = useState();
 
   const [visible, setVisible] = useState('d-none');
 

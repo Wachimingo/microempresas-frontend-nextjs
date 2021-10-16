@@ -32,6 +32,7 @@ export default function Menu() {
     }, [])
 
     const updateResults = (records, day) => {
+        // console.log(records)
         setItem(records)
         if(records.earnings.length > 0 && records.expenses.length > 0){
             toast.success(`Datos del ${day}`)

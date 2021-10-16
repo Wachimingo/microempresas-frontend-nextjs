@@ -71,9 +71,12 @@ export default function Menu() {
       return (
         <>
           <Link href="/addDish" passHref>
-            <button type="button" className={'btn btn-secondary '}>
+            {
+              session.user !== undefined ? <button type="button" className={'btn btn-secondary '}>
               <BsCloudUpload /> Agregar
-            </button>
+            </button> : <></>
+            }
+            
           </Link>
           <MenuAdmin
             title={'Catalogo'}

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, memo } from 'react';
 import { useRouter } from 'next/router';
 import PaginationControls from './../../components/NavigationItems/PaginationControls';
 import AuthContext from '../../context/authContext';
-import ParamsContext from '../../context/paramsContext';
+// import ParamsContext from '../../context/paramsContext';
 import Image from 'next/image';
 import { Collapse, CardBody, Card } from 'reactstrap';
 const classes = require('./../../styles/menu.module.css');
@@ -11,8 +11,8 @@ export default function pendingOrders({ items, totalRecords, backend }) {
   const router = useRouter();
   const { type } = router.query;
   const { session } = useContext(AuthContext);
-  let [filterObject = [...items], setFilterObject] = useState();
-  const { params } = useContext(ParamsContext);
+  let [filterObject =  [...items], setFilterObject] = useState();
+  // const { params } = useContext(ParamsContext);
 
 
   const toggle = (id) => {
@@ -37,7 +37,7 @@ export default function pendingOrders({ items, totalRecords, backend }) {
           id,
           role: session.role,
           status: 'isReady',
-          url: params[0].paramValue
+          // url: params[0].paramValue
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
@@ -55,7 +55,7 @@ export default function pendingOrders({ items, totalRecords, backend }) {
           id,
           role: session.role,
           status: 'Completed',
-          url: params[0].paramValue
+          // url: params[0].paramValue
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
@@ -74,7 +74,7 @@ export default function pendingOrders({ items, totalRecords, backend }) {
       },
       body: JSON.stringify({
         id,
-        url: params[0].paramValue
+        // url: params[0].paramValue
       }),
     }).then((res) => res.json());
     // .then((res) => console.log(res))
@@ -287,31 +287,20 @@ export async function getServerSideProps({ query }) {
   let res = []
 
   if (query.role === 'admin') {
-    res = await fetch(`${process.env.backend_orders}/api/v1/bills/orders`, {
-      method: 'POST',
+    res = await fetch(`${process.env.backend_orders}/api/v1/bills/orders?limit=10&page=1&status=status&ifValue=${query.type}`, {
+      method: 'GET',
       mode: 'cors',
       headers: {
         Authorization: `Bearer ${query.token}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        status: 'status',
-        ifValue: query.type,
-      }),
     });
   } else if (query.role === 'user') {
-    res = await fetch(`${process.env.backend_orders}/api/v1/bills/ownedOrders?sort=-status`, {
-      method: 'POST',
+    res = await fetch(`${process.env.backend_orders}/api/v1/bills/ownedOrders?sort=-status&limit=10&page=1&status=status&ifValue=${query.type}&id=${query.id}`, {
+      method: 'GET',
       mode: 'cors',
       headers: {
         Authorization: `Bearer ${query.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: query.id,
-        status: 'status',
-        ifValue: query.type,
-      }),
+      }
     });
   } else {
     return {
@@ -320,6 +309,8 @@ export async function getServerSideProps({ query }) {
   }
 
   const data = await res.json()
+
+  // console.log(data)
 
   const items = data.records !== undefined ? data.records : data
   const totalRecords = data.totalRecords !== undefined ? data.totalRecords.length > 0 ? data.totalRecords[0].total : 1 : 1

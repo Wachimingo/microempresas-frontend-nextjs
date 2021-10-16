@@ -36,9 +36,6 @@ export default memo(function SignIn() {
       // .then((res) => console.log(res))
       .then(
         (res) => cookieSettup(res),
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setError(error);
         }
@@ -73,18 +70,19 @@ export default memo(function SignIn() {
               onChange={(e) => setUserName(e.target.value)}
               className="form-control"
               placeholder="Usuario"
+              require
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Correo electronico</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
-              placeholder="Enter email"
+              placeholder="Ingrese correo electronico"
             />
           </div>
 
@@ -96,7 +94,8 @@ export default memo(function SignIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
-              placeholder="Enter password"
+              placeholder="Ingrese contraseña"
+              require
             />
           </div>
 
@@ -108,7 +107,8 @@ export default memo(function SignIn() {
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
               className="form-control"
-              placeholder="Enter password again"
+              placeholder="Confirme su contraseña"
+              require
             />
           </div>
           <br />
@@ -119,6 +119,7 @@ export default memo(function SignIn() {
                 className="custom-control-input"
                 id="customCheck1"
                 onChange={(e)=>setHasAgreed(!hasAgreed)}
+                require
               />
               <label className="custom-control-label" htmlFor="customCheck1">
                 <Link href="/agreement" passHref>
@@ -130,9 +131,9 @@ export default memo(function SignIn() {
           <br />
           {
               hasAgreed ? <button type="submit" className="btn btn-primary btn-block">
-              Submit
+              Registrar
             </button> : <button type="submit" className="btn btn-primary btn-block" disabled>
-            Submit
+            Registrar
           </button>
           }
         </form>
