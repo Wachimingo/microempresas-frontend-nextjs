@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from './../../context/authContext';
-import ParamsContext from '../../context/paramsContext';
 const classes = require('./../../styles/menu.module.css');
 import { BsCloudUpload } from 'react-icons/bs';
 import CarousselSSR from './../../components/Caroussel';
@@ -13,7 +12,6 @@ import MenuAdmin from './../../components/MenuAdmin';
 export default function Menu() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
   const { menuPage } = router.query;
 
   const [items, setItems] = useState([])
@@ -23,9 +21,6 @@ export default function Menu() {
     fetch(`/api/getMenu`, {
       method: 'GET',
       mode: 'cors',
-      headers: {
-        'url': params.local_backend_nodejs
-      }
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))

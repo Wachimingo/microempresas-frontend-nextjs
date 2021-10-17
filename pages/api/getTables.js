@@ -2,7 +2,7 @@ export default async (req, res) => {
     let records = ''
   if (req.body.type === 'grupal') {
      records = await fetch(
-      `${req.body.url}/api/v1/bills?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
+      `${process.env.BACKEND}/api/v1/bills?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
       {
         method: 'GET',
         mode: 'cors',
@@ -13,7 +13,7 @@ export default async (req, res) => {
     );
   } else if (req.body.type === 'individual') {
      records = await fetch(
-      `${req.body.url}/api/v1/bills/detailedBilling?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
+      `${process.env.BACKEND}/api/v1/bills/detailedBilling?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
       {
         method: 'GET',
         mode: 'cors',
@@ -24,7 +24,7 @@ export default async (req, res) => {
     );
   } else if (req.body.type === 'stats') {
     records = await fetch(
-      `${req.body.url}/api/v1/bills/detailedBilling?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
+      `${process.env.BACKEND}/api/v1/bills/detailedBilling?limit=${req.body.limit}&page=${req.body.page}&sort=${req.body.sort}`,
       {
         method: 'GET',
         mode: 'cors',
