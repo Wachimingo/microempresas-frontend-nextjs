@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect, useContext, memo } from 'react';
 import { useRouter } from 'next/router';
 import AuthContext from '../context/authContext';
+import ParamsContext from '../context/paramsContext';
 import 'react-toastify/dist/ReactToastify.css';
 const classes = require('./../styles/menu.module.css');
 import SearchBar from './NavigationItems/SearchBar';
@@ -12,6 +13,7 @@ export default memo(function SellCards(props) {
   const router = useRouter();
   let [filterObject = [...props.items], setFilterObject] = useState();
   const { session } = useContext(AuthContext);
+  const {params} = useContext(ParamsContext);
   const [customerName, setCustomerName] = useState();
   const [balance, setBalance] = useState(0);
   let [counterDish, setCounterDish] = useState(0);
@@ -41,6 +43,7 @@ export default memo(function SellCards(props) {
       mode: 'cors',
       headers: {
         Authorization: `Bearer ${session.token}`,
+        'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -93,6 +96,7 @@ export default memo(function SellCards(props) {
           price: window['price_' + id],
           amount: document.getElementById(`counter_${id}`).innerHTML,
           day: week[day],
+          url: params.local_backend_nodejs
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
@@ -149,7 +153,8 @@ export default memo(function SellCards(props) {
             status: stat,
             id: session._id,
             currentBalance: session.balance,
-            role: session.role
+            role: session.role,
+            url: params.local_backend_nodejs
           }),
         })
           .then((res) => res.json())
@@ -175,6 +180,7 @@ export default memo(function SellCards(props) {
       toast.error(res.data.message);
     }
   };
+  
   return (
     <>
       <h1>{session.role === 'admin' ? 'Vender platos' : 'Comprar Platos'}</h1>

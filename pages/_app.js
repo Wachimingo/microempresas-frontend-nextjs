@@ -1,5 +1,5 @@
 import { AuthProvider } from './../context/authContext';
-// import { ParamsProvider } from './../context/paramsContext';
+import { ParamsProvider } from './../context/paramsContext';
 import Head from 'next/head';
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -8,7 +8,7 @@ const TopBar = dynamic(() => import('../components/TopBar'), { ssr: true });
 
 function MyApp({ Component, pageProps }) {
   return (
-    // <ParamsProvider>
+    <ParamsProvider>
       <AuthProvider>
         <Head>
           {/* Responsive meta tag */}
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
         <TopBar />
         <Component {...pageProps} />
       </AuthProvider>
-    // </ParamsProvider>
+    </ParamsProvider>
   );
 }
 

@@ -109,32 +109,3 @@ export default function Menu() {
     </div>
   );
 }
-
-// export async function getServerSideProps(context) {
-//   const res = await fetch('http://localhost:3001/api/v1/menu?limit=100', {
-//     method: 'GET',
-//     mode: 'cors',
-//   });
-//   const resForToday = await fetch(
-//     'http://localhost:3001/api/v1/menu/forToday',
-//     {
-//       method: 'GET',
-//       mode: 'cors',
-//     }
-//   );
-//   const data = await res.json();
-//   const data2 = await resForToday.json();
-//   const itemsForToday = data2.data;
-//   const items = data.records;
-//   const totalRecords = data.totalRecords;
-//   // console.log(data.data.totalRecords)
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   return {
-//     props: { items, totalRecords, itemsForToday }, // will be passed to the page component as props
-//   };
-// }

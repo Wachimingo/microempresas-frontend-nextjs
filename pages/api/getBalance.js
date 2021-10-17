@@ -1,6 +1,6 @@
 export default async (req, res) => {
     // console.log(req.query)
-    const processSell = await fetch(`${process.env.backend_nodejs}/api/v1/users/getBalance/${req.query.id}`, {
+    const processSell = await fetch(`${req.headers.url}/api/v1/users/getBalance/${req.query.id}`, {
       method: 'GET',
       mode: 'cors',
       headers: {

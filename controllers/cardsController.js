@@ -1,6 +1,6 @@
 const classes = require('./../styles/menu.module.css');
 
-exports.deleteDish = (id, i, fileName, token) => {
+exports.deleteDish = (id, i, fileName, token, url) => {
   fetch(`/api/deleteDish`, {
     method: 'DELETE',
     mode: 'cors',
@@ -11,12 +11,13 @@ exports.deleteDish = (id, i, fileName, token) => {
     body: JSON.stringify({
       id,
       fileName,
+      url
     }),
   });
   document.getElementById(i).className = 'd-none';
 };
 
-exports.setDishForToday = (id, i, forToday, token) => {
+exports.setDishForToday = (id, i, forToday, token, url) => {
   fetch(`/api/setDishForToday`, {
     method: 'PATCH',
     mode: 'cors',
@@ -27,6 +28,7 @@ exports.setDishForToday = (id, i, forToday, token) => {
     body: JSON.stringify({
       id,
       forToday,
+      url,
     }),
   })
     .then((res) => res.json())

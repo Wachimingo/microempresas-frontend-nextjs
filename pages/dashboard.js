@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useContext } from 'react';
+import ParamsContext from '../context/paramsContext';
 import Script from 'next/script'
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
@@ -16,6 +17,7 @@ const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
 
 export default function dashboard() {
   const { session } = useContext(AuthContext);
+  const { params } = useContext(ParamsContext);
   const dateTime = new Date();
   // console.log(dateTime)
   const nextWeek = new Date(
@@ -91,18 +93,19 @@ export default function dashboard() {
 
   useEffect(() => {
     const today = new Date()
-    .toISOString()
-    .split('T')[0]
-    .split('-')
-    .reverse()
-    .join('-');
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .reverse()
+      .join('-');
 
     fetch(`/api/getStats?mode=${mode}&day=${today.split('-')[0]}&month=${today.split('-')[1]}&year=${today.split('-')[2]}`, {
       method: 'GET',
       mode: 'cors',
-      headers: { 
-        'Authorization': `Bearer ${session.token}`
-       }
+      headers: {
+        'Authorization': `Bearer ${session.token}`,
+        'url': params.local_backend_nodejs
+      }
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
@@ -114,7 +117,10 @@ export default function dashboard() {
     fetch(`/api/getStatsHistory?mode=${mode}&day=${monday.split('-')[0]}&month=${monday.split('-')[1]}&year=${monday.split('-')[2]}&day2=${nextWeekF.split('-')[0]}&month2=${nextWeekF.split('-')[1]}&year2=${nextWeekF.split('-')[2]}`, {
       method: 'GET',
       mode: 'cors',
-      headers: { Authorization: `Bearer ${session.token}` },
+      headers: { 
+        Authorization: `Bearer ${session.token}`,
+        'url': params.local_backend_nodejs
+      }
     })
       .then((res) => res.json())
       // .then((res) => console.log(res.data.result))
@@ -142,7 +148,10 @@ export default function dashboard() {
     fetch(`/api/getStats?mode=${mode}&day=${pickedDate.split('-')[2]}&month=${pickedDate.split('-')[1]}&year=${pickedDate.split('-')[0]}`, {
       method: 'GET',
       mode: 'cors',
-      headers: { Authorization: `Bearer ${session.token}` },
+      headers: { 
+        Authorization: `Bearer ${session.token}`,
+        'url': params.local_backend_nodejs
+      },
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
@@ -174,16 +183,19 @@ export default function dashboard() {
       .reverse()
       .join('-');
 
-      setHistoryMode(mode);
+    setHistoryMode(mode);
 
-      fetch(`/api/getStatsHistory?mode=${mode}&day=${pickedDateMondayF.split('-')[0]}&month=${pickedDateMondayF.split('-')[1]}&year=${pickedDateMondayF.split('-')[2]}&day2=${nextWeekF.split('-')[0]}&month2=${nextWeekF.split('-')[1]}&year2=${nextWeekF.split('-')[2]}`, {
-        method: 'GET',
+    fetch(`/api/getStatsHistory?mode=${mode}&day=${pickedDateMondayF.split('-')[0]}&month=${pickedDateMondayF.split('-')[1]}&year=${pickedDateMondayF.split('-')[2]}&day2=${nextWeekF.split('-')[0]}&month2=${nextWeekF.split('-')[1]}&year2=${nextWeekF.split('-')[2]}`, {
+      method: 'GET',
       mode: 'cors',
-      headers: { Authorization: `Bearer ${session.token}` },
-      })
-        .then((res) => res.json())
-        // .then((res) => console.log(res.data))
-        .then((res) => fillingArrayForLineChart(res.data.result, historyMode));
+      headers: { 
+        Authorization: `Bearer ${session.token}`,
+        'url': params.local_backend_nodejs
+      },
+    })
+      .then((res) => res.json())
+      // .then((res) => console.log(res.data))
+      .then((res) => fillingArrayForLineChart(res.data.result, historyMode));
   };
 
   const putValue = (category) => {
