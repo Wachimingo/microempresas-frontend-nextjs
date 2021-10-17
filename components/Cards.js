@@ -17,7 +17,7 @@ import {
 } from 'react-icons/bs';
 
 export default function Cards(props) {
-  let [filterObject = [...props.items] ?? [], setFilterObject] = useState();
+  let [filterObject = props.items.length > 0 ? [...props.items] : [], setFilterObject] = useState();
   const {params} = useContext(ParamsContext);
   const [visible, setVisible] = useState('d-none');
 
@@ -41,7 +41,7 @@ export default function Cards(props) {
             fileName,
             props.session.token,
             toast('Platillo eliminado del menu'),
-            params[0].paramValue
+            // params.local_backend_nodejs
           )
         }
       >
@@ -58,7 +58,7 @@ export default function Cards(props) {
             true,
             props.session.token,
             toast.success('Platillo selecionado para hoy!'),
-            params[0].paramValue
+            // params.local_backend_nodejs
           )
         }
       >
@@ -99,7 +99,6 @@ export default function Cards(props) {
     setFilterObject(res.data.records);
   };
 
-  if (filterObject.length > 0 && props.totalRecords > 0) {
     return (
       <>
         <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
@@ -108,11 +107,10 @@ export default function Cards(props) {
             totalRecords={props.totalRecords}
             limit={100}
             toUpdateParent={setNewItems}
-            url={`${process.env.backend_nodejs}/api/v1/menu`}
+            url={`${params.local_backend_nodejs}/api/v1/menu`}
             method={'GET'}
           />
         </div>
-
         <div className={classes.centerCard}>
           {filterObject.map((el, i) => {
             // console.log(el)
@@ -158,5 +156,4 @@ export default function Cards(props) {
         </div>
       </>
     );
-  } else return <h1>Cargando...</h1>;
 }

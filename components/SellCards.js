@@ -37,7 +37,7 @@ export default memo(function SellCards(props) {
       window['name_' + el.id] = el.name;
       window['price_' + el.id] = el.price;
     });
-
+    
     fetch(`/api/getBalance?id=${session._id}`, {
       method: 'GET',
       mode: 'cors',
@@ -180,7 +180,7 @@ export default memo(function SellCards(props) {
       toast.error(res.data.message);
     }
   };
-  
+
   return (
     <>
       <h1>{session.role === 'admin' ? 'Vender platos' : 'Comprar Platos'}</h1>

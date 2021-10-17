@@ -1,5 +1,5 @@
 export default async (req, res) => {
-  // console.log(req.body);
+  // console.log(req.body.url);
 
   const updateDish = await fetch(
     `${req.body.url}/api/v1/menu/${req.body.id}`,

@@ -46,7 +46,7 @@ export default function Menu({ items, params }) {
 
 export async function getServerSideProps(context) {
   const res = await fetch(
-    `http://localhost:3001/api/v1/menu?limit=100`,
+    `https://comedor-backend.herokuapp.com/api/v1/menu?limit=100`,
     {
       method: 'GET',
       mode: 'cors',
@@ -56,7 +56,7 @@ export async function getServerSideProps(context) {
   const items = data.records;
 
   const paramRes = await fetch(
-    `http://localhost:3001/api/v1/params`,
+    `https://comedor-backend.herokuapp.com/api/v1/params`,
     {
       method: 'GET',
       mode: 'cors',
@@ -66,6 +66,7 @@ export async function getServerSideProps(context) {
   const params = data2.records[0]
 
   // console.log(data2.records[0])
+
   if (!data) {
     return {
       notFound: true,
