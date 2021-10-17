@@ -2,26 +2,21 @@ import { useState, useEffect, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import AuthContext from '../context/authContext';
-// import ParamsContext from '../context/paramsContext';
 import Table from '../components/Table';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import PaginationControls from '../components/NavigationItems/PaginationControls';
 
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
-const loader = require('./../styles/loader.module.css');
 
 export default function products() {
-  const router = useRouter();
   const { session } = useContext(AuthContext);
-  // const {params} = useContext(ParamsContext);
   const [name, setName] = useState('');
   const [expires, setExpires] = useState('day');
   const [itemID, setItemID] = useState();
   const [items, setItems] = useState([]);
-  const [totalRecords, setTotalRecords] = useState(0);
+  const [totalRecords, setTotalRecords] = useState(1);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {

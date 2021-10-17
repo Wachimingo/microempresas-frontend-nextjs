@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useContext } from 'react';
-// import ParamsContext from '../context/paramsContext';
 import Script from 'next/script'
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
 const classes = import('./../styles/dashboard.module.css');
-// const BarChart = dynamic(() => import('../components/Charts/BarChart'), {
-//   ssr: true,
-// });
 const LineChart = dynamic(() => import('../components/Charts/LineChart'), {
   ssr: true,
 });
@@ -17,9 +13,7 @@ const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
 
 export default function dashboard() {
   const { session } = useContext(AuthContext);
-  // const { params } = useContext(ParamsContext);
   const dateTime = new Date();
-  // console.log(dateTime)
   const nextWeek = new Date(
     dateTime.setDate(dateTime.getDate() - dateTime.getDay() + 1) +
     7 * 24 * 60 * 60 * 1000
@@ -74,7 +68,6 @@ export default function dashboard() {
   let totalDishes = [];
   const [loaded, setLoaded] = useState(false);
   const [loadedHistory, setLoadedHistory] = useState(false);
-  // const [pickedDate = dateTime.toISOString().split('T')[0], setPickedDate] = useState();
   const [mode, setMode] = useState('day');
   const [valuesArray, setValuesArray] = useState({});
   const [value, setValue] = useState('totalDishes');
@@ -104,7 +97,6 @@ export default function dashboard() {
       mode: 'cors',
       headers: {
         'Authorization': `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
       }
     })
       .then((res) => res.json())
@@ -112,14 +104,11 @@ export default function dashboard() {
       .then((res) => valitateIfemtpy(res))
       .then(() => setLoaded(true))
 
-    // console.log(nextWeekF)
-
     fetch(`/api/getStatsHistory?mode=${mode}&day=${monday.split('-')[0]}&month=${monday.split('-')[1]}&year=${monday.split('-')[2]}&day2=${nextWeekF.split('-')[0]}&month2=${nextWeekF.split('-')[1]}&year2=${nextWeekF.split('-')[2]}`, {
       method: 'GET',
       mode: 'cors',
       headers: { 
         Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
       }
     })
       .then((res) => res.json())
@@ -150,7 +139,6 @@ export default function dashboard() {
       mode: 'cors',
       headers: { 
         Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -190,7 +178,6 @@ export default function dashboard() {
       mode: 'cors',
       headers: { 
         Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())

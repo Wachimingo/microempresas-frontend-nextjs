@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
-// import ParamsContext from '../context/paramsContext';
 import Image from 'next/image';
 const classes = require('./../styles/menu.module.css');
 import CarousselSSR from '../components/Caroussel';
@@ -9,13 +8,7 @@ import MenuAdmin from '../components/MenuAdmin';
 
 export default function Menu({ items }) {
   const [count, setCount] = useState(0);
-  // const {setParams} = useContext(ParamsContext);
 
-  // useEffect(()=>{
-  //   setParams(params)
-  // }, [])
-
-  // Server side render component
   const SSRElements = (
     <>
       <MenuAdmin
@@ -54,18 +47,6 @@ export async function getServerSideProps(context) {
   );
   const data = await res.json();
   const items = data.records;
-
-  // const paramRes = await fetch(
-  //   `${process.env.BACKEND}/api/v1/params`,
-  //   {
-  //     method: 'GET',
-  //     mode: 'cors',
-  //   }
-  // );
-  // const data2 = await paramRes.json();
-  // const params = data2.records[0]
-
-  // console.log(data)
 
   if (!data) {
     return {

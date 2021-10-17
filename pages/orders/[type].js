@@ -2,7 +2,6 @@ import { useState, useEffect, useContext, memo } from 'react';
 import { useRouter } from 'next/router';
 import PaginationControls from './../../components/NavigationItems/PaginationControls';
 import AuthContext from '../../context/authContext';
-// import ParamsContext from '../../context/paramsContext';
 import Image from 'next/image';
 import { Collapse, CardBody, Card } from 'reactstrap';
 const classes = require('./../../styles/menu.module.css');
@@ -11,12 +10,9 @@ export default function pendingOrders() {
   const router = useRouter();
   const { type } = router.query;
   const { session } = useContext(AuthContext);
-  // const {params} = useContext(ParamsContext);
   const [items, setItems] = useState([])
   const [totalRecords, setTotalRecords] = useState(1)
   const [backend, setBackend] = useState('js')
-  // const url = params.local_backend_nodejs
-
 
   useEffect(() => {
     // const params = new URLSearchParams(window.location.search)
@@ -26,7 +22,6 @@ export default function pendingOrders() {
         mode: 'cors',
         headers: {
           Authorization: `Bearer ${session.token}`,
-          // 'url': url
         },
       }).then((res) => res.json()).then((res) => updateItems(res));
     } else if (session.role === 'user') {
@@ -35,7 +30,6 @@ export default function pendingOrders() {
         mode: 'cors',
         headers: {
           Authorization: `Bearer ${session.token}`,
-          // 'url': url
         }
       }).then((res) => res.json()).then((res) => updateItems(res));
     }
@@ -73,7 +67,6 @@ export default function pendingOrders() {
           id,
           role: session.role,
           status: 'isReady',
-          // url
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
@@ -91,7 +84,6 @@ export default function pendingOrders() {
           id,
           role: session.role,
           status: 'Completed',
-          // url
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
@@ -110,7 +102,6 @@ export default function pendingOrders() {
       },
       body: JSON.stringify({
         id,
-        // url
       }),
     }).then((res) => res.json());
     // .then((res) => console.log(res))

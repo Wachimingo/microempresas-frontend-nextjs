@@ -2,21 +2,16 @@ import { useState, useEffect, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import AuthContext from '../context/authContext';
-// import ParamsContext from '../context/paramsContext';
 import Table from '../components/Table';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import PaginationControls from '../components/NavigationItems/PaginationControls';
 
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
-const loader = require('./../styles/loader.module.css');
 
 export default function expenses() {
-  const router = useRouter();
   const { session } = useContext(AuthContext);
-  // const {params} = useContext(ParamsContext);
   const [metric, setMetric] = useState('');
   const [amount, setAmount] = useState(0);
   const [productID, setProductID] = useState('');
@@ -25,7 +20,7 @@ export default function expenses() {
   const [itemID, setItemID] = useState();
   const [items, setItems] = useState([]);
   const [products, setProducts] = useState([]);
-  const [totalRecords, setTotalRecords] = useState(0);
+  const [totalRecords, setTotalRecords] = useState(1);
   const [loaded, setLoaded] = useState(false);
 
   // let dateTime = new Date();
@@ -38,7 +33,6 @@ export default function expenses() {
       headers: {
         Authorization: `Bearer ${session.token}`,
         'content-type': 'application/json',
-        // 'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -54,7 +48,6 @@ export default function expenses() {
       headers: {
         Authorization: `Bearer ${session.token}`,
         'content-type': 'application/json',
-        // 'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -96,7 +89,6 @@ export default function expenses() {
         totalPrice,
         id: itemID,
         createdAt: today,
-        // url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())
@@ -118,7 +110,6 @@ export default function expenses() {
       },
       body: JSON.stringify({
         id,
-        // url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())
