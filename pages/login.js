@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
+// import ParamsContext from '../context/paramsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -11,7 +11,7 @@ export default function login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setSession } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
+  // const {params} = useContext(ParamsContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
@@ -26,7 +26,7 @@ export default function login() {
       body: JSON.stringify({
         email,
         password,
-        url: params.local_backend_nodejs
+        // url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())

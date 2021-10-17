@@ -1,7 +1,7 @@
 import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link';
 import Image from 'next/image';
-import ParamsContext from '../context/paramsContext';
+// import ParamsContext from '../context/paramsContext';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect, useContext } from 'react';
 const classes = require('./../styles/menu.module.css');
@@ -18,7 +18,7 @@ import {
 
 export default function Cards(props) {
   let [filterObject = props.items.length > 0 ? [...props.items] : [], setFilterObject] = useState();
-  const {params} = useContext(ParamsContext);
+  // const {params} = useContext(ParamsContext);
   const [visible, setVisible] = useState('d-none');
 
   useEffect(() => {

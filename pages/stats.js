@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
+// import ParamsContext from '../context/paramsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Menu() {
     const dateTime = new Date();
     const { session } = useContext(AuthContext);
-    const {params} = useContext(ParamsContext);
+    // const {params} = useContext(ParamsContext);
     const [item, setItem] = useState([])
     const [loaded, setLoaded] = useState(false)
     const [date = dateTime.toISOString().split('T')[0], setDate] = useState();
@@ -24,7 +24,7 @@ export default function Menu() {
                 mode: 'cors',
                 headers: {
                     Authorization: session.token,
-                    'url': params.local_backend_nodejs
+                    // 'url': params.local_backend_nodejs
                 }
             }
         )
@@ -53,7 +53,7 @@ export default function Menu() {
                 mode: 'cors',
                 headers: {
                     Authorization: session.token,
-                    'url': params.local_backend_nodejs
+                    // 'url': params.local_backend_nodejs
                 }
             }
         )

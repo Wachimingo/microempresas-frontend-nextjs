@@ -2,7 +2,7 @@ import { useState, memo } from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
+// import ParamsContext from '../context/paramsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -16,7 +16,7 @@ export default memo(function SignIn() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [hasAgreed, setHasAgreed] = useState(false)
   const { setSession } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
+  // const {params} = useContext(ParamsContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
@@ -32,7 +32,7 @@ export default memo(function SignIn() {
         email,
         password,
         passwordConfirm,
-        url: params[0].paramValue
+        // url: params[0].paramValue
       }),
     })
       .then((res) => res.json())

@@ -1,6 +1,6 @@
 export default async (req, res) => {
   const result = await fetch(
-    `${req.headers.url}/api/v1/menu?limit=100`,
+    `${process.env.BACKEND}/api/v1/menu?limit=100`,
     {
       method: 'GET',
       mode: 'cors',
