@@ -1,6 +1,6 @@
 export default async (req, res) => {
   // console.log(req.query, req.headers.authorization)
-  const stats = await fetch(`${process.env.BACKEND}/api/v1/stats?mode=${req.query.mode}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
+  const stats = await fetch(`${req.headers.url}/api/v1/stats?mode=${req.query.mode}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
     method: 'GET',
     mode: 'cors',
     headers: {

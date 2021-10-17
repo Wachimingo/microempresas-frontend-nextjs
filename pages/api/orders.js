@@ -3,7 +3,7 @@ export default async (req, res) => {
   // console.log(req.query)
   if (req.query.role === 'admin') {
     if (req.method === 'GET') {
-      records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/orders?limit=${req.query.limit}&page=${req.query.page}&status=${req.query.status}&ifValue=${req.query.ifValue}`, {
+      records = await fetch(`${req.headers.url}/api/v1/bills/orders?limit=${req.query.limit}&page=${req.query.page}&status=${req.query.status}&ifValue=${req.query.ifValue}`, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -17,7 +17,7 @@ export default async (req, res) => {
       });
     } else if (req.method === 'PATCH') {
       records = await fetch(
-        `${process.env.ORDERS_BACKEND}/api/v1/bills/${req.body.id}`,
+        `${req.body.url}/api/v1/bills/${req.body.id}`,
         {
           method: 'PATCH',
           mode: 'cors',
@@ -32,7 +32,7 @@ export default async (req, res) => {
       );
     } else if (req.method === 'DELETE') {
       records = await fetch(
-        `${process.env.ORDERS_BACKEND}/api/v1/bills/${req.body.id}`,
+        `${req.body.url}/api/v1/bills/${req.body.id}`,
         {
           method: 'DELETE',
           mode: 'cors',
@@ -44,7 +44,7 @@ export default async (req, res) => {
     }
   } else if (req.query.role === 'user') {
     // console.log(req.body)
-    records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/ownedOrders?limit=${req.query.limit}&page=${req.query.page}`, {
+    records = await fetch(`${req.headers.url}/api/v1/bills/ownedOrders?limit=${req.query.limit}&page=${req.query.page}`, {
       method: 'POST',
       mode: 'cors',
       headers: {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useContext } from 'react';
-// import ParamsContext from '../context/paramsContext';
+import ParamsContext from '../context/paramsContext';
 import Script from 'next/script'
 import AuthContext from './../context/authContext';
 import dynamic from 'next/dynamic';
@@ -17,7 +17,7 @@ const DonutChart = dynamic(() => import('../components/Charts/DonutChart'), {
 
 export default function dashboard() {
   const { session } = useContext(AuthContext);
-  // const { params } = useContext(ParamsContext);
+  const { params } = useContext(ParamsContext);
   const dateTime = new Date();
   // console.log(dateTime)
   const nextWeek = new Date(
@@ -104,7 +104,7 @@ export default function dashboard() {
       mode: 'cors',
       headers: {
         'Authorization': `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
+        'url': params.local_backend_nodejs
       }
     })
       .then((res) => res.json())
@@ -119,7 +119,7 @@ export default function dashboard() {
       mode: 'cors',
       headers: { 
         Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
+        'url': params.local_backend_nodejs
       }
     })
       .then((res) => res.json())
@@ -150,7 +150,7 @@ export default function dashboard() {
       mode: 'cors',
       headers: { 
         Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
+        'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -190,7 +190,7 @@ export default function dashboard() {
       mode: 'cors',
       headers: { 
         Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
+        'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())

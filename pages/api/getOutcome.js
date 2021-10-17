@@ -3,7 +3,7 @@ export default async (req, res) => {
 let stats = []
     if (req.query.mode === 'day') {
         // console.log(req.query)
-        stats = await fetch(`${process.env.BACKEND}/api/v1/stats/outcome/day?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
+        stats = await fetch(`${req.headers.url}/api/v1/stats/outcome/day?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -12,7 +12,7 @@ let stats = []
         });
     } else if (req.query.mode === 'week') {
         // console.log(req.query)
-        stats = await fetch(`${process.env.BACKEND}/api/v1/stats/outcome/week?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
+        stats = await fetch(`${req.headers.url}/api/v1/stats/outcome/week?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -21,7 +21,7 @@ let stats = []
         });
     } else if (req.query.mode === 'month') {
         // console.log(req.query)
-        stats = await fetch(`${process.env.BACKEND}/api/v1/stats/outcome/month?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
+        stats = await fetch(`${req.headers.url}/api/v1/stats/outcome/month?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -30,7 +30,7 @@ let stats = []
         });
     } else if (req.query.mode === 'year') {
         // console.log(req.query)
-        stats = await fetch(`${process.env.BACKEND}/api/v1/stats/outcome/year?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
+        stats = await fetch(`${req.headers.url}/api/v1/stats/outcome/year?limit=${req.query.limit}&day=${req.query.day}&month=${req.query.month}&year=${req.query.year}`, {
             method: 'GET',
             mode: 'cors',
             headers: {

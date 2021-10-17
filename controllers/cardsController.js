@@ -11,7 +11,7 @@ exports.deleteDish = (id, i, fileName, token, url) => {
     body: JSON.stringify({
       id,
       fileName,
-      // url
+      url
     }),
   });
   document.getElementById(i).className = 'd-none';
@@ -28,7 +28,7 @@ exports.setDishForToday = (id, i, forToday, token, url) => {
     body: JSON.stringify({
       id,
       forToday,
-      // url,
+      url,
     }),
   })
     .then((res) => res.json())

@@ -1,8 +1,8 @@
 export default async (req, res) => {
-  // console.log(process.env.BACKEND);
+  // console.log(req.body);
 
   const updateDish = await fetch(
-    `${process.env.BACKEND}/api/v1/menu/${req.body.id}`,
+    `${req.body.url}/api/v1/menu/${req.body.id}`,
     {
       method: 'PATCH',
       mode: 'cors',

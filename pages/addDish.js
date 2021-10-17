@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuthContext from './../context/authContext';
-// import ParamsContext from '../context/paramsContext';
+import ParamsContext from '../context/paramsContext';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,7 +13,7 @@ const classes = require('./../styles/addDish.module.css');
 export default function addDish({ item }) {
   const router = useRouter();
   const { session } = useContext(AuthContext);
-  // const {params} = useContext(ParamsContext);
+  const {params} = useContext(ParamsContext);
   const [isForTodayState = true, setIsForTodayState] = useState(item.isFortoday);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);
@@ -45,7 +45,7 @@ export default function addDish({ item }) {
         mode: 'cors',
         headers: {
           Authorization: `${session.token}`,
-          // 'url': params.local_backend_nodejs
+          'url': params.local_backend_nodejs
         },
         body: formData,
       })

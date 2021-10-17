@@ -2,7 +2,7 @@ export default async (req, res) => {
   let records = [];
   // console.log(req.method, req.body.id)
   if (req.method === 'POST') {
-    records = await fetch(`${process.env.BACKEND}/api/v1/products`, {
+    records = await fetch(`${req.body.url}/api/v1/products`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -16,7 +16,7 @@ export default async (req, res) => {
     });
   } else if (req.method === 'PATCH') {
     records = await fetch(
-      `${process.env.BACKEND}/api/v1/products/${req.body.id}`,
+      `${req.body.url}/api/v1/products/${req.body.id}`,
       {
         method: 'PATCH',
         mode: 'cors',
@@ -32,7 +32,7 @@ export default async (req, res) => {
     );
   } else if (req.method === 'DELETE') {
     records = await fetch(
-      `${process.env.BACKEND}/api/v1/products/${req.body.id}`,
+      `${req.body.url}/api/v1/products/${req.body.id}`,
       {
         method: 'DELETE',
         mode: 'cors',

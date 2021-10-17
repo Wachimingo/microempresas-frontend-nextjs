@@ -1,5 +1,5 @@
 export default async (req, res) => {
-    const addDishesToBill = await fetch(`${process.env.BACKEND}/api/v1/bills/detailedBilling`, {
+    const addDishesToBill = await fetch(`${req.body.url}/api/v1/bills/detailedBilling`, {
       method: 'POST',
       mode: 'cors',
       headers: {

@@ -1,7 +1,7 @@
 import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link';
 import Image from 'next/image';
-// import ParamsContext from '../context/paramsContext';
+import ParamsContext from '../context/paramsContext';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect, useContext } from 'react';
 const classes = require('./../styles/menu.module.css');
@@ -18,7 +18,7 @@ import {
 
 export default function Cards(props) {
   let [filterObject = props.items.length > 0 ? [...props.items] : [], setFilterObject] = useState();
-  // const {params} = useContext(ParamsContext);
+  const {params} = useContext(ParamsContext);
   const [visible, setVisible] = useState('d-none');
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function Cards(props) {
             fileName,
             props.session.token,
             toast('Platillo eliminado del menu'),
-            // params.local_backend_nodejs
+            params.local_backend_nodejs
           )
         }
       >
@@ -58,7 +58,7 @@ export default function Cards(props) {
             true,
             props.session.token,
             toast.success('Platillo selecionado para hoy!'),
-            // params.local_backend_nodejs
+            params.local_backend_nodejs
           )
         }
       >

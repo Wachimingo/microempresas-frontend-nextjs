@@ -1,5 +1,5 @@
 export default async (req, res) => {
-    const login = await fetch(`${process.env.BACKEND}/api/v1/users/signup`, {
+    const login = await fetch(`${req.body.url}/api/v1/users/signup`, {
       method: 'POST',
       mode: 'cors',
       headers: {
