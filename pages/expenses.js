@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import AuthContext from '../context/authContext';
+import ParamsContext from '../context/paramsContext';
 import Table from '../components/Table';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -15,6 +16,7 @@ const loader = require('./../styles/loader.module.css');
 export default function expenses() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
+  const {params} = useContext(ParamsContext);
   const [metric, setMetric] = useState('');
   const [amount, setAmount] = useState(0);
   const [productID, setProductID] = useState('');
@@ -36,6 +38,7 @@ export default function expenses() {
       headers: {
         Authorization: `Bearer ${session.token}`,
         'content-type': 'application/json',
+        'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -51,6 +54,7 @@ export default function expenses() {
       headers: {
         Authorization: `Bearer ${session.token}`,
         'content-type': 'application/json',
+        'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -91,7 +95,8 @@ export default function expenses() {
         productID,
         totalPrice,
         id: itemID,
-        createdAt: today
+        createdAt: today,
+        url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())
@@ -113,6 +118,7 @@ export default function expenses() {
       },
       body: JSON.stringify({
         id,
+        url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())
@@ -120,7 +126,7 @@ export default function expenses() {
   };
 
   const modifyItem = (el) => {
-    console.log(el);
+    // console.log(el);
     setItemID(el._id);
     setMetric(el.metric);
     setAmount(el.amount);

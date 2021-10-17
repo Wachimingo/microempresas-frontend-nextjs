@@ -2,6 +2,7 @@ import { useState, memo } from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
+import ParamsContext from '../context/paramsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -15,6 +16,7 @@ export default memo(function SignIn() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [hasAgreed, setHasAgreed] = useState(false)
   const { setSession } = useContext(AuthContext);
+  const {params} = useContext(ParamsContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
@@ -29,7 +31,8 @@ export default memo(function SignIn() {
         userName,
         email,
         password,
-        passwordConfirm
+        passwordConfirm,
+        url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())
@@ -70,7 +73,7 @@ export default memo(function SignIn() {
               onChange={(e) => setUserName(e.target.value)}
               className="form-control"
               placeholder="Usuario"
-              require
+              require='true'
             />
           </div>
 
@@ -83,6 +86,7 @@ export default memo(function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
               placeholder="Ingrese correo electronico"
+              require='true'
             />
           </div>
 
@@ -95,7 +99,7 @@ export default memo(function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
               placeholder="Ingrese contraseña"
-              require
+              require='true'
             />
           </div>
 
@@ -108,7 +112,7 @@ export default memo(function SignIn() {
               onChange={(e) => setPasswordConfirm(e.target.value)}
               className="form-control"
               placeholder="Confirme su contraseña"
-              require
+              require='true'
             />
           </div>
           <br />
@@ -119,7 +123,7 @@ export default memo(function SignIn() {
                 className="custom-control-input"
                 id="customCheck1"
                 onChange={(e)=>setHasAgreed(!hasAgreed)}
-                require
+                require='true'
               />
               <label className="custom-control-label" htmlFor="customCheck1">
                 <Link href="/agreement" passHref>

@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import AuthContext from '../context/authContext';
+import ParamsContext from '../context/paramsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -10,10 +11,12 @@ export default function login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setSession } = useContext(AuthContext);
+  const {params} = useContext(ParamsContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(params.local_backend_nodejs)
     fetch('/api/login', {
       method: 'POST',
       mode: 'cors',
@@ -23,6 +26,7 @@ export default function login() {
       body: JSON.stringify({
         email,
         password,
+        url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())
@@ -70,7 +74,7 @@ export default function login() {
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
               placeholder="Ingrese su correo electronico"
-              require
+              require='true'
             />
           </div>
 
@@ -83,7 +87,7 @@ export default function login() {
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
               placeholder="Ingrese su contraseña"
-              require
+              require='true'
             />
           </div>
 

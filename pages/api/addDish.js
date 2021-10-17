@@ -29,7 +29,7 @@ export default async (req, res) => {
   }
   // console.log(data);
 
-  const addDish = await fetch(`${process.env.backend_nodejs}/api/v1/menu`, {
+  const addDish = await fetch(`${req.headers.url}/api/v1/menu`, {
     method: 'POST',
     mode: 'cors',
     headers: {

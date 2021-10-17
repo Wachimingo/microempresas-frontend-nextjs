@@ -97,17 +97,17 @@ export default function TopBar(props) {
                     aria-labelledby="navbarDropdown"
                   >
                     <li>
-                      <Link href={`/orders/Pending?token=${session.token}&role=${session.role}`} passHref>
+                      <Link href={`/orders/Pending`} passHref>
                         <a className="dropdown-item">Pendientes</a>
                       </Link>
                     </li>
                     <li>
-                      <Link href={`/orders/isReady?token=${session.token}&role=${session.role}`} passHref>
+                      <Link href={`/orders/isReady`} passHref>
                         <a className="dropdown-item">Listos para retirar</a>
                       </Link>
                     </li>
                     <li>
-                      <Link href={`/orders/Completed?token=${session.token}&role=${session.role}`} passHref>
+                      <Link href={`/orders/Completed`} passHref>
                         <a className="dropdown-item">Completados</a>
                       </Link>
                     </li>

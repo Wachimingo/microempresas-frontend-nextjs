@@ -1,8 +1,9 @@
 import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link';
 import Image from 'next/image';
+import ParamsContext from '../context/paramsContext';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 const classes = require('./../styles/menu.module.css');
 const cardsController = require('../controllers/cardsController.js');
 import SearchBar from './NavigationItems/SearchBar';
@@ -16,8 +17,8 @@ import {
 } from 'react-icons/bs';
 
 export default function Cards(props) {
-  let [filterObject = [...props.items] ?? [], setFilterObject] = useState();
-
+  let [filterObject = props.items.length > 0 ? [...props.items] : [], setFilterObject] = useState();
+  const {params} = useContext(ParamsContext);
   const [visible, setVisible] = useState('d-none');
 
   useEffect(() => {
@@ -39,7 +40,8 @@ export default function Cards(props) {
             i,
             fileName,
             props.session.token,
-            toast('Platillo eliminado del menu')
+            toast('Platillo eliminado del menu'),
+            params.local_backend_nodejs
           )
         }
       >
@@ -55,7 +57,8 @@ export default function Cards(props) {
             i,
             true,
             props.session.token,
-            toast.success('Platillo selecionado para hoy!')
+            toast.success('Platillo selecionado para hoy!'),
+            params.local_backend_nodejs
           )
         }
       >
@@ -96,7 +99,6 @@ export default function Cards(props) {
     setFilterObject(res.data.records);
   };
 
-  if (filterObject.length > 0 && props.totalRecords > 0) {
     return (
       <>
         <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
@@ -105,11 +107,10 @@ export default function Cards(props) {
             totalRecords={props.totalRecords}
             limit={100}
             toUpdateParent={setNewItems}
-            url={`${process.env.backend_nodejs}/api/v1/menu`}
+            url={`${params.local_backend_nodejs}/api/v1/menu`}
             method={'GET'}
           />
         </div>
-
         <div className={classes.centerCard}>
           {filterObject.map((el, i) => {
             // console.log(el)
@@ -155,5 +156,4 @@ export default function Cards(props) {
         </div>
       </>
     );
-  } else return <h1>Cargando...</h1>;
 }

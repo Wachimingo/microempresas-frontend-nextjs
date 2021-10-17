@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import AuthContext from './../../context/authContext';
-import { useState, useEffect } from 'react';
+import ParamsContext from '../../context/paramsContext';
 import { useRouter } from 'next/router';
 import PaginationControls from './../../components/NavigationItems/PaginationControls';
 import Table from './../../components/Table';
@@ -11,6 +11,7 @@ export default function sellHistory() {
   const { typeHistory } = router.query;
 
   const { session } = useContext(AuthContext);
+  const {params} = useContext(ParamsContext);
   const [items, setItems] = useState([]);
   const [totalRecords, setTotalRecords] = useState();
   const [sort, setSort] = useState('');
@@ -30,6 +31,7 @@ export default function sellHistory() {
         limit: 10,
         sort,
         type: window.location.href.split('/').pop(),
+        url: params.local_backend_nodejs
       }),
     })
       .then((res) => res.json())

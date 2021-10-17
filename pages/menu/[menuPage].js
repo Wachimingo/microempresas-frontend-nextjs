@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from './../../context/authContext';
+import ParamsContext from '../context/paramsContext';
 const classes = require('./../../styles/menu.module.css');
 import { BsCloudUpload } from 'react-icons/bs';
 import CarousselSSR from './../../components/Caroussel';
@@ -12,6 +13,7 @@ import MenuAdmin from './../../components/MenuAdmin';
 export default function Menu() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
+  const {params} = useContext(ParamsContext);
   const { menuPage } = router.query;
 
   const [items, setItems] = useState([])
@@ -21,6 +23,9 @@ export default function Menu() {
     fetch(`/api/getMenu`, {
       method: 'GET',
       mode: 'cors',
+      headers: {
+        'url': params.local_backend_nodejs
+      }
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
@@ -109,32 +114,3 @@ export default function Menu() {
     </div>
   );
 }
-
-// export async function getServerSideProps(context) {
-//   const res = await fetch('http://localhost:3001/api/v1/menu?limit=100', {
-//     method: 'GET',
-//     mode: 'cors',
-//   });
-//   const resForToday = await fetch(
-//     'http://localhost:3001/api/v1/menu/forToday',
-//     {
-//       method: 'GET',
-//       mode: 'cors',
-//     }
-//   );
-//   const data = await res.json();
-//   const data2 = await resForToday.json();
-//   const itemsForToday = data2.data;
-//   const items = data.records;
-//   const totalRecords = data.totalRecords;
-//   // console.log(data.data.totalRecords)
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   return {
-//     props: { items, totalRecords, itemsForToday }, // will be passed to the page component as props
-//   };
-// }

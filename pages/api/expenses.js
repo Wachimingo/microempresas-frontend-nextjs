@@ -2,7 +2,7 @@ export default async (req, res) => {
     let records = [];
     // console.log(req.body, req.method)
     if (req.method === 'POST') {
-      records = await fetch(`${process.env.backend_nodejs}/api/v1/expenses`, {
+      records = await fetch(`${req.body.url}/api/v1/expenses`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -19,7 +19,7 @@ export default async (req, res) => {
       });
     } else if (req.method === 'PATCH') {
       records = await fetch(
-        `${process.env.backend_nodejs}/api/v1/expenses/${req.body.id}`,
+        `${req.body.url}/api/v1/expenses/${req.body.id}`,
         {
           method: 'PATCH',
           mode: 'cors',
@@ -37,7 +37,7 @@ export default async (req, res) => {
       );
     } else if (req.method === 'DELETE') {
       records = await fetch(
-        `${process.env.backend_nodejs}/api/v1/expenses/${req.body.id}`,
+        `${req.body.url}/api/v1/expenses/${req.body.id}`,
         {
           method: 'DELETE',
           mode: 'cors',
@@ -48,7 +48,7 @@ export default async (req, res) => {
       );
     } else if (req.method === 'GET') {
       records = await fetch(
-        `${process.env.backend_nodejs}/api/v1/expenses?limit=100`,
+        `${req.headers.url}/api/v1/expenses?limit=100`,
         {
           method: 'GET',
           mode: 'cors',
