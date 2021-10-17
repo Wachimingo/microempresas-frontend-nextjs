@@ -65,7 +65,7 @@ export async function getServerSideProps(context) {
   // const data2 = await paramRes.json();
   // const params = data2.records[0]
 
-  // console.log(data2.records[0])
+  // console.log(data)
 
   if (!data) {
     return {

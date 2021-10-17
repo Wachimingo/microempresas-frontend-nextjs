@@ -43,7 +43,7 @@ export default async (req, res) => {
     );
   } else if (req.method === 'GET') {
     records = await fetch(
-      `${req.headers.url}/api/v1/products?limit=100`,
+      `${process.env.BACKEND}/api/v1/products?limit=100`,
       {
         method: 'GET',
         mode: 'cors',

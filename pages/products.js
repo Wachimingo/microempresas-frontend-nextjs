@@ -31,7 +31,6 @@ export default function products() {
       headers: {
         Authorization: `Bearer ${session.token}`,
         'content-type': 'application/json',
-        // 'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())

@@ -26,7 +26,7 @@ export default function pendingOrders() {
         mode: 'cors',
         headers: {
           Authorization: `Bearer ${session.token}`,
-          'url': url
+          // 'url': url
         },
       }).then((res) => res.json()).then((res) => updateItems(res));
     } else if (session.role === 'user') {
@@ -91,7 +91,7 @@ export default function pendingOrders() {
           id,
           role: session.role,
           status: 'Completed',
-          url
+          // url
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
