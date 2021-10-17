@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import AuthContext from './../../context/authContext';
-import ParamsContext from '../../context/paramsContext';
+import ParamsContext from './../../context/paramsContext';
 import { useRouter } from 'next/router';
 import PaginationControls from './../../components/NavigationItems/PaginationControls';
 import Table from './../../components/Table';
