@@ -12,7 +12,7 @@ export default function pendingOrders() {
   const { session } = useContext(AuthContext);
   const [items, setItems] = useState([])
   const [totalRecords, setTotalRecords] = useState(1)
-  const [backend, setBackend] = useState('js')
+  const [backend, setBackend] = useState('')
 
   useEffect(() => {
     // const params = new URLSearchParams(window.location.search)
@@ -37,9 +37,9 @@ export default function pendingOrders() {
   let [filterObject = [...items], setFilterObject] = useState();
 
   const updateItems = res => {
-    const items = res.data.records !== undefined ? res.data.records : data
+    const items = res.data.records !== undefined ? res.data.records : res.data
     const totalRecords = res.data.totalRecords !== undefined ? res.data.totalRecords.length > 0 ? res.data.totalRecords[0].total : 1 : 1
-    const backend = res.data.records !== undefined ? 'js' : 'py'
+    const backend = res.data.records !== undefined ? 'javascript' : 'python'
     setItems(items);
     setTotalRecords(totalRecords);
     setBackend(backend)
@@ -47,7 +47,7 @@ export default function pendingOrders() {
 
   const toggle = (id) => {
     // console.log(backend)
-    if (backend === 'py') return;
+    if (backend === 'python') return;
     document.getElementById(id).classList.toggle('show');
     document
       .getElementById(`item-${id}`)
@@ -178,7 +178,7 @@ export default function pendingOrders() {
       setFilterObject(res.data.records);
     } else {
       totalRecords = 0;
-      backend = 'py'
+      backend = 'python'
     }
   };
 
@@ -197,6 +197,7 @@ export default function pendingOrders() {
     <div>
       {/* {console.log(filterObject)} */}
       <h1>Pedidos en linea</h1>
+      <h2>Backend {backend}</h2>
       <div className={classes.paginationNav}>
         <PaginationControls
           token={session.token}

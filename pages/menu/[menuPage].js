@@ -15,7 +15,7 @@ export default function Menu() {
   const { menuPage } = router.query;
 
   const [items, setItems] = useState([])
-  const [totalRecords, setTotalRecords] = useState(0)
+  const [totalRecords, setTotalRecords] = useState(1)
 
   useEffect(() => {
     fetch(`/api/getMenu`, {
