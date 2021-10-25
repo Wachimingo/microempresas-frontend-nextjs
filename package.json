@@ -24,7 +24,8 @@
     "react-toastify": "^7.0.4",
     "react-webcam": "5.2.1",
     "reactstrap": "^8.10.0",
-    "sharp": "^0.28.3"
+    "sharp": "^0.28.3",
+    "twilio": "^3.70.0"
   },
   "devDependencies": {
     "compression-webpack-plugin": "^8.0.1"

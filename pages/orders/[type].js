@@ -54,7 +54,7 @@ export default function pendingOrders() {
       .classList.toggle(`${classes.activated}`);
   };
 
-  const completeOrder = (id) => {
+  const completeOrder = (id, tn) => {
     if (router.query.type === 'Pending') {
       fetch(`/api/orders`, {
         method: 'PATCH',
@@ -72,6 +72,18 @@ export default function pendingOrders() {
       // .then((res) => console.log(res));
       document.getElementById(`item-${id}`).className = 'd-none';
       document.getElementById(`buttons-${id}`).classList.add('d-none');
+      //Enviar mensaje SMS a clientes con telefono registrado en la cuenta
+      fetch(`/api/twilio`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          msg: 'Su orden esta lista, por favor pase a retirar su platillo',
+          tn
+        }).then((res)=> res.json().then((res)=>console.log(res)))
+      })
     } else if (router.query.type === 'isReady') {
       fetch(`/api/orders`, {
         method: 'PATCH',
@@ -109,7 +121,7 @@ export default function pendingOrders() {
     document.getElementById(`buttons-${id}`).classList.add('d-none');
   };
 
-  const buttons = (id, status) => {
+  const buttons = (id, status, tn) => {
     if (router.query.type === 'Pending') {
       return (
         <div id={`buttons-${id}`} className="">
@@ -117,7 +129,7 @@ export default function pendingOrders() {
             type="button"
             className={`btn btn-success ${classes.pendingOrderButton} ${session.role !== 'admin' ? 'd-none' : ''
               }`}
-            onClick={(e) => completeOrder(id)}
+            onClick={(e) => completeOrder(id, tn)}
           >
             Orden Lista
           </button>
@@ -300,7 +312,7 @@ export default function pendingOrders() {
                 </CardBody>
               </Card>
             </Collapse>
-            {buttons(el.id, el.status)}
+            {buttons(el.id, el.status, el.tn)}
           </div>
         );
       })}

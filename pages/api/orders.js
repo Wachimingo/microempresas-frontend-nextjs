@@ -1,19 +1,14 @@
 export default async (req, res) => {
   let records = [];
-  // console.log(req.query)
-  if (req.query.role === 'admin') {
+  // console.log(req.body, req.method)
+  if (req.query.role === 'admin' || req.body.role === 'admin') {
     if (req.method === 'GET') {
       records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/orders?limit=${req.query.limit}&page=${req.query.page}&status=${req.query.status}&ifValue=${req.query.ifValue}`, {
         method: 'GET',
         mode: 'cors',
         headers: {
           Authorization: req.headers.authorization,
-          // 'Content-Type': 'application/json',
         },
-        // body: JSON.stringify({
-        //   status: req.query.status,
-        //   ifValue: req.query.ifValue,
-        // }),
       });
     } else if (req.method === 'PATCH') {
       records = await fetch(
@@ -59,6 +54,9 @@ export default async (req, res) => {
     });
   } else {
     console.log('ERROR');
+    res.status(401).json({
+      status: 'failed',
+    });
     return;
   }
 
