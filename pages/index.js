@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Modal, Button } from 'react-bootstrap';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
 import Image from 'next/image';
@@ -7,7 +9,21 @@ import CarousselSSR from '../components/Caroussel';
 import MenuAdmin from '../components/MenuAdmin';
 
 export default function Menu({ items }) {
+  const router = useRouter();
   const [count, setCount] = useState(0);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  useEffect(() => { 
+    if(router.query.redirect_status !== undefined) {
+      if(router.query.redirect_status === 'succeeded') {
+        handleShow();
+      }
+    }
+    
+  }, [router.query]);
 
   const SSRElements = (
     <>
@@ -33,6 +49,17 @@ export default function Menu({ items }) {
           <a className="btn btn-success">Comprar</a>
         </Link>
       </div>
+      <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Mensaje</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Su pago por la compra anterior ha sido procesado exitosamente</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
     </div>
   );
 }

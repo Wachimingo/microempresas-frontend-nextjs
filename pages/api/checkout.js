@@ -12,6 +12,6 @@ export default async(req, res) => {
     })
 
     const client_secret = await data.json()
-    console.log(client_secret)
+    // console.log(client_secret)
     res.status(200).json({ data: client_secret })
 }

@@ -18,7 +18,7 @@ export default function checkout(props) {
     const { session } = useContext(AuthContext);
 
     useEffect(() => {
-      console.log(ids)
+      // console.log(ids)
         // Create PaymentIntent as soon as the page loads
         fetch('/api/checkout', {
           method: "POST",
@@ -43,7 +43,7 @@ export default function checkout(props) {
 
     return (
         <div className="App">
-            {console.log(clientSecret)}
+            {/* {console.log(clientSecret)} */}
           {clientSecret && (
             <Elements options={options} stripe={stripePromise}>
               <CheckoutForm />

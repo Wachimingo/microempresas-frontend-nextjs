@@ -5,6 +5,8 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 
+import './../styles/checkout.module.css'
+
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
@@ -57,7 +59,7 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:3000",
+        return_url: window.location.origin,
       },
     });
 
@@ -78,7 +80,7 @@ export default function CheckoutForm() {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button className={`checkoutButton`} disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Paga ahora"}
         </span>
