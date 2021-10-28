@@ -12,6 +12,7 @@ const classes = require('./../styles/login.module.css');
 export default memo(function SignIn() {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
+  const [tn, setTN] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [hasAgreed, setHasAgreed] = useState(false)
@@ -32,7 +33,7 @@ export default memo(function SignIn() {
         email,
         password,
         passwordConfirm,
-        // url: params.local_backend_nodejs
+        tn,
       }),
     })
       .then((res) => res.json())
@@ -87,6 +88,18 @@ export default memo(function SignIn() {
               className="form-control"
               placeholder="Ingrese correo electronico"
               require='true'
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="tn">Numero de Telefono</label>
+            <input
+              type="text"
+              id="tn"
+              value={tn}
+              onChange={(e) => setTN(e.target.value)}
+              className="form-control"
+              placeholder="Ingrese su numero telefonico"
             />
           </div>
 

@@ -9,7 +9,8 @@ export default async (req, res) => {
         name: req.body.userName,
         email: req.body.email,
         password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm
+        passwordConfirm: req.body.passwordConfirm,
+        tn: req.body.tn
       }),
     });
   

@@ -82,8 +82,8 @@ export default function pendingOrders() {
         body: JSON.stringify({
           msg: 'Su orden esta lista, por favor pase a retirar su platillo',
           tn
-        }).then((res)=> res.json().then((res)=>console.log(res)))
-      })
+        })
+      }).then((res)=> res.json().then((res)=>console.log(res)))
     } else if (router.query.type === 'isReady') {
       fetch(`/api/orders`, {
         method: 'PATCH',
@@ -223,6 +223,7 @@ export default function pendingOrders() {
         />
       </div>
       {filterObject.map((el, i) => {
+        // console.log(el.user.tn)
         return (
           <div key={el.id}>
             {sayStatus(el.status)}
@@ -312,7 +313,7 @@ export default function pendingOrders() {
                 </CardBody>
               </Card>
             </Collapse>
-            {buttons(el.id, el.status, el.tn)}
+            {buttons(el.id, el.status, el.user.tn)}
           </div>
         );
       })}

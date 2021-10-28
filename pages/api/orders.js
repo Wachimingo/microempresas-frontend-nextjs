@@ -1,6 +1,6 @@
 export default async (req, res) => {
   let records = [];
-  // console.log(req.body, req.method)
+  // console.log(req.query.role, req.method)
   if (req.query.role === 'admin' || req.body.role === 'admin') {
     if (req.method === 'GET') {
       records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/orders?limit=${req.query.limit}&page=${req.query.page}&status=${req.query.status}&ifValue=${req.query.ifValue}`, {
@@ -38,7 +38,7 @@ export default async (req, res) => {
       );
     }
   } else if (req.query.role === 'user') {
-    // console.log(req.body)
+    // console.log(req.query)
     records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/ownedOrders?limit=${req.query.limit}&page=${req.query.page}`, {
       method: 'POST',
       mode: 'cors',
@@ -47,7 +47,7 @@ export default async (req, res) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: req.body.id,
+        id: req.query.id,
         status: null,
         ifValue: null,
       }),

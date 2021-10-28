@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { BsFillTrashFill, BsCheck, BsFlagFill } from 'react-icons/bs';
+import { Modal, Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect, useContext, memo } from 'react';
 import { useRouter } from 'next/router';
@@ -30,6 +31,10 @@ export default memo(function SellCards(props) {
     'Viernes',
     'Sabado',
   ];
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     props.items.map((el) => {
@@ -37,7 +42,7 @@ export default memo(function SellCards(props) {
       window['name_' + el.id] = el.name;
       window['price_' + el.id] = el.price;
     });
-    
+
     fetch(`/api/getBalance?id=${session._id}`, {
       method: 'GET',
       mode: 'cors',
@@ -100,13 +105,40 @@ export default memo(function SellCards(props) {
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
+
+      // POST dish info to /api/spreedsheet
+      fetch(`/api/spreedsheet`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+        body: JSON.stringify({
+          id,
+          name: window['name_' + id],
+          price: window['price_' + id],
+          amount: document.getElementById(`counter_${id}`).innerHTML,
+          day: week[day],
+        })
+      }).then((res) => res.json());
+
+
       document.getElementById(`counter_${id}`).innerHTML = 0;
       // // lower the number in the label of total dishes
       document.getElementById('totalDishes').innerHTML = 0;
       // lower the number in the label of total price
       document.getElementById('totalPrice').innerHTML = 0;
     }
+
+    handleShow();
   };
+
+  const goToCheckout = () => {
+    router.push({
+      pathname: '/checkout',
+      query: dishes
+    },
+      '/checkout');
+  }
 
   const checkIfLogin = (fiado, token, msg) => {
     if (session === null) {
@@ -234,7 +266,7 @@ export default memo(function SellCards(props) {
                         {el.name}
                       </h5>
                       <h5 id={el.id + ' price'} className="card-text">
-                        {el.price}
+                        ${el.price}
                       </h5>
                       <p className="card-text">{el.description}</p>
                     </div>
@@ -286,6 +318,20 @@ export default memo(function SellCards(props) {
           <ToastContainer />
         </div>
         <br />
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Procesar Compra</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>¿Desea pagar con tarjeta o pagar en el local?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Pagar en el local
+            </Button>
+            <Button variant="primary" onClick={goToCheckout}>
+              Pagar con tarjeta
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );
