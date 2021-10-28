@@ -48,8 +48,8 @@ export default async (req, res) => {
       },
       body: JSON.stringify({
         id: req.query.id,
-        status: null,
-        ifValue: null,
+        status: req.query.status,
+        ifValue: req.query.ifValue,
       }),
     });
   } else {

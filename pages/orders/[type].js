@@ -33,7 +33,7 @@ export default function pendingOrders() {
         }
       }).then((res) => res.json()).then((res) => updateItems(res));
     }
-  }, [])
+  }, [router.query])
   let [filterObject = [...items], setFilterObject] = useState();
 
   const updateItems = res => {

@@ -18,6 +18,7 @@ export default function checkout(props) {
     const { session } = useContext(AuthContext);
 
     useEffect(() => {
+      console.log(ids)
         // Create PaymentIntent as soon as the page loads
         fetch('/api/checkout', {
           method: "POST",
