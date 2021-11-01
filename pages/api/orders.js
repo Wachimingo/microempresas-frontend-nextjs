@@ -37,21 +37,39 @@ export default async (req, res) => {
         }
       );
     }
-  } else if (req.query.role === 'user') {
+  } else if (req.query.role === 'user' || req.body.role === 'user') {
     // console.log(req.query)
-    records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/ownedOrders?limit=${req.query.limit}&page=${req.query.page}`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Authorization: req.headers.authorization,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: req.query.id,
-        status: req.query.status,
-        ifValue: req.query.ifValue,
-      }),
-    });
+    if (req.method === 'GET') {
+      records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/ownedOrders?limit=${req.query.limit}&page=${req.query.page}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Authorization: req.headers.authorization,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: req.query.id,
+          status: req.query.status,
+          ifValue: req.query.ifValue,
+        }),
+      });
+    } else if (req.method === 'PATCH') {
+      // console.log(req.headers.authorization)
+      records = await fetch(
+        `${process.env.ORDERS_BACKEND}/api/v1/bills/${req.body.billId}`,
+        {
+          method: 'PATCH',
+          mode: 'cors',
+          headers: {
+            Authorization: req.headers.authorization,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            isPayed: true,
+          }),
+        }
+      );
+    }
   } else {
     console.log('ERROR');
     res.status(401).json({
@@ -62,7 +80,7 @@ export default async (req, res) => {
 
   const data = await records.json();
 
-  // console.log(data);
+  console.log(data);
   if (records.ok) {
     res.status(201).json({
       status: 'success',

@@ -16,6 +16,7 @@ export default memo(function SellCards(props) {
   const { session } = useContext(AuthContext);
   // const {params} = useContext(ParamsContext);
   const [customerName, setCustomerName] = useState();
+  const [billId, setBillId] = useState();
   const [balance, setBalance] = useState(0);
   let [counterDish, setCounterDish] = useState(0);
   let [counterPrice, setCounterPrice] = useState(0);
@@ -33,7 +34,11 @@ export default memo(function SellCards(props) {
   ];
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+    setCounterDish(0),
+      setCounterPrice(0)
+  };
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -133,11 +138,25 @@ export default memo(function SellCards(props) {
   };
 
   const goToCheckout = () => {
+    // console.log(dishes);
     router.push({
-      pathname: '/checkout',
-      query: dishes
+      pathname: `/checkout`,
+      query: { ids: dishes, customer: customerName, billId },
     },
       '/checkout');
+    setCounterDish(0);
+    setCounterPrice(0);
+  }
+
+  const goToCheckoutBitcoin = () => {
+    // console.log(dishes);
+    router.push({
+      pathname: `/bitcoinCheckout`,
+      query: { ids: dishes, customer: customerName, billId, amount: counterPrice },
+    },
+      '/checkout');
+    setCounterDish(0);
+    setCounterPrice(0);
   }
 
   const checkIfLogin = (fiado, token, msg) => {
@@ -192,24 +211,25 @@ export default memo(function SellCards(props) {
           .then((res) => res.json())
           // .then((res)=>console.log(res))
           .then((res) => billCreationValidation(res, msg))
-          .then(
-            (counterDish = 0),
-            (counterPrice = 0),
-            setCounterDish(0),
-            setCounterPrice(0)
-          );
+        // .then(
+        //   (counterDish = 0),
+        //   (counterPrice = 0),
+        //   setCounterDish(0),
+        //   setCounterPrice(0)
+        // );
       }
     }
   };
 
   const billCreationValidation = (res, msg) => {
     if (res.data.record !== undefined) {
-      toast.success(msg);
+      toast.success('Orden generada exitosamente');
       // console.log(res)
+      setBillId(res.data.record._id);
       addDishesToBill(res.data.record._id);
     } else {
       // console.log(res);
-      toast.error(res.data.message);
+      toast.error('Error, No se pudo generar la orden');
     }
   };
 
@@ -326,6 +346,9 @@ export default memo(function SellCards(props) {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Pagar en el local
+            </Button>
+            <Button variant="success" onClick={goToCheckoutBitcoin}>
+              Pagar con Bitcoint
             </Button>
             <Button variant="primary" onClick={goToCheckout}>
               Pagar con tarjeta

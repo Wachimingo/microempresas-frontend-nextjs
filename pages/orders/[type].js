@@ -34,9 +34,11 @@ export default function pendingOrders() {
       }).then((res) => res.json()).then((res) => updateItems(res));
     }
   }, [router.query])
-  let [filterObject = [...items], setFilterObject] = useState();
+  
+  let [filterObject = [...items.reverse()], setFilterObject] = useState();
 
   const updateItems = res => {
+    // console.log(res)
     const items = res.data.records !== undefined ? res.data.records : res.data
     const totalRecords = res.data.totalRecords !== undefined ? res.data.totalRecords.length > 0 ? res.data.totalRecords[0].total : 1 : 1
     const backend = res.data.records !== undefined ? 'javascript' : 'python'
@@ -251,6 +253,7 @@ export default function pendingOrders() {
                   <h5 className={``}>Cliente: {el.customer}</h5>
                   <p className={``}>Total de Platos: {el.totalDishes}</p>
                   <p className={``}>Hora: {el.dayTime}</p>
+                  <p className={``}>{el.isPayed ? 'Pagado' : 'Pago pendiente'}</p>
                   <p className={``}>
                     Fecha {el.day} {el.createdAt}
                   </p>
@@ -321,44 +324,3 @@ export default function pendingOrders() {
     </div>
   );
 };
-
-// export async function getServerSideProps({ query }) {
-//   // Get external data from the file system, API, DB, etc.
-//   // console.log(query) // here is the data of the url { blogname: 'wfe436' }
-//   let res = []
-
-//   if (query.role === 'admin') {
-//     res = await fetch(`${process.env.backend_orders}/api/v1/bills/orders?limit=10&page=1&status=status&ifValue=${query.type}`, {
-//       method: 'GET',
-//       mode: 'cors',
-//       headers: {
-//         Authorization: `Bearer ${query.token}`,
-//       },
-//     });
-//   } else if (query.role === 'user') {
-//     res = await fetch(`${process.env.backend_orders}/api/v1/bills/ownedOrders?sort=-status&limit=10&page=1&status=status&ifValue=${query.type}&id=${query.id}`, {
-//       method: 'GET',
-//       mode: 'cors',
-//       headers: {
-//         Authorization: `Bearer ${query.token}`,
-//       }
-//     });
-//   } else {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   const data = await res.json()
-
-//   // console.log(data)
-
-  // const items = data.records !== undefined ? data.records : data
-  // const totalRecords = data.totalRecords !== undefined ? data.totalRecords.length > 0 ? data.totalRecords[0].total : 1 : 1
-  // const backend = data.records !== undefined ? 'js' : 'py'
-//   // console.log(data)
-
-//   return {
-//     props: { items, totalRecords, backend }, // will be passed to the page component as props
-//   };
-// }

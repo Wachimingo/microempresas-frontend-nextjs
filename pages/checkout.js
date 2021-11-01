@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useContext } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import Button from 'react-bootstrap/Button'
 import CheckoutForm from "../components/CheckoutForm";
 import AuthContext from '../context/authContext';
 const classes = require("./../styles/checkout.module.css");
@@ -13,12 +14,20 @@ const stripePromise = loadStripe("pk_test_51JoWSEBRTpO3u3NE9725VJ4hgW8mDQM25unYx
 
 export default function checkout(props) {
     const router = useRouter();
-    const ids = router.query;
+    const ids = router.query.ids;
+    const customerName = router.query.name;
+    const billId = router.query.billId;
     const [clientSecret, setClientSecret] = useState("");
     const { session } = useContext(AuthContext);
 
     useEffect(() => {
       // console.log(ids)
+      let customerRealName = session.name;
+
+      if(customerName !== undefined && customerName !== null && customerName !== "") {
+        customerRealName = customerName;
+      }
+
         // Create PaymentIntent as soon as the page loads
         fetch('/api/checkout', {
           method: "POST",
@@ -26,12 +35,26 @@ export default function checkout(props) {
                 Authorization: `${session.token}`,
               "Content-Type": "application/json"
              },
-          body: JSON.stringify({ ids }),
+          body: JSON.stringify({ 
+            ids,
+            customer: customerRealName,
+            email: session.email,
+            billId,
+          }),
         })
           .then((res) => res.json())
         //   .then((res) => {console.log(res)})
-          .then((res) => setClientSecret(res.data.clientSecret));
+          .then((res) => handleResult(res));
       }, []);
+
+      const handleResult = (res) => {
+        if (res.error) {
+          console.log(res.error);
+          return;
+        } else{
+          setClientSecret(res.data.clientSecret);
+        }
+      }
 
       const appearance = {
         theme: 'stripe',
@@ -41,12 +64,13 @@ export default function checkout(props) {
         appearance,
       };
 
+      
+
     return (
         <div className="App">
-            {/* {console.log(clientSecret)} */}
           {clientSecret && (
             <Elements options={options} stripe={stripePromise}>
-              <CheckoutForm />
+              <CheckoutForm ids={ids} billId={billId} customerName={customerName} token={session.token}/>
             </Elements>
           )}
         </div>

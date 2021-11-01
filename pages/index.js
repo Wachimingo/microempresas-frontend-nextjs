@@ -12,17 +12,25 @@ export default function Menu({ items }) {
   const router = useRouter();
   const [count, setCount] = useState(0);
   const [show, setShow] = useState(false);
+  const [title, setTitle] = useState('');
+  const [msg, setMsg] = useState('');
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (title, msg) =>{ 
+    setTitle(title);
+    setMsg(msg);
+    setShow(true);
+  }
 
   useEffect(() => { 
+    // console.log(router.query.redirect_status)
     if(router.query.redirect_status !== undefined) {
       if(router.query.redirect_status === 'succeeded') {
-        handleShow();
+        handleShow('Exito', 'Su transaccion fue procedada con exito');
+      } else if (router.query.redirect_status === 'cancelled') {
+        handleShow('Cancelacion', 'Su transaccion fue cancelada, por favor pague en el comedor');
       }
     }
-    
   }, [router.query]);
 
   const SSRElements = (
@@ -51,9 +59,9 @@ export default function Menu({ items }) {
       </div>
       <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Mensaje</Modal.Title>
+            <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Su pago por la compra anterior ha sido procesado exitosamente</Modal.Body>
+          <Modal.Body>{msg}</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Cerrar

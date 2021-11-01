@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import {
   PaymentElement,
   useStripe,
@@ -7,10 +12,10 @@ import {
 
 import './../styles/checkout.module.css'
 
-export default function CheckoutForm() {
+export default function CheckoutForm(props) {
   const stripe = useStripe();
   const elements = useElements();
-
+  const router = useRouter();
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,6 +52,15 @@ export default function CheckoutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //Change isPayed to true
+    fetch('/api/orders', {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${props.token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ billId: props.billId, role: 'user' }),
+    }).then(res => res.json()).then(res => console.log('resultado: ', res))
 
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
@@ -77,14 +91,34 @@ export default function CheckoutForm() {
     setIsLoading(false);
   };
 
+  const goBack = () => {
+    router.push({
+      pathname: `/`,
+      query: { redirect_status: 'cancelled' },
+    },
+      '/');
+  }
+
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" />
-      <button className={`checkoutButton`} disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Paga ahora"}
-        </span>
-      </button>
+    <form id="payment-form" onSubmit={handleSubmit}>      
+      <Container>
+        <Row>
+          <Col><PaymentElement id="payment-element" /></Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button variant="primary" disabled={isLoading || !stripe || !elements} id="submit">
+              <span id="button-text">
+                {isLoading ? <div className="spinner" id="spinner"></div> : "Paga ahora"}
+              </span>
+            </Button>
+          </Col>
+          <Col>
+            <Button variant="danger" onClick={goBack}>Cancelar</Button>
+          </Col>
+        </Row>
+      </Container>
+
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>

@@ -1,4 +1,5 @@
 export default async(req, res) => {
+    // console.log(req.body);
     const data = await fetch(`${process.env.BACKEND}/api/v1/payment/checkout`, {
         method: 'POST',
         mode: 'cors',
@@ -8,6 +9,9 @@ export default async(req, res) => {
         },
         body: JSON.stringify({
             "ids": req.body.ids,
+            "customer": req.body.customer,
+            "receipt_email": req.body.email,
+            "billId": req.body.billId,
         })
     })
 
