@@ -1,6 +1,6 @@
 export default async (req, res) => {
-    console.log(req.body)
-    POST request to inser data to google spreeadsheet
+    //console.log(req.body)
+    //POST request to inser data to google spreeadsheet
         const result = await fetch(`${process.env.SPREED_SHEET}`,{
             method: 'POST',
             headers: {
