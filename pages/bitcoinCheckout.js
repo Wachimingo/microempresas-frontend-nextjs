@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from '../context/authContext';
+import Button from 'react-bootstrap/Button'
 const classes = require("./../styles/checkout.module.css");
 
 export default function checkout(props) {
@@ -57,9 +58,9 @@ export default function checkout(props) {
       
     if (isLoaded) {
         return (
-            <div>
+            <div style={{marginTop:"5vh"}}>
                 <Button variant="danger" onClick={goBack}>Cancelar</Button>
-                <iframe src={`https://dev-checkout.opennode.com/${checkoutObject.id}`} style={{overflow:"hidden", overflowX: "hidden", overflowY:"hidden", height:"100%", width:"100%",position:"absolute",top:"0px",left:"0px",right:"0px",bottom:"0px",border:"none"}}></iframe>
+                <iframe src={`https://dev-checkout.opennode.com/${checkoutObject.id}`} style={{ height:"100vh", width:"100%", border:"none"}}></iframe>
             </div>
         );
     } else {
