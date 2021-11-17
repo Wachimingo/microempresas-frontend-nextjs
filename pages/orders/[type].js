@@ -220,8 +220,8 @@ export default function pendingOrders() {
           sort={null}
           toUpdateParent={parentItemsUpdate}
           type={null}
-          url={`/api/orders?status=status&ifValue=${router.query.type}&role=${session.role}`}
-          method={'POST'}
+          url={`/api/orders?status=status&ifValue=${router.query.type}&role=${session.role}&id=${session._id}`}
+          method={session.role === 'admin' ? 'GET' : 'POST' }
         />
       </div>
       {filterObject.map((el, i) => {
@@ -253,7 +253,7 @@ export default function pendingOrders() {
                   <h5 className={``}>Cliente: {el.customer}</h5>
                   <p className={``}>Total de Platos: {el.totalDishes}</p>
                   <p className={``}>Hora: {el.dayTime}</p>
-                  <p className={``}>{el.isPayed ? 'Pagado' : 'Pago pendiente'}</p>
+                  <p className={``} style={el.isPaid ? {color: 'green', fontWeight: 'bold', fontSize: '24px'} :{ color: 'red', fontWeight: 'bold', fontSize: '24px'}}>{el.isPaid ? 'Pagado' : 'Pago pendiente'}</p>
                   <p className={``}>
                     Fecha {el.day} {el.createdAt}
                   </p>

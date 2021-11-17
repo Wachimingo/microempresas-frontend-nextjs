@@ -35,7 +35,12 @@ export default function TopBar(props) {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <Link href="/" passHref>
-                    <a className="nav-link">Home</a>
+                    <a className="nav-link">Inicio</a>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/users" passHref>
+                    <a className="nav-link">Usuarios</a>
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -174,7 +179,7 @@ export default function TopBar(props) {
               </Link>
               <Link href="/" passHref>
                 <a className="nav-link" onClick={quitSession}>
-                  Logout
+                  Salir
                 </a>
               </Link>
             </div>
@@ -206,7 +211,7 @@ export default function TopBar(props) {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <Link href="/" passHref>
-                    <a className="nav-link">Home</a>
+                    <a className="nav-link">Inicio</a>
                   </Link>
                 </li>
                 <li>
@@ -259,7 +264,7 @@ export default function TopBar(props) {
               </ul>
               <Link href="/" passHref>
                 <a className="nav-link" onClick={quitSession}>
-                  Logout
+                  Salir
                 </a>
               </Link>
             </div>
@@ -289,7 +294,7 @@ export default function TopBar(props) {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link href="/" passHref>
-                  <a className="nav-link">Home</a>
+                  <a className="nav-link">Inicio</a>
                 </Link>
               </li>
               <li>
@@ -307,7 +312,7 @@ export default function TopBar(props) {
               <a className="nav-link">Registrase</a>
             </Link>
             <Link href="/login" passHref>
-              <a className="nav-link">Login</a>
+              <a className="nav-link">Ingresar</a>
             </Link>
           </div>
         </div>

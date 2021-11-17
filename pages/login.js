@@ -4,10 +4,13 @@ import AuthContext from '../context/authContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
+import  Image  from 'next/image';
+import { data } from '@tensorflow/tfjs';
+import { getAdjacentKeyPoints } from '@tensorflow-models/posenet';
 
 const classes = require('./../styles/login.module.css');
 
-export default function login() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setSession } = useContext(AuthContext);
@@ -60,11 +63,12 @@ export default function login() {
   }
 
   return (
-    <div>
-      <div className={'container ' + classes.formBody}>
+    <div className={`${classes.bodyBackground}`}>
+      <br/>
+      <div className={`container ${classes.formBody}`}>
         <form className={''} onSubmit={handleSubmit}>
           <h3>Ingresar</h3>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="email">Correo electronico</label>
             <input
@@ -77,7 +81,7 @@ export default function login() {
               require='true'
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -90,33 +94,23 @@ export default function login() {
               require='true'
             />
           </div>
-
-          <div className="form-group">
-            <div className="custom-control custom-checkbox">
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                id="customCheck1"
-              />
-              <label className="custom-control-label" htmlFor="customCheck1">
-                Recordar session
-              </label>
-            </div>
-          </div>
-
+          <br/>
           <button type="submit" className="btn btn-primary btn-block">
             Ingresar
           </button>
+
           <button type="button" className={"btn btn-info btn-block " + classes.moveRight } onClick={(e)=>goToSigning()}>
             Registrarse
           </button>
-          <p className="forgot-password text-right">
-            Olvido su <a href="#">clave?</a>
-          </p>
+          <br/>
+          <br/>
         </form>
       </div>
       <div>
         <ToastContainer />
+      </div>
+      <div style={{padding: "19.7vh", visibility: "hidden"}}>
+        {Date()}
       </div>
     </div>
   );

@@ -45,9 +45,9 @@ export default function Menu() {
   const NoSSRElements = (page) => {
     if (page === 'carusel') {
       return (
-        <>
+        <div className={`${classes.backgroundCarousel}`}>
           <MenuAdmin
-            title={'Carusel de Platillos para hoy'}
+            title={'Platillos de hoy'}
             componentName={'Carusel'}
             visible={false}
             Component={<CarousselSSR items={items} />}
@@ -55,7 +55,7 @@ export default function Menu() {
           <Link href="/menu/sell" passHref>
             <a className="btn btn-success">Comprar</a>
           </Link>
-        </>
+        </div>
       );
     } else if (page === 'sell') {
       return (

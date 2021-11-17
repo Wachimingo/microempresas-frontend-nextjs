@@ -95,61 +95,67 @@ export default function Cards(props) {
     setFilterObject(res.data.records);
   };
 
-    return (
-      <>
+  return (
+    <div className={`${classes.backgroundCatalog}`}>
+      <br/>
+      <section>
         <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
-        <div className={classes.paginationControls}>
-          <PaginationControls
-            totalRecords={props.totalRecords}
-            limit={100}
-            toUpdateParent={setNewItems}
-            url={`${process.env.BACKEND}/api/v1/menu`}
-            method={'GET'}
-          />
-        </div>
-        <div className={classes.centerCard}>
-          {filterObject.map((el, i) => {
-            // console.log(el)
-            let colorBorder = '';
-            el.forToday
-              ? (colorBorder = classes.borderActive)
-              : (colorBorder = '');
-            return (
-              <div
-                key={i}
-                id={i}
-                className={`card ${colorBorder}`}
-                style={{
-                  width: '18rem',
-                  display: 'inline-block',
-                  marginRight: '2vw',
-                }}
-              >
-                {cardButtons(el, el.id, i, el.image)}
-                <div className={classes.hoverCard}>
-                  <Image
-                    src={
-                      el.image !== undefined
-                        ? `/dishes/${el.image}`
-                        : `/dishes/stockDishImg.png`
-                    }
-                    className="card-img-top"
-                    alt="me"
-                    width="1000"
-                    height="1000"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{el.name}</h5>
-                    <p className="card-text">{el.description}</p>
-                  </div>
+      </section>
+      <div className={classes.paginationControls}>
+        <PaginationControls
+          totalRecords={props.totalRecords}
+          limit={100}
+          toUpdateParent={setNewItems}
+          url={`/api/getMenu`}
+          method={'GET'}
+        />
+      </div>
+      <div className={classes.centerCard}>
+        {filterObject.map((el, i) => {
+          // console.log(el)
+          let colorBorder = '';
+          el.forToday
+            ? (colorBorder = classes.borderActive)
+            : (colorBorder = '');
+          return (
+            <div
+              key={i}
+              id={i}
+              className={`card ${colorBorder}`}
+              style={{
+                width: '18rem',
+                display: 'inline-block',
+                marginRight: '2vw',
+              }}
+            >
+              {cardButtons(el, el.id, i, el.image)}
+              <div className={classes.hoverCard}>
+                <Image
+                  src={
+                    el.image !== undefined
+                      ? `/dishes/${el.image}`
+                      : `/dishes/stockDishImg.png`
+                  }
+                  className="card-img-top"
+                  alt="me"
+                  width="1000"
+                  height="1000"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{el.name}</h5>
+                  <p className="card-text">{el.description}</p>
                 </div>
               </div>
-            );
-          })}
-          <div>
-            <ToastContainer />
-          </div>
+            </div>
+          );
+        })}
+        <div style={{ padding: "19.7vh", visibility: "hidden" }}>
+          {Date()}
         </div>
-      </>
-    );
+        <div>
+          <ToastContainer />
+        </div>
+      </div>
+    </div>
+  );
 }

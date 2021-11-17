@@ -9,7 +9,7 @@ export default (req, res) => {
   if (req.method === 'GET') {
     res.status(200).json({
       status: 'success',
-      data: data.count,
+      count: data.count,
     });
   } else if (req.method === 'POST') {
     data = req.body;

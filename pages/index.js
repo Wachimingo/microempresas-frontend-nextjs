@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Modal, Button } from 'react-bootstrap';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
 import Image from 'next/image';
@@ -16,21 +20,31 @@ export default function Menu({ items }) {
   const [msg, setMsg] = useState('');
 
   const handleClose = () => setShow(false);
-  const handleShow = (title, msg) =>{ 
+  const handleShow = (title, msg) => {
     setTitle(title);
     setMsg(msg);
     setShow(true);
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     // console.log(router.query.redirect_status)
-    if(router.query.redirect_status !== undefined) {
-      if(router.query.redirect_status === 'succeeded') {
+    if (router.query.redirect_status !== undefined) {
+      if (router.query.redirect_status === 'succeeded') {
         handleShow('Exito', 'Su transaccion fue procedada con exito');
       } else if (router.query.redirect_status === 'cancelled') {
         handleShow('Cancelacion', 'Su transaccion fue cancelada, por favor pague en el comedor');
       }
     }
+
+    fetch('/api/counter', {
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res.count)
+        setCount(res.count);
+      });
+
   }, [router.query]);
 
   const SSRElements = (
@@ -45,29 +59,76 @@ export default function Menu({ items }) {
   );
 
   return (
-    <div>
-      <div className={'text-center '}>
+    <div className={`text-center ${classes.section2}`}>
+      {/* Main section */}
+      <section className={`text-center ${classes.section1}`}>
+        <div style={{backgroundColor: '#fcf8f5', width: "50%", height: "20vh", paddingTop: "4vh", marginLeft: "25vw"}}>
         <h1>Bienvenido a Comedor Buen Amancer</h1>
         <h2>Actualmente hay {count} clientes en el local</h2>
+        </div>
         <br />
         <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
         <br />
+        <h2>Disfruta de nuestra seleccion del día.</h2>
         {SSRElements}
         <Link href="/menu/sell" passHref>
-          <a className="btn btn-success">Comprar</a>
+          <a className="btn btn-success" style={{width: "25vw"}}>Comprar</a>
         </Link>
-      </div>
+        
+      </section>
+      <br/>
+      <br/>
+      <section className={`text-center ${classes.section2}`}>
+        <Container fluid>
+          <h3>Te esperamos para ofrecerte:</h3>
+          <Row>
+            <Col>
+              <h4>Desayunos</h4>
+              <Image
+                src='/assets/breakfast.jpg'
+                className="card-img-top"
+                alt="breakfast"
+                width="950"
+                height="900"
+              />
+            </Col>
+            <Col>
+            <h4>Almuerzos</h4>
+            <Image
+                src='/assets/lunch.jpg'
+                className="card-img-top"
+                alt="breakfast"
+                width="950"
+                height="900"
+              />
+            </Col>
+            <Col>
+            <h4>Cenas</h4>
+            <Image
+                src='/assets/dinner.jpg'
+                className="card-img-top"
+                alt="breakfast"
+                width="950"
+                height="900"
+              />
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+
+      {/* Modal box */}
       <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>{title}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{msg}</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cerrar
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{msg}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
