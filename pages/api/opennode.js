@@ -5,10 +5,10 @@ export default async (req, res) => {
     // console.log(JSON.parse(req.body));
     const bodyObj = JSON.parse(req.body);
     // const price = parseInt(req.body.amount);
-    // console.log(price);
+    // console.log(bodyObj);
     try {
         const charge = await opennode.createCharge({
-            description: 'My test charge',
+            description: `${bodyObj.dishNames}`,
             amount: bodyObj.amount * 1, // required
             currency: 'USD',
             order_id: bodyObj.billId,

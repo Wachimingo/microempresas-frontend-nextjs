@@ -3,6 +3,7 @@ const classes = require('./../../styles/menu.module.css');
 
 export default function SearchBar(props) {
   let internalFilterObject = [];
+  
   const searchItem = (text) => {
     let re = new RegExp(`\\b${text.toLowerCase()}`, 'g');
     props.items.map((el, i) => {
@@ -26,7 +27,7 @@ export default function SearchBar(props) {
       <input
         className={'form-control me-2 ' + classes.searchBar}
         type="search"
-        placeholder="Search"
+        placeholder="Buscar"
         aria-label="Search"
         onChange={(e) => searchItem(e.target.value)}
       />

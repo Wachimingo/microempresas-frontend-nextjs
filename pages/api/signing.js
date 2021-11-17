@@ -15,6 +15,7 @@ export default async (req, res) => {
     });
   
     const data = await login.json();
+    // console.log(data);
     if (login.ok) {
       res.status(201).json({
         status: 'success',

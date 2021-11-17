@@ -12,6 +12,7 @@ export default async(req, res) => {
             "customer": req.body.customer,
             "receipt_email": req.body.email,
             "billId": req.body.billId,
+            "description": req.body.dishNames
         })
     })
 

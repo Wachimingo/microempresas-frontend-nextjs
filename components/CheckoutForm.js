@@ -107,7 +107,7 @@ export default function CheckoutForm(props) {
         </Row>
         <Row>
           <Col>
-            <Button variant="primary" disabled={isLoading || !stripe || !elements} id="submit">
+            <Button type="submit" variant="primary" disabled={isLoading || !stripe || !elements} id="submit">
               <span id="button-text">
                 {isLoading ? <div className="spinner" id="spinner"></div> : "Paga ahora"}
               </span>

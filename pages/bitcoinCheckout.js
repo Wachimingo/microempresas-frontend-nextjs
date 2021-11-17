@@ -10,12 +10,14 @@ export default function checkout(props) {
     const customerName = router.query.name;
     const billId = router.query.billId;
     const amount = router.query.amount;
+    const dishNames = router.query.dishNames;
     const [checkoutObject, setcheckoutObject] = useState();
     const { session } = useContext(AuthContext);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        // console.log(ids)
+        // console.log(dishNames)
+        // console.log(router.query)
         let customerRealName = session.name;
 
         if (customerName !== undefined && customerName !== null && customerName !== "") {
@@ -30,7 +32,8 @@ export default function checkout(props) {
                 customer: customerRealName,
                 email: session.email,
                 billId,
-                amount
+                amount,
+                dishNames
             }),
         })
             .then((res) => res.json())
@@ -43,7 +46,7 @@ export default function checkout(props) {
             console.log(res.error);
             return;
         } else {
-            console.log(res);
+            // console.log(res);
             setcheckoutObject(res);
             setIsLoaded(true);
         }

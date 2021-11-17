@@ -60,10 +60,11 @@ export default memo(function SignIn() {
   };
 
   return (
-    <div>
+    <div className={`${classes.bodyBackground}`}>
+      <br/>
       <div className={'container ' + classes.formBody}>
         <form className={''} onSubmit={handleSubmit}>
-          <h3>Ingresar</h3>
+          <h3>Registro</h3>
 
           <div className="form-group">
             <label htmlFor="usuario">Nombre de usuario</label>
@@ -77,7 +78,7 @@ export default memo(function SignIn() {
               require='true'
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="email">Correo electronico</label>
             <input
@@ -90,7 +91,7 @@ export default memo(function SignIn() {
               require='true'
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="tn">Numero de Telefono</label>
             <input
@@ -102,7 +103,7 @@ export default memo(function SignIn() {
               placeholder="Ingrese su numero telefonico"
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="password">Clave</label>
             <input
@@ -115,7 +116,7 @@ export default memo(function SignIn() {
               require='true'
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="password">Confirmar clave</label>
             <input
@@ -154,6 +155,9 @@ export default memo(function SignIn() {
           </button>
           }
         </form>
+      </div>
+      <div style={{padding: "7vh", visibility: "hidden"}}>
+        {Date()}
       </div>
       <div>
         <ToastContainer />
