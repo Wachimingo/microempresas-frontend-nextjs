@@ -36,14 +36,14 @@ export default function Menu({ items }) {
       }
     }
 
-    // fetch('/api/counter', {
-    //   method: 'GET',
-    // })
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     // console.log(res.count)
-    //     setCount(res.count);
-    //   });
+    fetch('/api/counter', {
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res.count)
+        setCount(res.data.records[0].count);
+      });
 
   }, [router.query]);
 
