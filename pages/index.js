@@ -36,14 +36,14 @@ export default function Menu({ items }) {
       }
     }
 
-    fetch('/api/counter', {
-      method: 'GET',
-    })
-      .then(res => res.json())
-      .then(res => {
-        // console.log(res.count)
-        setCount(res.count);
-      });
+    // fetch('/api/counter', {
+    //   method: 'GET',
+    // })
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     // console.log(res.count)
+    //     setCount(res.count);
+    //   });
 
   }, [router.query]);
 
@@ -67,7 +67,7 @@ export default function Menu({ items }) {
         <h2>Actualmente hay {count} clientes en el local</h2>
         </div>
         <br />
-        <Image src={`/logo.jpg`} alt="logo" width="100" height="100" />
+        <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
         <br />
         <h2>Disfruta de nuestra seleccion del día.</h2>
         {SSRElements}
