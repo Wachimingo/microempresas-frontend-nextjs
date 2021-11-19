@@ -1,7 +1,3 @@
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// // const TerserPlugin = require("terser-webpack-plugin");
-// const CompressionPlugin = require('compression-webpack-plugin');
-
 module.exports = {
   async headers() {
     return [
@@ -29,32 +25,3 @@ module.exports = {
 module.exports = {
   poweredByHeader: false,
 }
-
-// module.exports = {
-//   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-//       // Note: we provide webpack above so you should not `require` it
-//       // Perform customizations to webpack config
-//       config.plugins.push(
-//           new TerserPlugin()
-//       )
-
-//       // Important: return the modified config
-//       return config
-//   },
-// }
-
-// module.exports = {
-//   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-//       // Note: we provide webpack above so you should not `require` it
-//       // Perform customizations to webpack config
-//       config.plugins.push(
-//         new CompressionPlugin({
-//           algorithm: 'gzip',
-//           test: /.js$|.css$/,
-//         })
-//       )
-
-//       // Important: return the modified config
-//       return config
-//   },
-// }
