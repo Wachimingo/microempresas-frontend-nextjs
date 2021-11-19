@@ -41,7 +41,7 @@ export default function Menu({ items }) {
     })
       .then(res => res.json())
       .then(res => {
-        // console.log(res.count)
+        // console.log(res.data.records[0].count);
         setCount(res.data.records[0].count);
       });
 

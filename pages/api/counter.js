@@ -24,16 +24,16 @@
 // };
 
 export default async (req, res) => {
-  let data = ''
+  let count = ''
   
   if(req.method === 'GET') {
 
-    data = await fetch(`${process.env.COUNT_BACKEND}/api/v1/counter`, {
+    count = await fetch(`${process.env.COUNT_BACKEND}/api/v1/counter`, {
       method: 'GET',
       mode: 'cors',
     })
   } else if(req.method === 'PATCH') {
-    data = await fetch(`${process.env.COUNT_BACKEND}/api/v1/counter/619827c2f253c90b44fdc052`, {
+    count = await fetch(`${process.env.COUNT_BACKEND}/api/v1/counter/619827c2f253c90b44fdc052`, {
       method: 'PATCH',
       mode: 'cors',
       body: JSON.stringify(req.body),
@@ -44,12 +44,12 @@ export default async (req, res) => {
       status: 'error',
     })
   }
-  const count = await data.json()
+  const data = await count.json()
 
-  if(data.ok) {
+  if(count.ok) {
     res.status(200).json({
       status: 'success',
-      count,
+      data,
     })
   } else {
     res.status(500).json({
