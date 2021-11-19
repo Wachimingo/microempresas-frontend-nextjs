@@ -133,7 +133,7 @@ export default function Menu({ items }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const res = await fetch(
     `${process.env.BACKEND}/api/v1/menu?limit=100`,
     {
