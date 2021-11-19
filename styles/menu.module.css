@@ -18,17 +18,17 @@
 }
 
 .backgroundCarousel{
-  background-image: url("http://localhost:3000/assets/background3.jpg");
+  background-image: url("https://thumbs.dreamstime.com/z/caf%C3%A9-bebidas-y-pasteles-patr%C3%B3n-vectorial-de-cafeter%C3%ADa-c%C3%B3cteles-sobre-fondo-blanco-vector-sin-costuras-218137589.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 .backgroundCatalog{
-  background-image: url("http://localhost:3000/assets/background3.jpg");
+  background-image: url("https://thumbs.dreamstime.com/z/caf%C3%A9-bebidas-y-pasteles-patr%C3%B3n-vectorial-de-cafeter%C3%ADa-c%C3%B3cteles-sobre-fondo-blanco-vector-sin-costuras-218137589.jpg");
   background-repeat: repeat;
   background-size: 55%;
 }
 .section1{
-  background-image: url("http://localhost:3000/assets/background1.png");
+  background-image: url("https://i2.wp.com/diplomartbrussels.com/wp-content/uploads/2020/09/food-background-images-94-images-in-co-381169-png-images-pngio-food-background-png-1440_619.png?ssl=1");
   background-repeat: no-repeat;
   background-size: 100%;
 }
