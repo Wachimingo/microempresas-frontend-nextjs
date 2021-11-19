@@ -30,7 +30,7 @@ export default function peopleCounter() {
 
   return (
     <div>
-      <h1>Contador en archivo {count}</h1>
+      <h1>Contador en base de datos {count}</h1>
       <PoseNetComponent 
         updateCounterget={updateCounterget} 
       />

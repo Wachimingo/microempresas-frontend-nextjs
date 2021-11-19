@@ -67,7 +67,7 @@ export default function Menu({ items }) {
         <h2>Actualmente hay {count} clientes en el local</h2>
         </div>
         <br />
-        <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
+        <Image src={`/logo.jpg`} alt="logo" width="100" height="100" />
         <br />
         <h2>Disfruta de nuestra seleccion del día.</h2>
         {SSRElements}

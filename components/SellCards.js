@@ -97,7 +97,9 @@ export default memo(function SellCards(props) {
     let dishesToAdd = [];
     for (let id of dishes) {
 
-      dishesToAdd.push(`${document.getElementById(`counter_${id}`).innerHTML} platos de ${window['name_' + id]}`);
+      if(document.getElementById(`counter_${id}`).innerHTML > 0){
+        dishesToAdd.push(`${document.getElementById(`counter_${id}`).innerHTML} platos de ${window['name_' + id]}`);
+      }
 
       fetch(`/api/addDishesToBill`, {
         method: 'POST',
