@@ -119,21 +119,21 @@ export default memo(function SellCards(props) {
       // .then((res) => console.log(res));
 
       // POST dish info to /api/spreedsheet
-      // if (window['price_' + id] !== '' && window['price_' + id] !== null ) {
-      //   fetch(`/api/spreedsheet`, {
-      //     method: 'POST',
-      //     headers: {
-      //       Authorization: `Bearer ${session.token}`,
-      //     },
-      //     body: JSON.stringify({
-      //       id,
-      //       name: window['name_' + id],
-      //       price: window['price_' + id],
-      //       amount: document.getElementById(`counter_${id}`).innerHTML,
-      //       day: week[day],
-      //     })
-      //   }).then((res) => res.json());
-      // }
+      if (window['price_' + id] !== '' && window['price_' + id] !== null ) {
+        fetch(`/api/spreedsheet`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+          body: JSON.stringify({
+            id,
+            name: window['name_' + id],
+            price: window['price_' + id],
+            amount: document.getElementById(`counter_${id}`).innerHTML,
+            day: week[day],
+          })
+        }).then((res) => res.json());
+      }
       document.getElementById(`counter_${id}`).innerHTML = 0;
       // // lower the number in the label of total dishes
       document.getElementById('totalDishes').innerHTML = 0;
@@ -213,18 +213,10 @@ export default memo(function SellCards(props) {
             id: session._id,
             currentBalance: session.balance,
             role: session.role,
-            // url: params.local_backend_nodejs
           }),
         })
           .then((res) => res.json())
-          // .then((res)=>console.log(res))
           .then((res) => billCreationValidation(res, msg))
-        // .then(
-        //   (counterDish = 0),
-        //   (counterPrice = 0),
-        //   setCounterDish(0),
-        //   setCounterPrice(0)
-        // );
       }
     }
   };
