@@ -116,8 +116,9 @@ export default function pendingOrders() {
       },
       body: JSON.stringify({
         id,
+        role: session.role,
       }),
-    }).then((res) => res.json());
+    }).then((res) => res.json())
     // .then((res) => console.log(res))
     document.getElementById(`item-${id}`).className = 'd-none';
     document.getElementById(`buttons-${id}`).classList.add('d-none');
@@ -211,7 +212,7 @@ export default function pendingOrders() {
     <div>
       {/* {console.log(filterObject)} */}
       <h1>Pedidos en linea</h1>
-      <h2>Backend {backend}</h2>
+      {/* <h2>Backend {backend}</h2> */}
       <div className={classes.paginationNav}>
         <PaginationControls
           token={session.token}
@@ -225,7 +226,7 @@ export default function pendingOrders() {
         />
       </div>
       {filterObject.map((el, i) => {
-        // console.log(el.user.tn)
+        // console.log(el)
         if(el.user !== null){
           return (
             <div key={el.id}>
@@ -251,7 +252,7 @@ export default function pendingOrders() {
                     height="100"
                   />
                   <div className={`${classes.pendingOrderCardsBody}`}>
-                    <h5 className={``}>Cliente: {el.customer}</h5>
+                    <h5 className={``}>Cliente: <span style={{color: "blue"}}>{el.user.name}</span></h5>
                     <p className={``}>Total de Platos: {el.totalDishes}</p>
                     <p className={``}>Hora: {el.dayTime}</p>
                     <p className={``} style={el.isPaid ? {color: 'green', fontWeight: 'bold', fontSize: '24px'} :{ color: 'red', fontWeight: 'bold', fontSize: '24px'}}>{el.isPaid ? 'Pagado' : 'Pago pendiente'}</p>

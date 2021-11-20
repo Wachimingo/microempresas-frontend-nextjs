@@ -78,7 +78,7 @@ export default function sellHistory() {
     return (
       <div>
         <h1 className={classes.centerItem}>
-          Historial de ventas {typeHistory}
+          Historial de ventas {typeHistory === 'grupal' ? 'por recibo de compra' : 'por plato'}
         </h1>
         <br />
         <div className={classes.paginationNav}>

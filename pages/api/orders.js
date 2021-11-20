@@ -1,6 +1,6 @@
 export default async (req, res) => {
   let records = [];
-  // console.log(req.query, req.method)
+  // console.log(req.query, req.body, req.method)
   if (req.query.role === 'admin' || req.body.role === 'admin') {
     if (req.method === 'GET') {
       records = await fetch(`${process.env.ORDERS_BACKEND}/api/v1/bills/orders?limit=${req.query.limit}&page=${req.query.page}&status=${req.query.status}&ifValue=${req.query.ifValue}`, {
@@ -26,6 +26,7 @@ export default async (req, res) => {
         }
       );
     } else if (req.method === 'DELETE') {
+      // console.log(req.body.id)
       records = await fetch(
         `${process.env.ORDERS_BACKEND}/api/v1/bills/${req.body.id}`,
         {

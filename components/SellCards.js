@@ -133,6 +133,12 @@ export default memo(function SellCards(props) {
             price: window['price_' + id],
             amount: document.getElementById(`counter_${id}`).innerHTML,
             day: week[day],
+            dayTime: `${Today_date.getHours()}:${Today_date.getMinutes()}`,
+            createdAt: Today_date.toISOString()
+              .split('T')[0]
+              .split('-')
+              .reverse()
+              .join('-'),
           })
         }).then((res) => res.json());
       }
@@ -216,6 +222,12 @@ export default memo(function SellCards(props) {
             id: session._id,
             currentBalance: session.balance,
             role: session.role,
+            dayTime: `${Today_date.getHours()}:${Today_date.getMinutes()}`,
+            createdAt: Today_date.toISOString()
+              .split('T')[0]
+              .split('-')
+              .reverse()
+              .join('-'),
           }),
         })
           .then((res) => res.json())
