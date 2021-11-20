@@ -212,7 +212,7 @@ export default function pendingOrders() {
     <div>
       {/* {console.log(filterObject)} */}
       <h1>Pedidos en linea</h1>
-      {/* <h2>Backend {backend}</h2> */}
+      <h2>Backend {backend}</h2>
       <div className={classes.paginationNav}>
         <PaginationControls
           token={session.token}
