@@ -97,7 +97,7 @@ export default memo(function SellCards(props) {
     let dishesToAdd = [];
     for (let id of dishes) {
 
-      if(document.getElementById(`counter_${id}`).innerHTML > 0){
+      if (document.getElementById(`counter_${id}`).innerHTML > 0) {
         dishesToAdd.push(`${document.getElementById(`counter_${id}`).innerHTML} platos de ${window['name_' + id]}`);
       }
 
@@ -121,7 +121,7 @@ export default memo(function SellCards(props) {
       // .then((res) => console.log(res));
 
       // POST dish info to /api/spreedsheet
-      if (window['price_' + id] !== '' && window['price_' + id] !== null ) {
+      if (window['price_' + id] !== '' && window['price_' + id] !== null) {
         fetch(`/api/spreedsheet`, {
           method: 'POST',
           headers: {
@@ -142,9 +142,10 @@ export default memo(function SellCards(props) {
       // lower the number in the label of total price
       document.getElementById('totalPrice').innerHTML = 0;
     }
-    setDishNames(dishesToAdd);
-    handleShow()
-
+    if (session.role !== 'admin') {
+      setDishNames(dishesToAdd);
+      handleShow()
+    }
   };
 
   const goToCheckout = () => {

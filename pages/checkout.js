@@ -57,7 +57,8 @@ export default function checkout(props) {
   }
 
   const appearance = {
-    theme: 'stripe',
+    theme: 'night',
+    labels: 'floating'
   };
   const options = {
     clientSecret,

@@ -97,6 +97,7 @@ export default function Cards(props) {
 
   return (
     <div className={`${classes.backgroundCatalog}`}>
+      {console.log(props)}
       <br/>
       <section>
         <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
@@ -128,7 +129,7 @@ export default function Cards(props) {
                 marginRight: '2vw',
               }}
             >
-              {cardButtons(el, el.id, i, el.image)}
+              {props.session.role !== "admin" ? null : cardButtons(el, el.id, i, el.image)}
               <div className={classes.hoverCard}>
                 <Image
                   src={

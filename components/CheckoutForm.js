@@ -100,11 +100,14 @@ export default function CheckoutForm(props) {
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>      
-      <Container>
+    <form id="payment-form" onSubmit={handleSubmit} style={{color: "white"}}>
+      <Container style={{backgroundColor: "#202630", width: "45vw", marginLeft: "30vw", marginTop: "25vh", color: "white"}}>
+      <br/>
+      <br/>
         <Row>
-          <Col><PaymentElement id="payment-element" /></Col>
+          <Col style={{color: "white"}}><PaymentElement id="payment-element" /></Col>
         </Row>
+        <br/>
         <Row>
           <Col>
             <Button type="submit" variant="primary" disabled={isLoading || !stripe || !elements} id="submit">
@@ -113,10 +116,12 @@ export default function CheckoutForm(props) {
               </span>
             </Button>
           </Col>
+          <br/>
           <Col>
             <Button variant="danger" onClick={goBack}>Cancelar</Button>
           </Col>
         </Row>
+        <br/>
       </Container>
 
       {/* Show any error or success messages */}

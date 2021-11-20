@@ -338,8 +338,10 @@ export default function dashboard() {
                 <input type="date" id="calendar" className="form-control" />
               </div>
             </div>
+            <br/>
             <input type="button" value="Buscar" onClick={() => loadNewData()} />
           </div>
+          <br/>
           <div className="row">
             <div className="col">
               <DonutChart

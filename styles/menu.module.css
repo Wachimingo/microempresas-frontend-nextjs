@@ -23,9 +23,7 @@
   background-size: cover;
 }
 .backgroundCatalog{
-  background-image: url("https://thumbs.dreamstime.com/z/caf%C3%A9-bebidas-y-pasteles-patr%C3%B3n-vectorial-de-cafeter%C3%ADa-c%C3%B3cteles-sobre-fondo-blanco-vector-sin-costuras-218137589.jpg");
-  background-repeat: repeat;
-  background-size: 55%;
+  background-color: #f3e4d8;
 }
 .section1{
   background-image: url("https://i2.wp.com/diplomartbrussels.com/wp-content/uploads/2020/09/food-background-images-94-images-in-co-381169-png-images-pngio-food-background-png-1440_619.png?ssl=1");
@@ -83,8 +81,8 @@
 }
 .borderActive {
   border-style: solid;
-  border-width: 5px;
-  border-color: blue;
+  border-width: 2px;
+  border-color: #606266;
 }
 .hoverCard:hover {
   cursor: pointer;

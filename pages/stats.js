@@ -29,7 +29,6 @@ export default function Menu() {
             }
         )
             .then((res) => res.json())
-            // .then((res) => console.log(res))
             .then((res) => updateResults(res.data.records, today))
             .then(() => setLoaded(true));
     }, [])
@@ -67,13 +66,14 @@ export default function Menu() {
     } else {
         return (
             <>
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} id="calendar" className="form-control" />
-
+            <br/>
+                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} id="calendar" className="form-control"  style={{width: "45vw", marginLeft: "30vw"}}/>
+                <br/>
                 <select
                     id="calendarMode"
                     className="form-select"
                     aria-label="Default select example"
-                // onChange={(e) => putHistoryMode(e.target.value)}
+                    style={{width: "45vw", marginLeft: "30vw"}}
                 >
                     <option value="day" defaultValue>
                         Dia
@@ -82,7 +82,10 @@ export default function Menu() {
                     <option value="month">Mes</option>
                     <option value="year">Año</option>
                 </select>
-                <input type="button" value="Buscar" onClick={(e) => getStats(e)} />
+                <br/>
+                <input type="button" value="Buscar" onClick={(e) => getStats(e)} style={{marginLeft: "30vw"}}/>
+                <br/>
+                <br/>
                 <div className="container">
                     <div className="row">
                         <div className="col">

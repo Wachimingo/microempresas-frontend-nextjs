@@ -148,6 +148,7 @@ export default function addDish({ item }) {
                 <input
                   type="submit"
                   className="btn btn-outline-primary form-control"
+                  value="Agregar"
                 />
                 <Link href="/menu/catalog" passHref>
                   <button
