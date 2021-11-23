@@ -1,8 +1,8 @@
 const fs = require('fs');
 import path from 'path';
 var newpath =
-  path.join(`${__dirname}/../../../../`, 'public/json-files/counter.json');
-  // console.log('path: ' + newpath)
+  path.join(process.cwd(), 'public/json-files/counter.json');
+  console.log('path: ' + newpath)
 
 export default (req, res) => {
   //   console.log(req.body);
