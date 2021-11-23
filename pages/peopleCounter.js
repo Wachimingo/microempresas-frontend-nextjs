@@ -21,7 +21,8 @@ export default function peopleCounter() {
       mode: 'cors',
     })
       .then((res) => res.json())
-      .then((res) => setCount(res.data.records[0].count));
+      // .then((res) => setCount(res.data.records[0].count));
+      .then((res) => setCount(res.count));
   });
 
   function updateCounterget(counter) {

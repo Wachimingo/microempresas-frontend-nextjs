@@ -1,11 +1,9 @@
 import { useEffect, useState, useContext } from 'react'
 import AuthContext from '../context/authContext'
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import PaginationControls from './../components/NavigationItems/PaginationControls';
 import SearchBar from './../components/NavigationItems/SearchBar';
+import Table from 'react-bootstrap/Table'
 
 export default function User() {
     const { session } = useContext(AuthContext)
@@ -67,35 +65,31 @@ export default function User() {
                     <br />
                 </section>
                 <br />
-                <section style={{ marginLeft: "12vw" }}>
-                    <Container fluid>
-                        <Row>
-                            <Col>Usuario</Col>
-                            <Col>Correo</Col>
-                            <Col>Telefono</Col>
-                            <Col>Puede fiar</Col>
-                        </Row>
-                        {
-                            // console.log(users)
-                            users.map((user, index) => {
-                                if (user.role === 'user') {
-                                    return (
-                                        <>
-                                            <Row key={user._id + index}>
-                                                <Col>{user.name}</Col>
-                                                <Col>{user.email}</Col>
-                                                <Col>{user.tn}</Col>
-                                                <Col>
-                                                    {user.canBorrow ? <Button variant="danger" onClick={() => toggleFiar(user._id, !user.canBorrow)}>Denegar</Button> : <Button variant="success" onClick={() => toggleFiar(user._id, !user.canBorrow)}>Permitir</Button>}
-                                                </Col>
-                                            </Row>
-                                            <br />
-                                        </>
-                                    )
-                                } else return null
-                            })
-                        }
-                    </Container>
+                <section>
+                    <Table responsive="lg" striped bordered hover style={{ width: "98%", marginLeft: "1%" }}>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Usuario</th>
+                                <th>Correo</th>
+                                <th>Telefono</th>
+                                <th>Puede fiar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((el, i) => {
+                                return (
+                                    <tr key={el._id}>
+                                        <td>{i+1}</td>
+                                        <td>{el.name}</td>
+                                        <td>{el.email}</td>
+                                        <td>{el.tn}</td>
+                                        <td>{el.canBorrow ? <Button variant="danger" onClick={() => toggleFiar(el._id, !el.canBorrow)}>Denegar</Button> : <Button variant="success" onClick={() => toggleFiar(el._id, !el.canBorrow)}>Permitir</Button>}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
                 </section>
             </>
         )

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import AuthContext from './../../context/authContext';
 import { useRouter } from 'next/router';
 import PaginationControls from './../../components/NavigationItems/PaginationControls';
-import Table from './../../components/Table';
+import Table from 'react-bootstrap/Table'
 const classes = require('./../../styles/sellHistory.module.css');
 
 export default function sellHistory() {
@@ -47,39 +47,13 @@ export default function sellHistory() {
     setItems(res.data.records);
   };
 
-  const itemList = (type) => {
-    if (type === 'grupal') {
-      return (
-        <Table
-          headers={['ID', 'Total de Platos', 'Total', 'Estado', 'Cliente', 'Dia', 'Fecha']}
-          items={items}
-          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'day','createdAt']}
-        />
-      );
-    } else if (type === 'individual') {
-      return (
-        <Table
-          headers={['ID', 'Plato', 'Dia', 'Fecha', 'Precio']}
-          items={items}
-          body={['_id', 'name', 'day','createdAt', 'price']}
-        />
-      );
-    } else if (type === 'stats') {
-      return (
-        <>
-        
-        </>
-      );
-    }
-  };
-
   if (!loaded) {
     return <></>;
   } else {
     return (
       <div>
         <h1 className={classes.centerItem}>
-          Historial de ventas {typeHistory === 'grupal' ? 'por recibo de compra' : 'por plato'}
+          Historial de ventas
         </h1>
         <br />
         <div className={classes.paginationNav}>
@@ -94,7 +68,32 @@ export default function sellHistory() {
             method={'POST'}
           />
         </div>
-        {itemList(typeHistory)}
+        <Table responsive="lg" striped bordered hover style={{width: "98%", marginLeft: "1%"}}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Total de Platos</th>
+              <th>Precio cancelado</th>
+              <th>Estado</th>
+              <th>Dia</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((el, i) =>{
+              return (
+                <tr key={el._id}>
+                  <td>{el._id}</td>
+                  <td>{el.totalDishes}</td>
+                  <td>{el.totalPrice}</td>
+                  <td>{el.estado}</td>
+                  <td>{el.day}</td>
+                  <td>{el.createdAt}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
       </div>
     );
   }

@@ -42,7 +42,8 @@ export default function Menu({ items }) {
       .then(res => res.json())
       .then(res => {
         // console.log(res.data.records[0].count);
-        setCount(res.data.records[0].count);
+        // .then((res) => setCount(res.data.records[0].count));
+        setCount(res.count)
       });
 
   }, [router.query]);
@@ -62,9 +63,9 @@ export default function Menu({ items }) {
     <div className={`text-center ${classes.section2}`}>
       {/* Main section */}
       <section className={`text-center ${classes.section1}`}>
-        <div style={{backgroundColor: '#fcf8f5', width: "50%", height: "20vh", paddingTop: "4vh", marginLeft: "25vw"}}>
-        <h1>Bienvenido a Comedor Buen Amanecer</h1>
-        <h2>Actualmente hay {count} clientes en el local</h2>
+        <div style={{ backgroundColor: '#fcf8f5', width: "50%", height: "20vh", paddingTop: "4vh", marginLeft: "25vw" }}>
+          <h1>Bienvenido a Comedor Buen Amanecer</h1>
+          <h2>Actualmente hay {count} clientes en el local</h2>
         </div>
         <br />
         <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
@@ -72,12 +73,12 @@ export default function Menu({ items }) {
         <h2>Disfruta de nuestra seleccion del día.</h2>
         {SSRElements}
         <Link href="/menu/sell" passHref>
-          <a className="btn btn-success" style={{width: "25vw"}}>Comprar</a>
+          <a className="btn btn-success" style={{ width: "25vw" }}>Comprar</a>
         </Link>
-        
+
       </section>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <section className={`text-center ${classes.section2}`}>
         <Container fluid>
           <h3>Te esperamos para ofrecerte:</h3>
@@ -93,8 +94,8 @@ export default function Menu({ items }) {
               />
             </Col>
             <Col>
-            <h4>Almuerzos</h4>
-            <Image
+              <h4>Almuerzos</h4>
+              <Image
                 src='/assets/lunch.jpg'
                 className="card-img-top"
                 alt="breakfast"
@@ -103,8 +104,8 @@ export default function Menu({ items }) {
               />
             </Col>
             <Col>
-            <h4>Cenas</h4>
-            <Image
+              <h4>Cenas</h4>
+              <Image
                 src='/assets/dinner.jpg'
                 className="card-img-top"
                 alt="breakfast"

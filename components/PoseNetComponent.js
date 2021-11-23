@@ -15,7 +15,7 @@ export default function App(props) {
 
   function updateCounter(counter) {
     fetch('/api/counter', {
-      method: 'PATCH',
+      method: 'POST',
       mode: 'cors',
       body: JSON.stringify({
         count: counter,
