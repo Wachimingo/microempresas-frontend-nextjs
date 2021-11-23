@@ -15,14 +15,14 @@ export default function App(props) {
 
   function updateCounter(counter) {
     fetch('/api/counter', {
-      method: 'POST',
+      method: 'PATCH',
       mode: 'cors',
       body: JSON.stringify({
         count: counter,
       }),
     })
       .then((res) => res.json())
-    // .then((res) => console.log(res))
+    // .then((res) => console.log(res))    
   }
 
   const detectWebcamFeed = async () => {
@@ -80,7 +80,7 @@ export default function App(props) {
       drawKeypoints(pose[i]['keypoints'], 0.6, ctx);
       drawSkeleton(pose[i]['keypoints'], 0.7, ctx);
     }
-    updateCounter(pose.length)
+    updateCounter(pose.length);
     props.updateCounterget(pose.length)
     tf.dispose(pose)
     pose = null,
