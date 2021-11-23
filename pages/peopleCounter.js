@@ -11,7 +11,7 @@ const PoseNetComponent = dynamic(
 
 export default function peopleCounter() {
   const [count, setCount] = useState(0);
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false);
   const { session } = useContext(AuthContext);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function peopleCounter() {
       mode: 'cors',
     })
       .then((res) => res.json())
-      .then((res) => setCount(res.data));
+      .then((res) => setCount(res.data.records[0].count));
   });
 
   function updateCounterget(counter) {

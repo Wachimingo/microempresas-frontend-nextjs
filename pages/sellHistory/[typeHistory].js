@@ -36,6 +36,7 @@ export default function sellHistory() {
       .then((res) => res.json())
       // .then((res) => console.log(res))
       .then((res) => {
+        // console.log(res)
         setItems(res.data.records),
           setTotalRecords(res.data.totalRecords);
       })
@@ -52,7 +53,7 @@ export default function sellHistory() {
         <Table
           headers={['ID', 'Total de Platos', 'Total', 'Estado', 'Cliente', 'Dia', 'Fecha']}
           items={items}
-          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'customer', 'day','createdAt']}
+          body={['_id', 'totalDishes', 'totalPrice', 'estado', 'day','createdAt']}
         />
       );
     } else if (type === 'individual') {

@@ -53,46 +53,49 @@ export default function User() {
     } else {
         return (
             <>
-                <h1 style={{marginLeft: "37vw"}}>Usuarios registrados</h1>
-                <br/>
-                <section style={{marginLeft: "45vw"}}>
-                <PaginationControls
-                    token={session.token}
-                    totalRecords={totalRecords}
-                    limit={10}
-                    toUpdateParent={updateStates}
-                    url={'/api/users'}
-                    method={'GET'}
-                />
+                <h1 style={{ marginLeft: "37vw" }}>Usuarios registrados</h1>
                 <br />
+                <section style={{ marginLeft: "45vw" }}>
+                    <PaginationControls
+                        token={session.token}
+                        totalRecords={totalRecords}
+                        limit={10}
+                        toUpdateParent={updateStates}
+                        url={'/api/users'}
+                        method={'GET'}
+                    />
+                    <br />
                 </section>
-                <br/>
-                <section style={{marginLeft: "12vw"}}>
-                <Container fluid>
-                    <Row>
-                        <Col>Usuario</Col>
-                        <Col>Correo</Col>
-                        <Col>Telefono</Col>
-                        <Col>Puede fiar</Col>
-                    </Row>
-                    {
-                        // console.log(users)
-                        users.map((user, index) => {
-                            if (user.role === 'user') {
-                                return (
-                                    <Row key={user._id + index}>
-                                        <Col>{user.name}</Col>
-                                        <Col>{user.email}</Col>
-                                        <Col>{user.tn}</Col>
-                                        <Col>
-                                            {user.canBorrow ? <Button variant="danger" onClick={() => toggleFiar(user._id, !user.canBorrow)}>Denegar</Button> : <Button variant="success" onClick={() => toggleFiar(user._id, !user.canBorrow)}>Permitir</Button>}
-                                        </Col>
-                                    </Row>
-                                )
-                            } else return null
-                        })
-                    }
-                </Container>
+                <br />
+                <section style={{ marginLeft: "12vw" }}>
+                    <Container fluid>
+                        <Row>
+                            <Col>Usuario</Col>
+                            <Col>Correo</Col>
+                            <Col>Telefono</Col>
+                            <Col>Puede fiar</Col>
+                        </Row>
+                        {
+                            // console.log(users)
+                            users.map((user, index) => {
+                                if (user.role === 'user') {
+                                    return (
+                                        <>
+                                            <Row key={user._id + index}>
+                                                <Col>{user.name}</Col>
+                                                <Col>{user.email}</Col>
+                                                <Col>{user.tn}</Col>
+                                                <Col>
+                                                    {user.canBorrow ? <Button variant="danger" onClick={() => toggleFiar(user._id, !user.canBorrow)}>Denegar</Button> : <Button variant="success" onClick={() => toggleFiar(user._id, !user.canBorrow)}>Permitir</Button>}
+                                                </Col>
+                                            </Row>
+                                            <br />
+                                        </>
+                                    )
+                                } else return null
+                            })
+                        }
+                    </Container>
                 </section>
             </>
         )

@@ -1,5 +1,5 @@
 export default async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
 
   const processSell = await fetch(`${process.env.BACKEND}/api/v1/bills`, {
     method: 'POST',

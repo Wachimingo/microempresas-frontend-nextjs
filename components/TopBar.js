@@ -135,12 +135,9 @@ export default function TopBar(props) {
                   >
                     <li>
                       <Link href="/sellHistory/grupal" passHref>
-                        <a className="dropdown-item">Listado grupal</a>
+                        <a className="dropdown-item">Ventas</a>
                       </Link>
                     </li>
-                    <Link href="/sellHistory/individual" passHref>
-                      <a className="dropdown-item">Listado individual</a>
-                    </Link>
                     <Link href="/stats" passHref>
                       <a className="dropdown-item">Estadisticas</a>
                     </Link>
