@@ -85,7 +85,7 @@ export default function sellHistory() {
                 <tr key={el._id}>
                   <td>{el._id}</td>
                   <td>{el.totalDishes}</td>
-                  <td>{el.totalPrice}</td>
+                  <td>${el.totalPrice}</td>
                   <td>{el.estado}</td>
                   <td>{el.day}</td>
                   <td>{el.createdAt}</td>
