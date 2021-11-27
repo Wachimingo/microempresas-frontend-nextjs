@@ -67,10 +67,9 @@ export default function Menu({ items }) {
           <h1>Bienvenido a Comedor Buen Amanecer</h1>
           <h2>Actualmente hay {count} clientes en el local</h2>
         </div>
-        <br />
         <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
         <br />
-        <h2>Disfruta de nuestra seleccion del día.</h2>
+        <h2>El sabor que nos Caracteriza</h2>
         {SSRElements}
         <Link href="/menu/sell" passHref>
           <a className="btn btn-success" style={{ width: "25vw" }}>Comprar</a>

@@ -97,7 +97,7 @@ export default function Cards(props) {
 
   return (
     <div className={`${classes.backgroundCatalog}`}>
-      {console.log(props)}
+      {/* {console.log(props)} */}
       <br/>
       <section>
         <SearchBar updateFilter={setNewFilteredObject} items={props.items} />

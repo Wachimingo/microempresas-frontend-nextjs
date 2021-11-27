@@ -38,18 +38,34 @@ export default function addDish({ item }) {
       formData.append('forToday', isForTodayState);
 
       // console.log(formData);
-      fetch(`/api/addDish`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          Authorization: `${session.token}`,
-          // 'url': params.local_backend_nodejs
-        },
-        body: formData,
-      })
-        .then((res) => res.json())
-        // .then((res) => console.log(res));
-        .then((res) => router.push('/menu/catalog'));
+      if (item.isForUpdate === undefined) {
+        fetch(`/api/addDish?id=${item._id}`, {
+          method: 'PATCH',
+          mode: 'cors',
+          headers: {
+            Authorization: `${session.token}`,
+            // 'Content-Type': 'application/json',
+          },
+          body: formData,
+        })
+          .then((res) => res.json())
+          // .then((res) => console.log(res));
+          .then((res) => router.push('/menu/catalog'));
+      } else {
+        fetch(`/api/addDish`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `${session.token}`,
+            // 'url': params.local_backend_nodejs
+          },
+          body: formData,
+        })
+          .then((res) => res.json())
+          // .then((res) => console.log(res));
+          .then((res) => router.push('/menu/catalog'));
+      }
+
     }
   };
 
@@ -148,7 +164,7 @@ export default function addDish({ item }) {
                 <input
                   type="submit"
                   className="btn btn-outline-primary form-control"
-                  value="Agregar"
+                  value={item.isForUpdate === undefined ? 'Actualizar' : 'Agregar'}
                 />
                 <Link href="/menu/catalog" passHref>
                   <button
@@ -189,7 +205,8 @@ export async function getServerSideProps(context) {
       description: '',
       price: 0,
       image: 'stockDishImg.png',
-      forToday: true
+      forToday: true,
+      isForUpdate: false,
     };
   }
 
