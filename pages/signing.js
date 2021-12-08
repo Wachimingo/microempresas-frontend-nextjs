@@ -2,7 +2,7 @@ import { useState, memo } from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
+// import ParamsContext from '../context/paramsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
@@ -12,11 +12,12 @@ const classes = require('./../styles/login.module.css');
 export default memo(function SignIn() {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
+  const [tn, setTN] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [hasAgreed, setHasAgreed] = useState(false)
   const { setSession } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
+  // const {params} = useContext(ParamsContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
@@ -32,7 +33,7 @@ export default memo(function SignIn() {
         email,
         password,
         passwordConfirm,
-        url: params.local_backend_nodejs
+        tn,
       }),
     })
       .then((res) => res.json())
@@ -59,10 +60,11 @@ export default memo(function SignIn() {
   };
 
   return (
-    <div>
+    <div className={`${classes.bodyBackground}`}>
+      <br/>
       <div className={'container ' + classes.formBody}>
         <form className={''} onSubmit={handleSubmit}>
-          <h3>Ingresar</h3>
+          <h3>Registro</h3>
 
           <div className="form-group">
             <label htmlFor="usuario">Nombre de usuario</label>
@@ -76,7 +78,7 @@ export default memo(function SignIn() {
               require='true'
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="email">Correo electronico</label>
             <input
@@ -89,7 +91,19 @@ export default memo(function SignIn() {
               require='true'
             />
           </div>
-
+          <br/>
+          <div className="form-group">
+            <label htmlFor="tn">Numero de Telefono</label>
+            <input
+              type="text"
+              id="tn"
+              value={tn}
+              onChange={(e) => setTN(e.target.value)}
+              className="form-control"
+              placeholder="Ingrese su numero telefonico"
+            />
+          </div>
+          <br/>
           <div className="form-group">
             <label htmlFor="password">Clave</label>
             <input
@@ -102,7 +116,7 @@ export default memo(function SignIn() {
               require='true'
             />
           </div>
-
+          <br/>
           <div className="form-group">
             <label htmlFor="password">Confirmar clave</label>
             <input
@@ -141,6 +155,9 @@ export default memo(function SignIn() {
           </button>
           }
         </form>
+      </div>
+      <div style={{padding: "7vh", visibility: "hidden"}}>
+        {Date()}
       </div>
       <div>
         <ToastContainer />

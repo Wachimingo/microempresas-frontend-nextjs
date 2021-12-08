@@ -12,6 +12,7 @@ export const config = {
 };
 
 export default async (req, res) => {
+  
   const data = await new Promise((resolve, reject) => {
     const form = new formidable({
       uploadDir: path.join(`${__dirname}/../../../../`, 'public'),
@@ -27,81 +28,116 @@ export default async (req, res) => {
   if (Object.keys(data.files).length > 0) {
     fileName = `dish-${data.files.image.name}-${Date.now()}.jpeg`;
   }
-  // console.log(data);
+  // console.log('cuerpo: ' + data, 'id: ' + req.query.id);
 
-  const addDish = await fetch(`${req.headers.url}/api/v1/menu`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      Authorization: `Bearer ${req.headers.authorization}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: data.fields.name,
-      description: data.fields.description,
-      price: data.fields.price,
-      forToday: data.fields.forToday,
-      image: fileName,
-    }),
-  });
-
-  const result = await addDish.json();
-
-  if (addDish.ok) {
-    if (Object.keys(data.files).length > 0) {
-      const oldpath = data.files.image.path;
-      const modifiedPath = `${path.join(`${__dirname}/../../../../`, 'public/') + oldpath.split('\\')[oldpath.split('\\').length - 1].split('.')[0]}-new.${
-        oldpath.split('.')[oldpath.split('.').length - 1]
-      }`;
-      // console.log("modifed path: " + modifiedPath)
-      // console.log("oldpath: " + oldpath)
-      // console.log(path.join(`${__dirname}/../../../../`, 'public'))
-      sharp(oldpath)
-        .resize(500, 500)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(modifiedPath)
-        .then(() => {
-          const newpath =
-            path.join(`${__dirname}/../../../../`, 'public') +
-            '/dishes/' +
-            fileName;
-
-          fs.rename(modifiedPath, newpath, function (err) {
-            if (err) throw err;
-          });
-        })
-        .then(() => {
-          fs.unlink(data.files.image.path, (err) => {
-            if (err) {
-              throw err;
-            }
-            // console.log('File deleted')
-          });
-        });
-    }
-    
-    res.status(201).json({
-      status: 'success',
-      data: {
-        result,
+  if (req.method === 'POST') {
+    const addDish = await fetch(`${process.env.BACKEND}/api/v1/menu`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${req.headers.authorization}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        name: data.fields.name,
+        description: data.fields.description,
+        price: data.fields.price,
+        forToday: data.fields.forToday,
+        image: fileName,
+      }),
     });
-  } 
-  else {
-    if(Object.keys(data.files).length > 0){
-    fs.unlink(data.files.image.path, (err) => {
-      if (err) {
-        throw err;
+    const result = await addDish.json();
+
+    if (addDish.ok) {
+      if (Object.keys(data.files).length > 0) {
+        const oldpath = data.files.image.path;
+        const modifiedPath = `${path.join(`${__dirname}/../../../../`, 'public/') + oldpath.split('\\')[oldpath.split('\\').length - 1].split('.')[0]}-new.${oldpath.split('.')[oldpath.split('.').length - 1]
+          }`;
+        // console.log("modifed path: " + modifiedPath)
+        // console.log("oldpath: " + oldpath)
+        // console.log(path.join(`${__dirname}/../../../../`, 'public'))
+        sharp(oldpath)
+          .resize(500, 500)
+          .toFormat('jpeg')
+          .jpeg({ quality: 90 })
+          .toFile(modifiedPath)
+          .then(() => {
+            const newpath =
+              path.join(`${__dirname}/../../../../`, 'public') +
+              '/dishes/' +
+              fileName;
+
+            fs.rename(modifiedPath, newpath, function (err) {
+              if (err) throw err;
+            });
+          })
+          .then(() => {
+            fs.unlink(data.files.image.path, (err) => {
+              if (err) {
+                throw err;
+              }
+              // console.log('File deleted')
+            });
+          });
       }
-      // console.log('File deleted')
-    });}
-    res.status(401).json({
-      status: 'failed',
-      data: {
-        message: result.message,
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          result,
+        },
+      });
+    }
+    else {
+      if (Object.keys(data.files).length > 0) {
+        fs.unlink(data.files.image.path, (err) => {
+          if (err) {
+            throw err;
+          }
+          // console.log('File deleted')
+        });
+      }
+      res.status(401).json({
+        status: 'failed',
+        data: {
+          message: result.message,
+        },
+      });
+      //   console.log(data)
+    }
+  } else if(req.method === 'PATCH'){
+      console.log(req.method)
+    const addDish = await fetch(`${process.env.BACKEND}/api/v1/menu/${req.query.id}`, {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${req.headers.authorization}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        name: data.fields.name,
+        description: data.fields.description,
+        price: data.fields.price,
+        forToday: data.fields.forToday,
+      }),
     });
-    //   console.log(data)
+    const result = await addDish.json();
+    console.log(result)
+    if(addDish.ok){
+      res.status(201).json({
+        status: 'success',
+        data: {
+          result,
+        },
+      });
+    } else {
+      res.status(401).json({
+        status: 'failed',
+        data: {
+          message: result.message,
+        },
+      });
+    }
   }
+
 };

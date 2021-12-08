@@ -1,7 +1,6 @@
 import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link';
 import Image from 'next/image';
-import ParamsContext from '../context/paramsContext';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect, useContext } from 'react';
 const classes = require('./../styles/menu.module.css');
@@ -18,7 +17,6 @@ import {
 
 export default function Cards(props) {
   let [filterObject = props.items.length > 0 ? [...props.items] : [], setFilterObject] = useState();
-  const {params} = useContext(ParamsContext);
   const [visible, setVisible] = useState('d-none');
 
   useEffect(() => {
@@ -41,7 +39,6 @@ export default function Cards(props) {
             fileName,
             props.session.token,
             toast('Platillo eliminado del menu'),
-            params.local_backend_nodejs
           )
         }
       >
@@ -58,7 +55,6 @@ export default function Cards(props) {
             true,
             props.session.token,
             toast.success('Platillo selecionado para hoy!'),
-            params.local_backend_nodejs
           )
         }
       >
@@ -99,61 +95,68 @@ export default function Cards(props) {
     setFilterObject(res.data.records);
   };
 
-    return (
-      <>
+  return (
+    <div className={`${classes.backgroundCatalog}`}>
+      {/* {console.log(props)} */}
+      <br/>
+      <section>
         <SearchBar updateFilter={setNewFilteredObject} items={props.items} />
-        <div className={classes.paginationControls}>
-          <PaginationControls
-            totalRecords={props.totalRecords}
-            limit={100}
-            toUpdateParent={setNewItems}
-            url={`${params.local_backend_nodejs}/api/v1/menu`}
-            method={'GET'}
-          />
-        </div>
-        <div className={classes.centerCard}>
-          {filterObject.map((el, i) => {
-            // console.log(el)
-            let colorBorder = '';
-            el.forToday
-              ? (colorBorder = classes.borderActive)
-              : (colorBorder = '');
-            return (
-              <div
-                key={i}
-                id={i}
-                className={`card ${colorBorder}`}
-                style={{
-                  width: '18rem',
-                  display: 'inline-block',
-                  marginRight: '2vw',
-                }}
-              >
-                {cardButtons(el, el.id, i, el.image)}
-                <div className={classes.hoverCard}>
-                  <Image
-                    src={
-                      el.image !== undefined
-                        ? `/dishes/${el.image}`
-                        : `/dishes/stockDishImg.png`
-                    }
-                    className="card-img-top"
-                    alt="me"
-                    width="1000"
-                    height="1000"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{el.name}</h5>
-                    <p className="card-text">{el.description}</p>
-                  </div>
+      </section>
+      <div className={classes.paginationControls}>
+        <PaginationControls
+          totalRecords={props.totalRecords}
+          limit={100}
+          toUpdateParent={setNewItems}
+          url={`/api/getMenu`}
+          method={'GET'}
+        />
+      </div>
+      <div className={classes.centerCard}>
+        {filterObject.map((el, i) => {
+          // console.log(el)
+          let colorBorder = '';
+          el.forToday
+            ? (colorBorder = classes.borderActive)
+            : (colorBorder = '');
+          return (
+            <div
+              key={i}
+              id={i}
+              className={`card ${colorBorder}`}
+              style={{
+                width: '18rem',
+                display: 'inline-block',
+                marginRight: '2vw',
+              }}
+            >
+              {props.session.role !== "admin" ? null : cardButtons(el, el.id, i, el.image)}
+              <div className={classes.hoverCard}>
+                <Image
+                  src={
+                    el.image !== undefined
+                      ? `/dishes/${el.image}`
+                      : `/dishes/stockDishImg.png`
+                  }
+                  className="card-img-top"
+                  alt="me"
+                  width="1000"
+                  height="1000"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{el.name}</h5>
+                  <p className="card-text">{el.description}</p>
                 </div>
               </div>
-            );
-          })}
-          <div>
-            <ToastContainer />
-          </div>
+            </div>
+          );
+        })}
+        <div style={{ padding: "19.7vh", visibility: "hidden" }}>
+          {Date()}
         </div>
-      </>
-    );
+        <div>
+          <ToastContainer />
+        </div>
+      </div>
+    </div>
+  );
 }

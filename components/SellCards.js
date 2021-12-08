@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { BsFillTrashFill, BsCheck, BsFlagFill } from 'react-icons/bs';
+import { Modal, Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect, useContext, memo } from 'react';
 import { useRouter } from 'next/router';
@@ -15,7 +16,9 @@ export default memo(function SellCards(props) {
   const { session } = useContext(AuthContext);
   // const {params} = useContext(ParamsContext);
   const [customerName, setCustomerName] = useState();
+  const [billId, setBillId] = useState();
   const [balance, setBalance] = useState(0);
+  const [dishNames, setDishNames] = useState();
   let [counterDish, setCounterDish] = useState(0);
   let [counterPrice, setCounterPrice] = useState(0);
   let [dishes] = useState([]);
@@ -30,6 +33,14 @@ export default memo(function SellCards(props) {
     'Viernes',
     'Sabado',
   ];
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => {
+    setShow(false)
+    setCounterDish(0),
+      setCounterPrice(0)
+  };
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     props.items.map((el) => {
@@ -37,20 +48,22 @@ export default memo(function SellCards(props) {
       window['name_' + el.id] = el.name;
       window['price_' + el.id] = el.price;
     });
-    
-    fetch(`/api/getBalance?id=${session._id}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-        // 'url': params.local_backend_nodejs
-      },
-    })
-      .then((res) => res.json())
-      // .then((res) => console.log(res))
-      .then((res) => {
-        setBalance(res.data.record.balance)
+
+    if (session !== '') {
+      fetch(`/api/getBalance?id=${session._id}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+          // 'url': params.local_backend_nodejs
+        },
       })
+        .then((res) => res.json())
+        // .then((res) => console.log(res))
+        .then((res) => {
+          setBalance(res.data.record.balance)
+        })
+    }
   }, [props]);
 
   const setNewFilteredObject = (obj) => {
@@ -81,7 +94,13 @@ export default memo(function SellCards(props) {
   };
 
   const addDishesToBill = (billId) => {
+    let dishesToAdd = [];
     for (let id of dishes) {
+
+      if (document.getElementById(`counter_${id}`).innerHTML > 0) {
+        dishesToAdd.push(`${document.getElementById(`counter_${id}`).innerHTML} platos de ${window['name_' + id]}`);
+      }
+
       fetch(`/api/addDishesToBill`, {
         method: 'POST',
         mode: 'cors',
@@ -100,16 +119,66 @@ export default memo(function SellCards(props) {
         }),
       }).then((res) => res.json());
       // .then((res) => console.log(res));
+
+      // POST dish info to /api/spreedsheet
+      if (window['price_' + id] !== '' && window['price_' + id] !== null) {
+        fetch(`/api/spreedsheet`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+          body: JSON.stringify({
+            id,
+            name: window['name_' + id],
+            price: window['price_' + id],
+            amount: document.getElementById(`counter_${id}`).innerHTML,
+            day: week[day],
+            dayTime: `${Today_date.getHours()}:${Today_date.getMinutes()}`,
+            createdAt: Today_date.toISOString()
+              .split('T')[0]
+              .split('-')
+              .reverse()
+              .join('-'),
+          })
+        }).then((res) => res.json());
+      }
       document.getElementById(`counter_${id}`).innerHTML = 0;
       // // lower the number in the label of total dishes
       document.getElementById('totalDishes').innerHTML = 0;
       // lower the number in the label of total price
       document.getElementById('totalPrice').innerHTML = 0;
     }
+    if (session.role !== 'admin') {
+      setDishNames(dishesToAdd);
+      handleShow()
+    }
   };
 
+  const goToCheckout = () => {
+    // console.log(dishes);
+    router.push({
+      pathname: `/checkout`,
+      query: { ids: dishes, customer: customerName, billId, dishNames },
+    },
+      '/checkout');
+
+    setCounterDish(0);
+    setCounterPrice(0);
+  }
+
+  const goToCheckoutBitcoin = () => {
+    // console.log(dishNames);
+    router.push({
+      pathname: `/bitcoinCheckout`,
+      query: { ids: dishes, customer: customerName, billId, amount: counterPrice, dishNames },
+    },
+      '/checkout');
+    setCounterDish(0);
+    setCounterPrice(0);
+  }
+
   const checkIfLogin = (fiado, token, msg) => {
-    if (session === null) {
+    if (session === null || session === '') {
       router.push({
         pathname: '/login',
         query: { page: '/menu/sell' },
@@ -124,8 +193,7 @@ export default memo(function SellCards(props) {
   };
 
   const processSell = (fiado, msg, stat) => {
-    // console.log(session)
-    if (counterPrice < 0 && counterDish < 1) {
+    if (counterPrice < 0 || counterDish < 1) {
       toast.error('No ha seleccionado platos para facturar');
     } else {
       if (fiado && (customerName === null || customerName === '')) {
@@ -154,32 +222,62 @@ export default memo(function SellCards(props) {
             id: session._id,
             currentBalance: session.balance,
             role: session.role,
-            // url: params.local_backend_nodejs
+            dayTime: `${Today_date.getHours()}:${Today_date.getMinutes()}`,
+            createdAt: Today_date.toISOString()
+              .split('T')[0]
+              .split('-')
+              .reverse()
+              .join('-'),
           }),
         })
           .then((res) => res.json())
-          // .then((res)=>console.log(res))
           .then((res) => billCreationValidation(res, msg))
-          .then(
-            (counterDish = 0),
-            (counterPrice = 0),
-            setCounterDish(0),
-            setCounterPrice(0)
-          );
       }
     }
   };
 
   const billCreationValidation = (res, msg) => {
     if (res.data.record !== undefined) {
-      toast.success(msg);
+      toast.success('Orden generada exitosamente');
       // console.log(res)
+      setBillId(res.data.record._id);
       addDishesToBill(res.data.record._id);
     } else {
       // console.log(res);
-      toast.error(res.data.message);
+      toast.error('Error, No se pudo generar la orden');
     }
   };
+
+  const drawFiar = () => {
+    if (session.role !== 'user') {
+      return (
+        <button
+          type="button"
+          className={
+            session !== null ? `btn btn-danger ${classes.fiado}` : 'd-none'
+          }
+          onClick={(e) => checkIfLogin(true, session.token, 'Factura creada!')}
+        >
+          <BsFlagFill /> Fiar
+        </button>
+      )
+    }
+    if (session.canBorrow) {
+      return (
+        <button
+          type="button"
+          className={
+            session !== null ? `btn btn-danger ${classes.fiado}` : 'd-none'
+          }
+          onClick={(e) => checkIfLogin(true, session.token, 'Factura creada!')}
+        >
+          <BsFlagFill /> Fiar
+        </button>
+      )
+    } else {
+      return;
+    }
+  }
 
   return (
     <>
@@ -234,7 +332,7 @@ export default memo(function SellCards(props) {
                         {el.name}
                       </h5>
                       <h5 id={el.id + ' price'} className="card-text">
-                        {el.price}
+                        ${el.price}
                       </h5>
                       <p className="card-text">{el.description}</p>
                     </div>
@@ -272,20 +370,32 @@ export default memo(function SellCards(props) {
           <BsCheck /> {session !== null ? 'Procesar venta' : 'Realizar pedido'}
         </button>
         {/* Fiado is to lend this dish to the client with the promise to pay afterward */}
-        <button
-          type="button"
-          className={
-            session !== null ? `btn btn-danger ${classes.fiado}` : 'd-none'
-          }
-          onClick={(e) => checkIfLogin(true, session.token, 'Factura creada!')}
-        >
-          <BsFlagFill /> Fiar
-        </button>
+        {
+          drawFiar()
+        }
+
         <br />
         <div>
           <ToastContainer />
         </div>
         <br />
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Procesar Compra</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>¿Desea pagar con tarjeta o pagar en el local?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Pagar en el local
+            </Button>
+            <Button variant="success" onClick={goToCheckoutBitcoin}>
+              Pagar con Bitcoint
+            </Button>
+            <Button variant="primary" onClick={goToCheckout}>
+              Pagar con tarjeta
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );

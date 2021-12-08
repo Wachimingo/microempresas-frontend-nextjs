@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuthContext from './../context/authContext';
-import ParamsContext from '../context/paramsContext';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,7 +12,6 @@ const classes = require('./../styles/addDish.module.css');
 export default function addDish({ item }) {
   const router = useRouter();
   const { session } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
   const [isForTodayState = true, setIsForTodayState] = useState(item.isFortoday);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);
@@ -40,18 +38,34 @@ export default function addDish({ item }) {
       formData.append('forToday', isForTodayState);
 
       // console.log(formData);
-      fetch(`/api/addDish`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          Authorization: `${session.token}`,
-          'url': params.local_backend_nodejs
-        },
-        body: formData,
-      })
-        .then((res) => res.json())
-        // .then((res) => console.log(res));
-        .then((res) => router.push('/menu/catalog'));
+      if (item.isForUpdate === undefined) {
+        fetch(`/api/addDish?id=${item._id}`, {
+          method: 'PATCH',
+          mode: 'cors',
+          headers: {
+            Authorization: `${session.token}`,
+            // 'Content-Type': 'application/json',
+          },
+          body: formData,
+        })
+          .then((res) => res.json())
+          // .then((res) => console.log(res));
+          .then((res) => router.push('/menu/catalog'));
+      } else {
+        fetch(`/api/addDish`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `${session.token}`,
+            // 'url': params.local_backend_nodejs
+          },
+          body: formData,
+        })
+          .then((res) => res.json())
+          // .then((res) => console.log(res));
+          .then((res) => router.push('/menu/catalog'));
+      }
+
     }
   };
 
@@ -150,6 +164,7 @@ export default function addDish({ item }) {
                 <input
                   type="submit"
                   className="btn btn-outline-primary form-control"
+                  value={item.isForUpdate === undefined ? 'Actualizar' : 'Agregar'}
                 />
                 <Link href="/menu/catalog" passHref>
                   <button
@@ -190,7 +205,8 @@ export async function getServerSideProps(context) {
       description: '',
       price: 0,
       image: 'stockDishImg.png',
-      forToday: true
+      forToday: true,
+      isForUpdate: false,
     };
   }
 

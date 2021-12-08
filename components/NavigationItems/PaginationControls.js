@@ -21,7 +21,11 @@ export default function PaginationControls(props) {
         })
         if(props.method === 'GET') {
           body = null;
+          if(props.url.split('?').length > 1) {
+            newUrl = `${props.url}&limit=${props.limit}&page=${page}`
+          } else {
           newUrl = `${props.url}?limit=${props.limit}&page=${page}`
+        }
         }else {
           newUrl = props.url
         }
@@ -36,17 +40,11 @@ export default function PaginationControls(props) {
           body: body,
         })
           .then((res) => res.json())
-          // .then((res) => console.log(res))
           .then(
             (res) => {
+              // console.log(res),
               props.toUpdateParent(res);
             },
-            // Note: it's important to handle errors here
-            // instead of a catch() block so that we don't swallow
-            // exceptions from actual bugs in components.
-            (error) => {
-              setError(error);
-            }
           );
       };
 

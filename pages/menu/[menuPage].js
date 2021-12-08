@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from './../../context/authContext';
-import ParamsContext from '../context/paramsContext';
 const classes = require('./../../styles/menu.module.css');
 import { BsCloudUpload } from 'react-icons/bs';
 import CarousselSSR from './../../components/Caroussel';
@@ -13,19 +12,15 @@ import MenuAdmin from './../../components/MenuAdmin';
 export default function Menu() {
   const router = useRouter();
   const { session } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
   const { menuPage } = router.query;
 
   const [items, setItems] = useState([])
-  const [totalRecords, setTotalRecords] = useState(0)
+  const [totalRecords, setTotalRecords] = useState(1)
 
   useEffect(() => {
     fetch(`/api/getMenu`, {
       method: 'GET',
       mode: 'cors',
-      headers: {
-        'url': params.local_backend_nodejs
-      }
     })
       .then((res) => res.json())
       // .then((res) => console.log(res))
@@ -50,9 +45,9 @@ export default function Menu() {
   const NoSSRElements = (page) => {
     if (page === 'carusel') {
       return (
-        <>
+        <div className={`${classes.backgroundCarousel}`}>
           <MenuAdmin
-            title={'Carusel de Platillos para hoy'}
+            title={'Platillos de hoy'}
             componentName={'Carusel'}
             visible={false}
             Component={<CarousselSSR items={items} />}
@@ -60,7 +55,7 @@ export default function Menu() {
           <Link href="/menu/sell" passHref>
             <a className="btn btn-success">Comprar</a>
           </Link>
-        </>
+        </div>
       );
     } else if (page === 'sell') {
       return (

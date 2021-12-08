@@ -1,6 +1,7 @@
 export default async (req, res) => {
   // console.log(req.body)
-  const processSell = await fetch(`${req.body.url}/api/v1/bills`, {
+
+  const processSell = await fetch(`${process.env.BACKEND}/api/v1/bills`, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -13,13 +14,15 @@ export default async (req, res) => {
       customer: req.body.customer,
       day: req.body.day,
       isFiado: req.body.isFiado,
-      status: req.body.status
+      status: req.body.status,
+      dayTime: req.body.dayTime,
+      createdAt: req.body.createdAt
     }),
   });
 
   if (req.body.isFiado && req.body.role === 'user') {
     let newBalance = -(req.body.currentBalance * 1 + req.body.totalPrice * 1)
-    const updateBalance = await fetch(`${req.body.url}/api/v1/users/updateuser/${req.body.id}`, {
+    const updateBalance = await fetch(`${process.env.BACKEND}/api/v1/users/updateuser/${req.body.id}`, {
       method: 'PATCH',
       mode: 'cors',
       headers: {

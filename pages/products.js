@@ -2,26 +2,22 @@ import { useState, useEffect, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import AuthContext from '../context/authContext';
-import ParamsContext from '../context/paramsContext';
-import Table from '../components/Table';
-import { useRouter } from 'next/router';
+// import Table from '../components/Table';
+import Table from 'react-bootstrap/Table'
 import Link from 'next/link';
 import PaginationControls from '../components/NavigationItems/PaginationControls';
 
 import { BsFillTrashFill, BsGearFill } from 'react-icons/bs';
 
 const classes = require('./../styles/addDish.module.css');
-const loader = require('./../styles/loader.module.css');
 
 export default function products() {
-  const router = useRouter();
   const { session } = useContext(AuthContext);
-  const {params} = useContext(ParamsContext);
   const [name, setName] = useState('');
   const [expires, setExpires] = useState('day');
   const [itemID, setItemID] = useState();
   const [items, setItems] = useState([]);
-  const [totalRecords, setTotalRecords] = useState(0);
+  const [totalRecords, setTotalRecords] = useState(1);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -31,7 +27,6 @@ export default function products() {
       headers: {
         Authorization: `Bearer ${session.token}`,
         'content-type': 'application/json',
-        'url': params.local_backend_nodejs
       },
     })
       .then((res) => res.json())
@@ -121,7 +116,7 @@ export default function products() {
                     className="form-control"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    required  
+                    required
                   />
                 </div>
                 <div className="input-group">
@@ -179,36 +174,44 @@ export default function products() {
             />
           </div>
           <div className={`${classes.InLineBlock} ${classes.Table}`}>
-            <Table
-              headers={['ID', 'Nombre']}
-              items={items}
-              body={['_id', 'name']}
-            />
-          </div>
-          <div className={`${classes.InLineBlock} ${classes.actions}`}>
-            {items.map((el, i) => {
-              return (
-                <div key={el._id + i}>
-                  {/* Button to Delete Item */}
-                  <button
-                    type="button"
-                    className={'btn btn-danger'}
-                    onClick={(e) => removeItem(el._id, el.name)}
-                  >
-                    <BsFillTrashFill />
-                  </button>
-                  {/* Button to Modify Item */}
-                  <button
-                    type="button"
-                    className={'btn btn-info'}
-                    onClick={(e) => modifyItem(el)}
-                  >
-                    <BsGearFill />
-                  </button>
-                  <br />
-                </div>
-              );
-            })}
+            <Table responsive="lg" striped bordered hover style={{ width: "98%", marginLeft: "1%" }}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Duracion</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((el, i) => {
+                  return (
+                    <tr key={el._id}>
+                      <td>{el._id}</td>
+                      <td>{el.name}</td>
+                      <td>{el.expires}</td>
+                      <td>
+                        {/* Button to Delete Item */}
+                        <button
+                          type="button"
+                          className={'btn btn-danger'}
+                          onClick={(e) => removeItem(el._id, el.name)}
+                        >
+                          <BsFillTrashFill />
+                        </button>
+                        {/* Button to Modify Item */}
+                        <button
+                          type="button"
+                          className={'btn btn-info'}
+                          onClick={(e) => modifyItem(el)}
+                        >
+                          <BsGearFill />
+                        </button></td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
           </div>
         </div>
         <div>

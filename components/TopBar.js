@@ -35,7 +35,12 @@ export default function TopBar(props) {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <Link href="/" passHref>
-                    <a className="nav-link">Home</a>
+                    <a className="nav-link">Inicio</a>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/users" passHref>
+                    <a className="nav-link">Usuarios</a>
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -130,12 +135,9 @@ export default function TopBar(props) {
                   >
                     <li>
                       <Link href="/sellHistory/grupal" passHref>
-                        <a className="dropdown-item">Listado grupal</a>
+                        <a className="dropdown-item">Ventas</a>
                       </Link>
                     </li>
-                    <Link href="/sellHistory/individual" passHref>
-                      <a className="dropdown-item">Listado individual</a>
-                    </Link>
                     <Link href="/stats" passHref>
                       <a className="dropdown-item">Estadisticas</a>
                     </Link>
@@ -174,7 +176,7 @@ export default function TopBar(props) {
               </Link>
               <Link href="/" passHref>
                 <a className="nav-link" onClick={quitSession}>
-                  Logout
+                  Salir
                 </a>
               </Link>
             </div>
@@ -206,7 +208,7 @@ export default function TopBar(props) {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <Link href="/" passHref>
-                    <a className="nav-link">Home</a>
+                    <a className="nav-link">Inicio</a>
                   </Link>
                 </li>
                 <li>
@@ -240,17 +242,17 @@ export default function TopBar(props) {
                     aria-labelledby="navbarDropdown"
                   >
                     <li>
-                      <Link href={`/orders/Pending?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                      <Link href={`/orders/Pending`} passHref>
                         <a className="dropdown-item">Pendientes</a>
                       </Link>
                     </li>
                     <li>
-                      <Link href={`/orders/isReady?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                      <Link href={`/orders/isReady`} passHref>
                         <a className="dropdown-item">Listos para retirar</a>
                       </Link>
                     </li>
                     <li>
-                      <Link href={`/orders/Completed?token=${session.token}&role=${session.role}&id=${session._id}`} passHref>
+                      <Link href={`/orders/Completed`} passHref>
                         <a className="dropdown-item">Completados</a>
                       </Link>
                     </li>
@@ -259,7 +261,7 @@ export default function TopBar(props) {
               </ul>
               <Link href="/" passHref>
                 <a className="nav-link" onClick={quitSession}>
-                  Logout
+                  Salir
                 </a>
               </Link>
             </div>
@@ -289,7 +291,7 @@ export default function TopBar(props) {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link href="/" passHref>
-                  <a className="nav-link">Home</a>
+                  <a className="nav-link">Inicio</a>
                 </Link>
               </li>
               <li>
@@ -307,7 +309,7 @@ export default function TopBar(props) {
               <a className="nav-link">Registrase</a>
             </Link>
             <Link href="/login" passHref>
-              <a className="nav-link">Login</a>
+              <a className="nav-link">Ingresar</a>
             </Link>
           </div>
         </div>
